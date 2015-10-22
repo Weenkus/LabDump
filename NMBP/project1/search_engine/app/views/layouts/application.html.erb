@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	
+<head>
+  <title>Search Engine</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+
+<body>
+  <header class="navbar navbar-fixed-top navbar-inverse">
+    <div class="container">
+      <%= link_to "Text Search Engine", '#', id: "logo" %>
+      <nav>
+        <ul class="nav navbar-nav navbar-right">
+           <li><%= link_to "Home",   root_path %></li>
+           <li><%= link_to "Add Text",   add_path %></li>
+           <li><%= link_to "Help", help_path %></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="container">
+    <%= yield %>
+  </div>
+</body>
+
+</html>
