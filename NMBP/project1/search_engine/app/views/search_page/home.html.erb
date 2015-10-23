@@ -1,2 +1,14 @@
 <h1>One click away from the world</h1>
 
+<%= form_for :search do |f| %>
+  <p>
+    <%= f.label :Text %><br>
+    <%= f.text_field :text %>
+  </p>
+ 
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+
+
