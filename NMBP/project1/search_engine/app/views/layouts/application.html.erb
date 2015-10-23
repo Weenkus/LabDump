@@ -11,11 +11,12 @@
 <body>
   <header class="navbar navbar-fixed-top navbar-inverse">
     <div class="container">
-      <%= link_to "Text Search Engine", '#', id: "logo" %>
+      <%= link_to "Text Search Engine", root_path, id: "logo" %>
       <nav>
         <ul class="nav navbar-nav navbar-right">
            <li><%= link_to "Home",   root_path %></li>
-           <li><%= link_to "Add Text",   add_path %></li>
+           <li><%= link_to "Index",   index_path %></li>
+           <li><%= link_to "Add Text",   new_path %></li>
            <li><%= link_to "Help", help_path %></li>
         </ul>
       </nav>

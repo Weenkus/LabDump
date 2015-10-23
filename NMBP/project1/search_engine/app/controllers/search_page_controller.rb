@@ -4,7 +4,5 @@ class SearchPageController < ApplicationController
   
   def help
   end
-  
-  def add
-  end
+
 end
