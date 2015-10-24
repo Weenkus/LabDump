@@ -1,14 +1,35 @@
 <h1>One click away from the world</h1>
 
-<%= form_for :search do |f| %>
-  <p>
-    <%= f.label :Text %><br>
-    <%= f.text_field :text %>
-  </p>
- 
-  <p>
-    <%= f.submit %>
-  </p>
-<% end %>
+<br> &nbsp;<br>
+<br> &nbsp;<br>
+
+<div id = "search-bar">
+	<%= form_for :search do |f| %>
+	  <p>
+		<%= f.text_field :text, :size => 50%>
+	 
+		<button class="btn" type="submit"><i class="icon-search"></i>Search</button>
+	  </p>
+	  
+	  <p>
+	  	<div class = "box">
+			<%= radio_button_tag(:logic, "and") %>
+			<%= label_tag(:age_adult, "AND") %>
+			<%= radio_button_tag(:logic, "or") %>
+			<%= label_tag(:age_adult, "OR") %>
+		</div>
+		
+		<div class = "box">
+			<%= radio_button_tag(:search, "exact") %>
+			<%= label_tag(:age_child, "exact") %>
+			<%= radio_button_tag(:search, "dictionaries") %>
+			<%= label_tag(:age_adult, "use dictionaries") %>
+			<%= radio_button_tag(:search, "fuzzy") %>
+			<%= label_tag(:age_adult, "fuzzy") %>
+		</div>
+	
+	  </p>
+	<% end %>
+</div>
 
 

@@ -97,3 +97,19 @@ footer {
     }
   }
 }
+
+/* search bar */
+#search-bar {
+  margin: 0 auto; 
+  text-align: center;
+}
+
+.box {
+	border: solid;
+	border-color: #00688B;
+	border-width: 1px;
+	
+	display: inline-block;
+	margin: 5px 5px 5px 5px;
+	padding: 5px 10px 5px 10px;  
+}
