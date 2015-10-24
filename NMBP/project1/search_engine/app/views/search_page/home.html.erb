@@ -31,6 +31,13 @@
 	  </p>
 	<% end %>
 	
+	
+	<% if @documents.present? %>
+		<h3>SQL string</h3>
+		<%= @sql %>
+	<% end %>
+	
+	
 	<!-- Debug the search bar -->
 	<!--<pre>
 		<%= @documents.inspect %>
@@ -38,8 +45,10 @@
 	
 	<br> &nbsp;<br>
 	
+
 	<!-- Print the results only fi they exist -->
 	<% if @documents.present? %>
+		<h3>Results</h3>
 		<div class = "textBox">
 			<table> 
 			
