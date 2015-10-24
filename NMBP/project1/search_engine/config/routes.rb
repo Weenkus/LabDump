@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   # Search page
   get 'home' => 'search_page#home'
   get 'help' => 'search_page#help'
+  post 'home' => 'search_page#show'
   
   # Documents
   get 'new' => 'documents#new'

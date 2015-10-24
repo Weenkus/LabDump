@@ -11,6 +11,7 @@ class DocumentsController < ApplicationController
     @document.save
     redirect_to action: "index"
   end
+ 
   
   private
     def document_params

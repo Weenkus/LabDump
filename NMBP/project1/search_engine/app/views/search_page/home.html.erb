@@ -4,9 +4,9 @@
 <br> &nbsp;<br>
 
 <div id = "search-bar">
-	<%= form_for :search do |f| %>
+	<%= form_tag("/home", method: "post") do %>
 	  <p>
-		<%= f.text_field :text, :size => 50%>
+		<%= text_field_tag(:search) %>
 	 
 		<button class="btn" type="submit"><i class="icon-search"></i>Search</button>
 	  </p>
@@ -14,22 +14,47 @@
 	  <p>
 	  	<div class = "box">
 			<%= radio_button_tag(:logic, "and") %>
-			<%= label_tag(:age_adult, "AND") %>
+			<%= label_tag(:and, "AND") %>
 			<%= radio_button_tag(:logic, "or") %>
-			<%= label_tag(:age_adult, "OR") %>
+			<%= label_tag(:or, "OR") %>
 		</div>
 		
 		<div class = "box">
-			<%= radio_button_tag(:search, "exact") %>
-			<%= label_tag(:age_child, "exact") %>
-			<%= radio_button_tag(:search, "dictionaries") %>
-			<%= label_tag(:age_adult, "use dictionaries") %>
-			<%= radio_button_tag(:search, "fuzzy") %>
-			<%= label_tag(:age_adult, "fuzzy") %>
+			<%= radio_button_tag(:method, "exact") %>
+			<%= label_tag(:exact, "Exact") %>
+			<%= radio_button_tag(:method, "dictionaries") %>
+			<%= label_tag(:dict, "Use dictionaries") %>
+			<%= radio_button_tag(:method, "fuzzy") %>
+			<%= label_tag(:fuzzy, "Fuzzy") %>
 		</div>
 	
 	  </p>
 	<% end %>
+	
+	<!-- Debug the search bar -->
+	<!--<pre>
+		<%= @documents.inspect %>
+	</pre>-->
+	
+	<br> &nbsp;<br>
+	
+	<!-- Print the results only fi they exist -->
+	<% if @documents.present? %>
+		<div class = "textBox">
+			<table> 
+			
+			  <!-- Use loop if there are many results -->
+		
+				  <% @documents.each do |document| %>
+					<tr>
+					  <td><%= document[1] %><br> &nbsp;<br> </td>
+					</tr>
+				  <% end %>
+		
+			  
+			  
+			</table>
+		</div>
+	<% end %>
+	
 </div>
-
-

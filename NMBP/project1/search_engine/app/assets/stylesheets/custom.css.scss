@@ -26,6 +26,13 @@ textarea {
   }
 }
 
+.textBox {
+  margin: 0 auto; 
+  text-align: left;
+      width: 50%;
+    margin: 0 auto;
+}
+
 /* typography */
 
 h1, h2, h3, h4, h5, h6 {
@@ -111,5 +118,5 @@ footer {
 	
 	display: inline-block;
 	margin: 5px 5px 5px 5px;
-	padding: 5px 10px 5px 10px;  
+	padding: 5px 10px 1px 10px;  
 }

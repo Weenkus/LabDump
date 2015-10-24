@@ -1,10 +1,12 @@
 <h1>Listing documents</h1>
 <br> &nbsp;<br>
 
-<table> 
-  <% @documents.each do |document| %>
-    <tr>
-      <td><%= document.text %><br> &nbsp;<br> </td>
-    </tr>
-  <% end %>
-</table>
+<div class = "textBox">
+	<table> 
+	  <% @documents.each do |document| %>
+		<tr>
+		  <td><%= document.text %><br> &nbsp;<br> </td>
+		</tr>
+	  <% end %>
+	</table>
+</div>
