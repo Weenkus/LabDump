@@ -15,11 +15,15 @@ ActiveRecord::Schema.define(version: 20151022180149) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "fuzzystrmatch"
+  enable_extension "pg_trgm"
+  enable_extension "tablefunc"
 
   create_table "documents", force: :cascade do |t|
     t.string   "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.tsvector "texttsv"
   end
 
 end
