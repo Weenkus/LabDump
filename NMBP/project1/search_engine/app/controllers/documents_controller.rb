@@ -16,7 +16,7 @@ class DocumentsController < ApplicationController
     
     idString = id[0].to_s;
     idString.delete! '["]'
-    sql2 = "UPDATE documents SET texttsv='test'::TSVector WHERE id='" + idString + "'"
+    sql2 = "UPDATE documents SET texttsv='" + @document.text + "'::TSVector WHERE id='" + idString + "'"
 	ActiveRecord::Base.connection.execute(sql2)
     
     redirect_to action: "index"
