@@ -3,10 +3,10 @@
 <br> &nbsp;<br>
 <br> &nbsp;<br>
 
-<div id = "search-bar">
+<div id = "search-box">
 	<%= form_tag("/home", method: "post") do %>
 	  <p>
-		<%= text_field_tag(:search) %>
+		<%= text_field_tag('search', nil, class: 'input-xxlarge') %>
 	 
 		<button class="btn" type="submit"><i class="icon-search"></i>Search</button>
 	  </p>
@@ -31,10 +31,10 @@
 	  </p>
 	<% end %>
 	
-	<% if @documents.present? %>
+	<!--<% if @documents.present? %>-->
 		<h3>SQL string</h3>
 		<%= @sql %>
-	<% end %>
+	<!--<% end %>-->
 	
 	
 	<!-- Debug the search bar -->
