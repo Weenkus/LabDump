@@ -10,7 +10,7 @@ class SearchPageController < ApplicationController
   if params[:search] != "" 
   
     # Split the search string and remove ""
-    values = params[:search].split();
+    values = params[:search].split("\" \"");
 	values.each { |x| x.delete! '"'}
 	
 	# Set the logical parameters
@@ -22,19 +22,43 @@ class SearchPageController < ApplicationController
 	end
 	
 	# Build the sql string core
-	for i in 0..(values.length-1)
-		if i != values.length-1
-			sqlSubString = sqlSubString.to_s + " text LIKE '%" + values[i].to_s + "%'" + logicParam.to_s
-		else
-			sqlSubString = sqlSubString.to_s + " text LIKE '%" + values[i].to_s + "%'"
+	if params[:method]  == "exact"
+		for i in 0..(values.length-1)
+			if i != values.length-1
+				sqlSubString = sqlSubString.to_s + " text LIKE '%" + values[i].to_s + "%'" + logicParam.to_s
+			else
+				sqlSubString = sqlSubString.to_s + " text LIKE '%" + values[i].to_s + "%'"
+			end
+		end
+	elsif params[:method]  == "dictionaries"
+		for i in 0..(values.length-1)
+			if i != values.length-1
+				sqlSubString = sqlSubString.to_s + " texttsv @@ '" + values[i].to_s.gsub(" ", " & ") + "'::TSQuery" + logicParam.to_s
+			else
+				sqlSubString = sqlSubString.to_s + " texttsv @@ '" + values[i].to_s.gsub(" ", " & ") + "'::TSQuery"
+			end
+		end
+	elsif params[:method]  == "fuzzy"
+		for i in 0..(values.length-1)
+			if i != values.length-1
+				sqlSubString = sqlSubString.to_s + " text % '" + values[i].to_s + "'" + logicParam.to_s
+			else
+				sqlSubString = sqlSubString.to_s + " text % '" + values[i].to_s + "'"
+			end
 		end
 	end
+	
 	
     # Exact search
     if params[:method]  == "exact"
 		@sql = "SELECT * FROM documents WHERE" + sqlSubString
-		@documents = ActiveRecord::Base.connection.execute(@sql).values
+	elsif params[:method]  == "dictionaries"
+		@sql = "SELECT * FROM documents WHERE" + sqlSubString
+	elsif params[:method]  == "fuzzy"
+		@sql = "SELECT * FROM documents WHERE" + sqlSubString
 	end
+	@documents = ActiveRecord::Base.connection.execute(@sql).values
+	
   end
   
   render 'home'
