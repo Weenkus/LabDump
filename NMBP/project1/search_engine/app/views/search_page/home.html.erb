@@ -56,7 +56,7 @@
 		
 				  <% @documents.each do |document| %>
 					<tr>
-					  <td><%= document[1].html_safe %><br> &nbsp;<br> </td>
+					  <td><%= document[1].html_safe %>&nbsp&nbsp[<%= document[2] %>] <br> &nbsp;<br> </td>
 					</tr>
 				  <% end %>	  
 			</table>

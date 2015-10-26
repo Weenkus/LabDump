@@ -35,6 +35,18 @@ class SearchPageController < ApplicationController
 		end
 	end
 	
+	# Add result ranking
+	if params[:method]  == "exact" || params[:method]  == "dictionaries" || params[:method]  == "fuzzy"
+		rankHeadlineString = rankHeadlineString + ", ts_rank(texttsv, to_tsquery('"
+		for i in 0..(values.length-1)
+			if i != values.length-1
+				rankHeadlineString = rankHeadlineString.to_s + "" + values[i].to_s.gsub(" ", " & ") + logicSign.to_s
+			else
+				rankHeadlineString = rankHeadlineString.to_s + "" + values[i].to_s.gsub(" ", " & ") + "')) rank";
+			end
+		end
+	end
+	
 	# Build the sql string core
 	if params[:method]  == "exact"
 		for i in 0..(values.length-1)
@@ -65,7 +77,7 @@ class SearchPageController < ApplicationController
 	
     # Search with the constructed SQL string
     if params[:method]  == "exact" || params[:method]  == "dictionaries" || params[:method]  == "fuzzy"
-		@sql = "SELECT text, " + rankHeadlineString + " FROM documents WHERE" + sqlSubString
+		@sql = "SELECT text, " + rankHeadlineString + " FROM documents WHERE" + sqlSubString + " ORDER BY rank DESC"
 		@documents = ActiveRecord::Base.connection.execute(@sql).values
 	end
 	
