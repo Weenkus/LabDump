@@ -51,18 +51,14 @@
 		<h5>[number of documents retrieved: <%= @documents.length %>]</h5>
 		<br> &nbsp;<br>
 		<div class = "textBox">
-			<table> 
-			
+			<table> 		
 			  <!-- Use loop if there are many results -->
 		
 				  <% @documents.each do |document| %>
 					<tr>
-					  <td><%= document[1] %><br> &nbsp;<br> </td>
+					  <td><%= document[1].html_safe %><br> &nbsp;<br> </td>
 					</tr>
-				  <% end %>
-		
-			  
-			  
+				  <% end %>	  
 			</table>
 		</div>
 	<% end %>

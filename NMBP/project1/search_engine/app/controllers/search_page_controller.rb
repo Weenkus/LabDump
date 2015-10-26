@@ -16,9 +16,23 @@ class SearchPageController < ApplicationController
 	# Set the logical parameters
 	if params[:logic] == "and"
 		logicParam = " AND "
+		logicSign = " & "
 	end
 	if params[:logic] == "or"
 	    logicParam = " OR "
+	    logicSign = " | "
+	end
+	
+	# Add result text bolding 
+	if params[:method]  == "exact" || params[:method]  == "dictionaries" || params[:method]  == "fuzzy"
+		rankHeadlineString = "ts_headline('english', text, to_tsquery('"
+		for i in 0..(values.length-1)
+			if i != values.length-1
+				rankHeadlineString = rankHeadlineString.to_s + "" + values[i].to_s.gsub(" ", " & ") + logicSign.to_s
+			else
+				rankHeadlineString = rankHeadlineString.to_s + "" + values[i].to_s.gsub(" ", " & ") + "'))";
+			end
+		end
 	end
 	
 	# Build the sql string core
@@ -49,15 +63,11 @@ class SearchPageController < ApplicationController
 	end
 	
 	
-    # Exact search
-    if params[:method]  == "exact"
-		@sql = "SELECT * FROM documents WHERE" + sqlSubString
-	elsif params[:method]  == "dictionaries"
-		@sql = "SELECT * FROM documents WHERE" + sqlSubString
-	elsif params[:method]  == "fuzzy"
-		@sql = "SELECT * FROM documents WHERE" + sqlSubString
+    # Search with the constructed SQL string
+    if params[:method]  == "exact" || params[:method]  == "dictionaries" || params[:method]  == "fuzzy"
+		@sql = "SELECT text, " + rankHeadlineString + " FROM documents WHERE" + sqlSubString
+		@documents = ActiveRecord::Base.connection.execute(@sql).values
 	end
-	@documents = ActiveRecord::Base.connection.execute(@sql).values
 	
   end
   
