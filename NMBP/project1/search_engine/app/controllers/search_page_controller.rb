@@ -67,7 +67,7 @@ class SearchPageController < ApplicationController
 	elsif params[:method]  == "fuzzy"
 		for i in 0..(values.length-1)
 			if i != values.length-1
-				sqlSubString = sqlSubString.to_s + " text % '" + values[i].to_s + "'" + logicParam.to_s
+				sqlSubString = sqlSubString.to_s + "(" + values[i].to_s.gsub(" ", " & ") + ")" + logicSign.to_s
 			else
 				sqlSubString = sqlSubString.to_s + " text % '" + values[i].to_s + "'"
 			end
@@ -81,10 +81,27 @@ class SearchPageController < ApplicationController
 		@documents = ActiveRecord::Base.connection.execute(@sql).values
 	end
 	
+	# Before rendering the result, save the search query inside the DB
+	for i in 0..(values.length-1)
+		if i != values.length-1
+			recordSave = recordSave.to_s + "'" + values[i].to_s.gsub(" ", " & ") + "'" + logicSign.to_s
+		else
+			recordSave = recordSave.to_s + "'" + values[i].to_s.gsub(" ", " & ") + "'";
+		end
+	end
+	
+	# Update/create the record inside the DB
+	record = Record.find_by(search: recordSave.to_s)
+	if record.nil?
+		record = Record.create(search: recordSave.to_s, count: 0)
+	else
+		record.count = record.count + 1
+		record.save
+	end
   end
+
   
+  # Render the search results to the user
   render 'home'
   end
-  
-
 end
