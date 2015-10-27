@@ -28,9 +28,9 @@ class SearchPageController < ApplicationController
 		rankHeadlineString = "ts_headline('english', text, to_tsquery('"
 		for i in 0..(values.length-1)
 			if i != values.length-1
-				rankHeadlineString = rankHeadlineString.to_s + "" + values[i].to_s.gsub(" ", " & ") + logicSign.to_s
+				rankHeadlineString = rankHeadlineString.to_s + "(" + values[i].to_s.gsub(" ", " & ") + ")" + logicSign.to_s
 			else
-				rankHeadlineString = rankHeadlineString.to_s + "" + values[i].to_s.gsub(" ", " & ") + "'))";
+				rankHeadlineString = rankHeadlineString.to_s + "(" + values[i].to_s.gsub(" ", " & ") + ")'))";
 			end
 		end
 	end
@@ -40,9 +40,9 @@ class SearchPageController < ApplicationController
 		rankHeadlineString = rankHeadlineString + ", ts_rank(texttsv, to_tsquery('"
 		for i in 0..(values.length-1)
 			if i != values.length-1
-				rankHeadlineString = rankHeadlineString.to_s + "" + values[i].to_s.gsub(" ", " & ") + logicSign.to_s
+				rankHeadlineString = rankHeadlineString.to_s + "(" + values[i].to_s.gsub(" ", " & ") + ")" + logicSign.to_s
 			else
-				rankHeadlineString = rankHeadlineString.to_s + "" + values[i].to_s.gsub(" ", " & ") + "')) rank";
+				rankHeadlineString = rankHeadlineString.to_s + "(" + values[i].to_s.gsub(" ", " & ") + ")')) AS rank";
 			end
 		end
 	end
