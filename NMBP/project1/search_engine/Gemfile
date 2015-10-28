@@ -28,6 +28,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # bootstrap sass for front end design
 gem 'bootstrap-sass',       '3.2.0.0'
 
+# Datetime manipulation
+gem 'squeel'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

@@ -1,0 +1,61 @@
+<h1>We spy on our users</h1>
+
+<br> &nbsp;<br>
+<br> &nbsp;<br>
+
+<div id = "search-box">
+	<%= form_tag("/anal", method: "post") do %>
+	  <p>
+	  START DATE 
+	  &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp &nbsp; &nbsp;
+
+	  END DATE
+	  </p>
+	  <p>
+		<%= select_date Date.today, prefix: :start_date %>  
+		
+		&nbsp; &nbsp;  &nbsp; &nbsp;
+		 
+		<%= select_date Date.today, prefix: :end_date %>
+		
+		<br> &nbsp;<br>
+		
+	    <div class = "box">
+			<%= radio_button_tag(:time, "day") %>
+			<%= label_tag(:day, "DAY") %>
+			&nbsp;
+			<%= radio_button_tag(:time, "month") %>
+			<%= label_tag(:month, "MONTH") %>
+		</div>
+		<button class="btn" type="submit"><i class="icon-search"></i>Search</button>
+	  </p>
+	  
+	  <p>
+	  	
+	
+	  </p>
+	<% end %>
+	
+
+	
+	<br> &nbsp;<br><td><%= @d1 %><td><%= @d2 %>
+	
+
+	<!-- Print the results only fi they exist -->
+	<% if @results.present? %>
+		<h3>Results</h3>
+		<br> &nbsp;<br>
+		<div class = "textBox">
+			<table> 		
+			  <!-- Use loop if there are many results -->
+		
+				  <% @results.each do |r| %>
+					<tr>
+					  <td><%= r.search %> &nbsp;<%= r.created_at %><br> &nbsp;<br> </td>
+					</tr>
+				  <% end %>	  
+			</table>
+		</div>
+	<% end %>
+	
+</div>
