@@ -9,45 +9,50 @@ class SearchPageController < ApplicationController
   end
   
   def analQuery
-  @d1 = params[:start_date]["year"]
-  @d2 = params[:end_date]
   
+    # Fatch all the touples from DB that are between the two user specified dates
+	startDate = "'" + params[:start_date]["year"] + "-" + params[:start_date]["month"] + "-" + params[:start_date]["day"] + "'"
+	endDate = "'" + params[:end_date]["year"] + "-" + params[:end_date]["month"] + "-" + params[:end_date]["day"] + "'"
   
-    @results = Record.all
-    
-    #sqlRecords = "SELECT search FROM records WHERE YEAR(time) >= " + params[:start_date]["year"]
-    #@results = ActiveRecord::Base.connection.execute(sqlRecords).values
-    
-    #sqlRecords = "SELECT * FROM records WHERE CAST(time AS date) BETWEEN '" 
-    #+ params[:start_date]["year"] + "/" + params[:start_date]["month"] + "/" + params[:start_date]["day"] + "' 
-    #and '" + params[:end_date]["year"] + "/" + params[:end_date]["month"]+ "/" + params[:end_date]["day"] + "'"
-    
-    
-    #@results = ActiveRecord::Base.connection.execute(sqlRecords).values
-    #@results = Record.where("created_at.date >= :start_date AND created_at.date<= :end_date",
-    #{start_date: params[:start_date], end_date: params[:end_date]})
-    
-    
-    #@results = Record.where('DATE(time.date) BETWEEN ? AND ?', params[:start_date], params[:end_date]).first
    
     
-   #@results = Record.where("created_at >= :start_date AND created_at <= :end_date",
-	#{start_date: params[:start_date], end_date: params[:end_date]})
 
-    #for i in 0..(@records.length-1)
-		#if !((@records[i].time.date >= params[:start_date].date) && (@records[i].time <= params[:end_date]))
-			#@records.delete_at(i)
-		#end
-	#end
-    
-
-    # Fatch the user selected data
-    if params[:time] == "month"
-
-	elsif params[:time] == "day"
-		#@results = Record.where("time.date >= :start_date AND time.date <= :end_date",
-		#{start_date: params[:start_date], end_date: params[:end_date]})
+    # Format the data so it matches the user's granulation choice
+    if params[:time] == "day"
+		filter = "extract(DAY FROM created_at) as day"
+		groupBy = "day"
+	elsif params[:time] == "hour"
+		filter = "extract(HOUR FROM created_at) as hour"
+		groupBy = "hour"
 	end
+	
+	# Execute the sql
+	if params[:time] == "hour" || params[:time] == "day"
+		sqlRecords = "SELECT search, " + filter + ", COUNT(*) AS count FROM records WHERE created_at::DATE >= " + startDate + " AND created_at::DATE <= " + endDate
+		sqlRecords = sqlRecords + " GROUP BY search, " + groupBy + " ORDER BY 1, 2"
+		
+		# Pivot the relation
+		if params[:time] == "day"
+			sqlPivot = "SELECT * FROM crosstab('" + sqlRecords + "','select m from generate_series(1,12) m') as (
+						  \"query\" tsvector,
+						  \"Jan\" int,
+						  \"Feb\" int,
+						  \"Mar\" int,
+						  \"Apr\" int,
+						  \"May\" int,
+						  \"Jun\" int,
+						  \"Jul\" int,
+						  \"Aug\" int,
+						  \"Sep\" int,
+						  \"Oct\" int,
+						  \"Nov\" int,
+						  \"Dec\" int
+						)"
+		end
+		@sql = sqlRecords
+		@results = ActiveRecord::Base.connection.execute(sqlRecords).values
+	end
+
 	
   # Render the search results to the user
   render 'anal'
