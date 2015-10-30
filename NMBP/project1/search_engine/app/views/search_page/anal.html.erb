@@ -38,23 +38,42 @@
 	
 	<!--<br> &nbsp;<br><td><%= @d1 %><td><%= @d2 %>-->
 	
-	<%= @sql %>
+	<!--<%= @sql %>
+	<br> &nbsp;<br>
+	<%= @piv %>
+	
+	<pre>
+		<%= @results.inspect %>
+	</pre>-->
 
 	<!-- Print the results only fi they exist -->
 	<% if @results.present? %>
 		<h3>Results</h3>
-		<br> &nbsp;<br>
+		<br> &nbsp;<br>		
 		<div class = "textBox">
-			<table> 		
-			  <!-- Use loop if there are many results -->
 		
-				  <% @results.each do |r| %>
+			<table  border="1"> 	
+				<tr>	
+					<% @datesForHTML.each do |h| %>
+						<td> <b><%= h.html_safe %></b> &nbsp;&nbsp;&nbsp;&nbsp; </td> 
+					<% end %>	
+				</tr>
+				<% @results.each do |r| %>
 					<tr>
-					  <td><%= r[1] %> &nbsp;<%= r[0] %> <%= r[2] %> &nbsp; <br> &nbsp;<br> </td>
+						<% r.each do |k| %>
+							<td> 
+								<% if k.nil? %> 
+									<%= 0 %>
+								<% else %>
+									<%= k %>
+								<% end %>
+							</td>
+						<% end %>
 					</tr>
-				  <% end %>	  
+				<% end %>	 
 			</table>
-		</div>
+			
+		</div>	
 	<% end %>
 	
 </div>

@@ -12,15 +12,13 @@ class SearchPageController < ApplicationController
   
     # Fatch all the touples from DB that are between the two user specified dates
 	startDate = "'" + params[:start_date]["year"] + "-" + params[:start_date]["month"] + "-" + params[:start_date]["day"] + "'"
-	endDate = "'" + params[:end_date]["year"] + "-" + params[:end_date]["month"] + "-" + params[:end_date]["day"] + "'"
-  
-   
-    
+	endDate = "'" + params[:end_date]["year"] + "-" + params[:end_date]["month"] + "-" + params[:end_date]["day"] + "'"    
 
     # Format the data so it matches the user's granulation choice
     if params[:time] == "day"
-		filter = "extract(DAY FROM created_at) as day"
-		groupBy = "day"
+		#filter = "extract(DAY FROM created_at) as day"
+		filter = "created_at::DATE as days"
+		groupBy = "days"
 	elsif params[:time] == "hour"
 		filter = "extract(HOUR FROM created_at) as hour"
 		groupBy = "hour"
@@ -30,21 +28,53 @@ class SearchPageController < ApplicationController
 	if params[:time] == "hour" || params[:time] == "day"
 		sqlRecords = "SELECT search, " + filter + ", COUNT(*) AS count FROM records WHERE created_at::DATE >= " + startDate + " AND created_at::DATE <= " + endDate
 		sqlRecords = sqlRecords + " GROUP BY search, " + groupBy + " ORDER BY 1, 2"
-		
+				
+		# DROP TEMP PREPIVOT
+		#sqlDrop = "DROP TABLE prepivot"
+		#ActiveRecord::Base.connection.execute(sqlDrop).values		
+				
+		# CREATE TEMP TABLE
 		createTemp = "CREATE TEMP TABLE prePivot as " + sqlRecords
-		pivotSql = "SELECT * FROM corsstab('SELECT * FROM prepivot') as ct(query varchar(250), d27 bigint, d29 bigint"
+		ActiveRecord::Base.connection.execute(createTemp)
+		
+		
+		#pivotSql = "SELECT * FROM corsstab('SELECT * FROM prepivot') as ct(query varchar(250), d27 bigint, d29 bigint"
 		
 		# Pivot the relation
 		if params[:time] == "day"
+			# GET ALL THE DATES
+			grepDates = "SELECT days FROM prePivot"
+			dates = ActiveRecord::Base.connection.execute(grepDates).values
 			
+			# CREAT data types for the pivoted table
+			@datesForHTML = Array.new
+			@datesForHTML << "Query"
+			dataTypeString = "as ct(query varchar(250)"
+			
+			for i in 0..(dates.length-1)
+				if !dataTypeString.include? dates[i].to_s.gsub("[\"", "d").gsub("\"]", "").gsub("-", "_")
+					dataTypeString = dataTypeString.to_s + ", " + dates[i].to_s.gsub("[\"", "d").gsub("\"]", "").gsub("-", "_") + " bigint"
+					@datesForHTML.push(dates[i].to_s.gsub("[\"", "d").gsub("\"]", "").gsub("-", "_").to_s)
+			end
+			
+			# Finish the pivotSql string
+			pivotSql = "SELECT * FROM crosstab('SELECT * FROM prepivot') " + dataTypeString
+			pivotSql = pivotSql + ")"
+		end	
+		if params[:time] == "hour"
+		
 		end
+		
+		# Pivot the table
 		@sql = sqlRecords
-		@results = ActiveRecord::Base.connection.execute(sqlRecords).values
+		@piv = pivotSql
+		@results = ActiveRecord::Base.connection.execute(pivotSql).values
 		
 		# DROP TEMP PREPIVOT
 		sqlDrop = "DROP TABLE prepivot"
 		ActiveRecord::Base.connection.execute(sqlDrop).values
 	end
+  end
 
 	
   # Render the search results to the user
