@@ -31,26 +31,19 @@ class SearchPageController < ApplicationController
 		sqlRecords = "SELECT search, " + filter + ", COUNT(*) AS count FROM records WHERE created_at::DATE >= " + startDate + " AND created_at::DATE <= " + endDate
 		sqlRecords = sqlRecords + " GROUP BY search, " + groupBy + " ORDER BY 1, 2"
 		
+		createTemp = "CREATE TEMP TABLE prePivot as " + sqlRecords
+		pivotSql = "SELECT * FROM corsstab('SELECT * FROM prepivot') as ct(query varchar(250), d27 bigint, d29 bigint"
+		
 		# Pivot the relation
 		if params[:time] == "day"
-			sqlPivot = "SELECT * FROM crosstab('" + sqlRecords + "','select m from generate_series(1,12) m') as (
-						  \"query\" tsvector,
-						  \"Jan\" int,
-						  \"Feb\" int,
-						  \"Mar\" int,
-						  \"Apr\" int,
-						  \"May\" int,
-						  \"Jun\" int,
-						  \"Jul\" int,
-						  \"Aug\" int,
-						  \"Sep\" int,
-						  \"Oct\" int,
-						  \"Nov\" int,
-						  \"Dec\" int
-						)"
+			
 		end
 		@sql = sqlRecords
 		@results = ActiveRecord::Base.connection.execute(sqlRecords).values
+		
+		# DROP TEMP PREPIVOT
+		sqlDrop = "DROP TABLE prepivot"
+		ActiveRecord::Base.connection.execute(sqlDrop).values
 	end
 
 	
