@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9D761147-40F4-4D3B-A0B9-D7616F0EDA23}</ProjectGuid>
+    <ProjectGuid>{DEB6CD2C-4AD0-47AE-A7A8-FAE757132ED2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RBTree</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
@@ -146,6 +146,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="RedBlackTree.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RedBlackTree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
