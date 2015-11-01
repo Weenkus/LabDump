@@ -17,11 +17,11 @@ class SearchPageController < ApplicationController
     if params[:time] == "day"
 		filter = "created_at::DATE as days"
 		groupBy = "days"
-		orderBy = "1, 2"
+		orderBy = "2"
 	elsif params[:time] == "hour"
 		filter = "date_trunc('hour', created_at) as hours"
 		groupBy = "hours"
-		orderBy = "1, 2"
+		orderBy = "2"
 	end
 	
 	# Execute the sql
@@ -56,8 +56,20 @@ class SearchPageController < ApplicationController
 				end
 			end
 			
+			# Fix cross tab that is not safe! --> second argument
+			sqlFix = " ('"
+			for i in 0..(dates.length-1)
+				if !sqlFix.include? dates[i].to_s.gsub("[\"", "").gsub("\"]", "")
+					if i == 0
+						sqlFix = sqlFix.to_s + dates[i].to_s.gsub("[\"", "").gsub("\"]", "") + "'::date)"
+					else
+						sqlFix = sqlFix.to_s + ",('" + dates[i].to_s.gsub("[\"", "").gsub("\"]", "") + "') "
+					end
+				end
+			end
+			
 			# Finish the pivotSql string
-			pivotSql = "SELECT * FROM crosstab('SELECT * FROM prepivot') " + dataTypeString
+			pivotSql = "SELECT * FROM crosstab('SELECT * FROM prepivot', $$VALUES" + sqlFix + "$$) " + dataTypeString
 			pivotSql = pivotSql + ")"
 		end
 		
@@ -69,12 +81,24 @@ class SearchPageController < ApplicationController
 			for i in 0..(hours.length-1)
 				if !dataTypeString.include? hours[i].to_s.gsub("[\"", "d").gsub("\"]", "").gsub("-", "_").gsub(" ","_").gsub(":00:00","")
 					dataTypeString = dataTypeString.to_s + ", " + hours[i].to_s.gsub("[\"", "d").gsub("\"]", "").gsub("-", "_").gsub(" ","_").gsub(":00:00","") + " bigint"
-					@datesForHTML.push(hours[i].to_s.gsub("[\"", "d").gsub("\"]", "").gsub("-", "_").gsub(" ","_").gsub(":00:00","").to_s)
+					@datesForHTML.push(hours[i].to_s.gsub("[\"", "d").gsub("\"]", "").gsub("-", "_").gsub(" "," h").gsub(":00:00","").to_s)
+				end
+			end
+			
+			# Fix cross tab that is not safe! --> second argument
+			sqlFix = " ('"
+			for i in 0..(hours.length-1)
+				if !sqlFix.include? hours[i].to_s.gsub("[\"", "").gsub("\"]", "")
+					if i == 0
+						sqlFix = sqlFix.to_s + hours[i].to_s.gsub("[\"", "").gsub("\"]", "") + "'::timestamp)"
+					else
+						sqlFix = sqlFix.to_s + ",('" + hours[i].to_s.gsub("[\"", "").gsub("\"]", "") + "') "
+					end
 				end
 			end
 			
 			# Finish the pivotSql string
-			pivotSql = "SELECT * FROM crosstab('SELECT * FROM prepivot') " + dataTypeString
+			pivotSql = "SELECT * FROM crosstab('SELECT * FROM prepivot', $$VALUES" + sqlFix + "$$) " + dataTypeString
 			pivotSql = pivotSql + ")"		
 		end
 		
