@@ -17,8 +17,9 @@ int main(int argc, char* argv[]) {
 
 	// Create the red black tree
 	RedBlackTree RBTree = RedBlackTree();
+	node* root = RBTree.getRoot();
 	for (int numb : numbers)
-		RBTree.insert(RBTree.getRoot(), numb);
+		RBTree.insert(root, numb);
 
 	RBTree.inorderTraversalPrint(RBTree.getRoot());
 
