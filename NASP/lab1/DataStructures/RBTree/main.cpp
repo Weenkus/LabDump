@@ -17,11 +17,10 @@ int main(int argc, char* argv[]) {
 
 	// Create the red black tree
 	RedBlackTree RBTree = RedBlackTree();
-	node* root = RBTree.getRoot();
 	for (int numb : numbers)
-		RBTree.insert(root, numb);
+		RBTree.insert(numb);
 
-	RBTree.inorderTraversalPrint(RBTree.getRoot());
+	RBTree.inorderTraversalPrint();
 
 	exitPrgoram();
 	return 0;
@@ -55,3 +54,4 @@ void exitPrgoram() {
 	cout << "\nEnter any input to exit the program.";
 	getchar();
 }
+

@@ -1,4 +1,4 @@
-﻿Build started 31.10.2015. 18:49:38.
+﻿Build started 1.11.2015. 16:41:39.
      1>Project "E:\Programming\Workspace\Lab\NASP\lab1\DataStructures\BalancedTree\BalancedTree.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          E:\Programming\IDE\Visual Studio 2015\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt BalancedTree.cpp main.cpp
@@ -13,4 +13,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:04.26
+Time Elapsed 00:00:03.53

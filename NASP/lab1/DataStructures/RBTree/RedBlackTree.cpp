@@ -14,6 +14,10 @@ RedBlackTree::~RedBlackTree()
 {
 }
 
+void RedBlackTree::inorderTraversalPrint() const {
+	this->inorderTraversalPrint(this->root);
+}
+
 void RedBlackTree::inorderTraversalPrint(node *root) const
 {
 	// Escape recursion
@@ -35,17 +39,34 @@ void RedBlackTree::inorderTraversalPrint(node *root) const
 		inorderTraversalPrint(root->right);
 }
 
-void RedBlackTree::insert(node *&root, int element)
+void RedBlackTree::insert(int element, node *leaf)
 {
-	// Escape recursion
-	if (root == nullptr) {
-		root = new node(element, color::RED);
-		return;
+	if (element < leaf->number)
+	{
+		if (leaf->left != nullptr)
+			insert(element, leaf->left);
+		else
+		{
+			leaf->left = new node (element, color::RED);
+		}
 	}
+	else if (element >= leaf->number)
+	{
+		if (leaf->right != nullptr)
+			insert(element, leaf->right);
+		else
+		{
+			leaf->left = new node(element, color::RED);
+		}
+	}
+}
 
-	if (element <= root->number)
-		insert(root->left, element);
+void RedBlackTree::insert(int element)
+{
+	if (root != nullptr)
+		insert(element, root);
 	else
-		insert(root->right, element);
-
+	{
+		root = new node(element, color::RED);
+	}
 }

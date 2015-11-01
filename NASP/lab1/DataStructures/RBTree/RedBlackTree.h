@@ -27,15 +27,15 @@ public:
 	~RedBlackTree();
 
 	// Tree traversals
-	void inorderTraversalPrint(node* root) const;
+	void inorderTraversalPrint() const;
 
 	// Data manipulation
-	void insert(node *&root, int element);
-
-	// Getters
-	node* getRoot() const { return this->root; }
+	void insert(int element);
 
 private:
+	void insert(int element, node *leaf);
+	void inorderTraversalPrint(node *root) const;
+
 	node* root;
 };
 
