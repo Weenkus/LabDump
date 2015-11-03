@@ -9,8 +9,7 @@
 #include <fstream>
 #include <iostream>
 
-#define RED		1
-#define BLACK	2
+enum COLOR {RED, BLACK};
 
 using namespace std;
 
@@ -19,234 +18,262 @@ vector<int> parseInputFile(const string& fileName);
 
 struct node {
 	int key;
-	struct node *left, *right, *p;
-	int color;
+	struct node *left, *right, *parent;
+	COLOR color;
 };
 
-typedef struct node *NODEPTR;
-struct node NIL;
-NODEPTR NILPTR = &NIL;
+typedef struct node *nodePointer;
 
-void inorder(NODEPTR x) {
-	if (x != NILPTR) {
+struct node NIL;
+nodePointer NILpointer = &NIL;
+
+/*
+	Print the elements of the red black tree in inorder order, as the tree is a binary search
+	tree, the inorder traversal will print elements from the lowest to the highest number (sorted).
+	For the above to be true, left subtree must contain the values <= and the right subtree > of the 
+	element in the current node we are watching.
+*/
+void inorder(nodePointer x) {
+	if (x != NILpointer) {
 		inorder(x->left);
-		printf("%d ", x->key);
+		if (x->color == RED)
+			printf(" <%d> ", x->key);
+		else
+			printf(" %d ", x->key);
 		inorder(x->right);
 	}
 }
 
-NODEPTR search(NODEPTR root, int k) {
-	if (root == NILPTR || root->key == k)
+/*
+	Search for the element in the BST, go left if you value is less than the current node, otherwise
+	go right. If you node has you value voila, otherwise you will visit a NIL node meaning the tree
+	doesn't contain the given element.
+*/
+nodePointer search(nodePointer root, int number) {
+	if (root == NILpointer || root->key == number)
 		return root;
-	if (k < root->key)
-		return search(root->left, k);
+	if (number < root->key)
+		return search(root->left, number);
 	else
-		return search(root->right, k);
+		return search(root->right, number);
 }
 
-NODEPTR minimum(NODEPTR root) {
-	while (root->left != NILPTR)
+/*
+	The minimum element of the tree can be found in the leftmost node.
+*/
+nodePointer minimum(nodePointer root) {
+	while (root->left != NILpointer)
 		root = root->left;
 	return root;
 }
 
-NODEPTR maximum(NODEPTR root) {
-	while (root->right != NILPTR)
+/*
+	The maximum element of the tree can be found in the rightmost node.
+*/
+nodePointer maximum(nodePointer root) {
+	while (root->right != NILpointer)
 		root = root->right;
 	return root;
 }
 
-NODEPTR successor(NODEPTR root, int x) {
-	NODEPTR temp = search(root, x);
-	if (temp == NILPTR) {
-		printf("%d not in tree\n", x);
-		return temp;
-	}
-	if (temp->right != NILPTR)
-		return minimum(temp->right);
-	NODEPTR y = temp->p;
-	while (y != NILPTR && temp == y->right) {
-		temp = y;
-		y = y->p;
-	}
-	return y;
-}
-
-NODEPTR predecessor(NODEPTR root, int x) {
-	NODEPTR temp = search(root, x);
-	if (temp == NILPTR) {
-		printf("%d not in tree\n", x);
-		return temp;
-	}
-	if (temp->left != NILPTR)
-		return maximum(temp->left);
-	NODEPTR y = temp->p;
-	while (y != NILPTR && temp == y->left) {
-		temp = y;
-		y = y->p;
-	}
-	return y;
-}
-void leftrotate(NODEPTR *treeroot, NODEPTR x) {
-	NODEPTR y = x->right;
+/*
+	Left rotation of the tree nodes.
+*/
+void leftRotation(nodePointer *treeroot, nodePointer x) {
+	nodePointer y = x->right;
 	x->right = y->left;
-	if (y->left != NILPTR)
-		y->left->p = x;
-	y->p = x->p;
-	if (x->p == NILPTR)
+
+	// Update parent pointer of y's left child
+	if (y->left != NILpointer)
+		y->left->parent = x;
+	y->parent = x->parent;
+
+	// If x's parent is null make y the ROOT of the tree
+	if (x->parent == NILpointer)
 		*treeroot = y;
-	else if (x->p->left == x)
-		x->p->left = y;
+	else if (x->parent->left == x)
+		x->parent->left = y;
 	else
-		x->p->right = y;
+		x->parent->right = y;
 	y->left = x;
-	x->p = y;
+	x->parent = y;
 }
 
-void rightrotate(NODEPTR *treeroot, NODEPTR y) {
-	NODEPTR x = y->left;
+/*
+	Right rotation of the tree nodes.
+*/
+void rightRotation(nodePointer *treeroot, nodePointer y) {
+	nodePointer x = y->left;
 	y->left = x->right;
-	if (x->right != NILPTR)
-		x->right->p = y;
-	x->p = y->p;
-	if (y->p == NILPTR)
+
+	// Update parent point of x's right child
+	if (x->right != NILpointer)
+		x->right->parent = y;
+	x->parent = y->parent;
+
+	// If y's parent is null make x the ROOT of the tree
+	if (y->parent == NILpointer)
 		*treeroot = x;
-	else if (y->p->left == y)
-		y->p->left = x;
+	else if (y->parent->left == y)
+		y->parent->left = x;
 	else
-		y->p->right = x;
+		y->parent->right = x;
 	x->right = y;
-	y->p = x;
+	y->parent = x;
 }
 
-void rbinsertfixup(NODEPTR *treeroot, NODEPTR z) {
-	while (z->p->color == RED) {
-		if (z->p == z->p->p->left) {
-			NODEPTR y = z->p->p->right;
-			if (y->color == RED) {
-				z->p->color = BLACK;
-				y->color = BLACK;
-				z->p->p->color = RED;
-				z = z->p->p;
+/*
+	Fix the red black tree after an element is inserted into the tree.
+*/
+void insertFixUp(nodePointer *treeroot, nodePointer n) {
+	// Iterate until z parent color is black
+	while (n->parent->color == RED) {
+		if (n->parent == n->parent->parent->left) {
+			// Store uncle in U
+			nodePointer u = n->parent->parent->right;
+
+			// If uncle is RED, do following
+			// (i)  Change color of parent and uncle as BLACK
+			// (ii) Change color of grandparent as RED
+			// (iii) Move n to grandparent
+			if (u->color == RED) {
+				n->parent->color = BLACK;
+				u->color = BLACK;
+				n->parent->parent->color = RED;
+				n = n->parent->parent;
 			}
+			// Left-Left (LL) case, do following
+			// (i)  Swap color of parent and grandparent
+			// (ii) Right Rotate Grandparent
 			else {
-				if (z == z->p->right) {
-					z = z->p;
-					leftrotate(treeroot, z);
+				if (n == n->parent->right) {
+					n = n->parent;
+					leftRotation(treeroot, n);
 				}
-				z->p->color = BLACK;
-				z->p->p->color = RED;
-				rightrotate(treeroot, z->p->p);
+				n->parent->color = BLACK;
+				n->parent->parent->color = RED;
+				rightRotation(treeroot, n->parent->parent);
 			}
 		}
 		else {
-			NODEPTR y = z->p->p->left;
-			if (y->color == RED) {
-				z->p->color = BLACK;
-				y->color = BLACK;
-				z->p->p->color = RED;
-				z = z->p->p;
+			// Store uncle in u
+			nodePointer u = n->parent->parent->left;
+			if (u->color == RED) {
+				n->parent->color = BLACK;
+				u->color = BLACK;
+				n->parent->parent->color = RED;
+				n = n->parent->parent;
 			}
 			else {
-				if (z == z->p->left) {
-					z = z->p;
-					rightrotate(treeroot, z);
+				if (n == n->parent->left) {
+					n = n->parent;
+					rightRotation(treeroot, n);
 				}
-				z->p->color = BLACK;
-				z->p->p->color = RED;
-				leftrotate(treeroot, z->p->p);
+				n->parent->color = BLACK;
+				n->parent->parent->color = RED;
+				leftRotation(treeroot, n->parent->parent);
 			}
 		}
 	}
 	(*treeroot)->color = BLACK;
 }
 
-void rbinsert(NODEPTR *treeroot, int z) {
-	NODEPTR Z = (NODEPTR)malloc(sizeof(struct node));
-	Z->key = z;
-	NODEPTR y = NILPTR;
-	NODEPTR x = *treeroot;
-	while (x != NILPTR) {
+/*
+	Insert the element into RB tree
+*/
+void insert(nodePointer *treeroot, int element) {
+	nodePointer newNode = (nodePointer)malloc(sizeof(struct node));
+	newNode->key = element;
+	nodePointer y = NILpointer;
+	nodePointer x = *treeroot;
+
+	// Find the spot to insert the new node, also check if root exists
+	while (x != NILpointer) {
 		y = x;
-		if (Z->key < x->key)
+		if (newNode->key < x->key)
 			x = x->left;
 		else
 			x = x->right;
 	}
-	Z->p = y;
-	if (y == NILPTR)
-		*treeroot = Z;
-	else if (Z->key < y->key)
-		y->left = Z;
+
+	// Setup the new node
+	newNode->parent = y;
+	if (y == NILpointer)
+		*treeroot = newNode;
+	else if (newNode->key < y->key)
+		y->left = newNode;
 	else
-		y->right = Z;
-	Z->left = NILPTR;
-	Z->right = NILPTR;
-	Z->color = RED;
-	rbinsertfixup(treeroot, Z);
+		y->right = newNode;
+
+	newNode->left = NILpointer;
+	newNode->right = NILpointer;
+	newNode->color = RED;
+
+	// Fix the red black tree rules
+	insertFixUp(treeroot, newNode);
 }
 
-void rbtransplant(NODEPTR *treeroot, NODEPTR u, NODEPTR v) {
-	if (u->p == NILPTR)
+void rbtransplant(nodePointer *treeroot, nodePointer u, nodePointer v) {
+	if (u->parent == NILpointer)
 		*treeroot = v;
-	else if (u == u->p->left)
-		u->p->left = v;
+	else if (u == u->parent->left)
+		u->parent->left = v;
 	else
-		u->p->right = v;
-	v->p = u->p;
+		u->parent->right = v;
+	v->parent = u->parent;
 }
 
-void rbdeletefixup(NODEPTR *treeroot, NODEPTR x) {
+void rbdeletefixup(nodePointer *treeroot, nodePointer x) {
 	while (x != *treeroot && x->color == BLACK) {
-		if (x == x->p->left) {
-			NODEPTR w = x->p->right;
+		if (x == x->parent->left) {
+			nodePointer w = x->parent->right;
 			if (w->color == RED) {
 				w->color = BLACK;
-				x->p->color = RED;
-				leftrotate(treeroot, x->p);
-				w = x->p->right;
+				x->parent->color = RED;
+				leftRotation(treeroot, x->parent);
+				w = x->parent->right;
 			}
 			if (w->left->color == BLACK && w->right->color == BLACK) {
 				w->color = RED;
-				x = x->p;
+				x = x->parent;
 			}
 			else {
 				if (w->right->color == BLACK) {
 					w->left->color = BLACK;
 					w->color = RED;
-					rightrotate(treeroot, w);
-					w = x->p->right;
+					rightRotation(treeroot, w);
+					w = x->parent->right;
 				}
-				w->color = x->p->color;
-				x->p->color = BLACK;
+				w->color = x->parent->color;
+				x->parent->color = BLACK;
 				w->right->color = BLACK;
-				leftrotate(treeroot, x->p);
+				leftRotation(treeroot, x->parent);
 				x = *treeroot;
 			}
 		}
 		else {
-			NODEPTR w = x->p->left;
+			nodePointer w = x->parent->left;
 			if (w->color == RED) {
 				w->color = BLACK;
-				x->p->color = RED;
-				rightrotate(treeroot, x->p);
-				w = x->p->left;
+				x->parent->color = RED;
+				rightRotation(treeroot, x->parent);
+				w = x->parent->left;
 			}
 			if (w->left->color == BLACK && w->right->color == BLACK) {
 				w->color = RED;
-				x = x->p;
+				x = x->parent;
 			}
 			else {
 				if (w->left->color == BLACK) {
 					w->right->color = BLACK;
 					w->color = RED;
-					leftrotate(treeroot, w);
-					w = x->p->left;
+					leftRotation(treeroot, w);
+					w = x->parent->left;
 				}
-				w->color = x->p->color;
-				x->p->color = BLACK;
+				w->color = x->parent->color;
+				x->parent->color = BLACK;
 				w->left->color = BLACK;
-				rightrotate(treeroot, x->p);
+				rightRotation(treeroot, x->parent);
 				x = *treeroot;
 			}
 		}
@@ -254,20 +281,20 @@ void rbdeletefixup(NODEPTR *treeroot, NODEPTR x) {
 	x->color = BLACK;
 }
 
-void rbdelete(NODEPTR *treeroot, int z) {
-	NODEPTR Z = search(*treeroot, z);
-	if (Z == NILPTR) {
+void rbdelete(nodePointer *treeroot, int z) {
+	nodePointer Z = search(*treeroot, z);
+	if (Z == NILpointer) {
 		printf("Node to be deleted not found\n");
 		return;
 	}
-	NODEPTR y = Z;
+	nodePointer y = Z;
 	int yoc = y->color;
-	NODEPTR x;
-	if (Z->left == NILPTR) {
+	nodePointer x;
+	if (Z->left == NILpointer) {
 		x = Z->right;
 		rbtransplant(treeroot, Z, Z->right);
 	}
-	else if (Z->right == NILPTR) {
+	else if (Z->right == NILpointer) {
 		x = Z->left;
 		rbtransplant(treeroot, Z, Z->left);
 	}
@@ -275,16 +302,16 @@ void rbdelete(NODEPTR *treeroot, int z) {
 		y = minimum(Z->right);
 		yoc = y->color;
 		x = y->right;
-		if (y->p == Z)
-			x->p = y;
+		if (y->parent == Z)
+			x->parent = y;
 		else {
 			rbtransplant(treeroot, y, y->right);
 			y->right = Z->right;
-			y->right->p = y;
+			y->right->parent = y;
 		}
 		rbtransplant(treeroot, Z, y);
 		y->left = Z->left;
-		y->left->p = y;
+		y->left->parent = y;
 		y->color = Z->color;
 	}
 	if (yoc == BLACK)
@@ -293,18 +320,17 @@ void rbdelete(NODEPTR *treeroot, int z) {
 
 int main(int argc, char* argv[])
 {
-	NIL.left = NIL.right = NIL.p = NILPTR;
+	NIL.left = NIL.right = NIL.parent = NILpointer;
 	NIL.color = BLACK;
-	NODEPTR tree = NILPTR;
+	nodePointer tree = NILpointer;
 	int n;
-
 
 	// Parse the input file
 	vector<int> numbers = parseInputFile(argv[1]);
 	for (auto num : numbers) {
-		rbinsert(&tree, num);
+		insert(&tree, num);
 	}
-	cout << "\nStarting RedBlackTree interface...\n" << endl;
+	cout << "\nStarting RedBlackTree interface...\n" << endl << "Example of a RED node \"<number>\", BLACK node \"number\"";
 
 	while (1) {
 		int n = 0;
@@ -314,7 +340,7 @@ int main(int argc, char* argv[])
 		if (n == 1) {
 			cout << "Enter any number: ";
 			cin >> userInput;
-			rbinsert(&tree, userInput);
+			insert(&tree, userInput);
 		}
 		else if (n == 2) {
 			cout << "Enter the number to be deleted: ";
