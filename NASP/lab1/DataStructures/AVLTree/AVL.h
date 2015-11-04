@@ -17,6 +17,7 @@ namespace dataStructures {
 			this->right = nullptr;
 			this->height = 1;
 		}
+
 	};
 
 
@@ -29,11 +30,17 @@ namespace dataStructures {
 
 		void insert(int element);
 
+		/*void insertAVL(int element);
+		node*  AVL::insertAVL(node* treeNode, int element);*/
+
 		void inorder() const;
 
 		int treeHight() { return this->height(this->root); }
 
 		void printPretty();
+
+		void setRoot(node* root) { this->root = root;  }
+		node* getRoot() const { return this->root; }
 
 
 	private:
@@ -47,6 +54,7 @@ namespace dataStructures {
 		int height(node* root);
 
 		void printBinaryTree(node *n);
+		
 
 		/*node* RRrotation(node* root);
 		node* RLrotation(node* root);

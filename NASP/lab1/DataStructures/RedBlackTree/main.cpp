@@ -8,6 +8,8 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
+#include <queue>
 
 enum COLOR {RED, BLACK};
 
@@ -26,6 +28,43 @@ typedef struct node *nodePointer;
 
 struct node NIL;
 nodePointer NILpointer = &NIL;
+
+
+/*
+	Use BFS to print the tree in rows.
+*/
+void printBinaryTree(nodePointer n) {
+	if (NILpointer == n) {
+		return;
+	}
+	int level = 0;
+
+	// BFS
+	typedef std::pair<node*, int> node_level;
+	std::queue<node_level> q;
+	q.push(node_level(n, 1));
+
+	while (!q.empty()) {
+		node_level nl = q.front();
+		q.pop();
+		if (NILpointer != (n = nl.first)) {
+			if (level != nl.second) {
+				std::cout << std::endl;
+				std::cout << "Level " << nl.second << ": ";
+
+				level = nl.second;
+			}
+			if(n->color == RED)
+				std::cout << "<" << n->key << ">  ";
+			else 
+				std::cout << n->key << "  ";
+
+			q.push(node_level(n->left, 1 + level));
+			q.push(node_level(n->right, 1 + level));
+		}
+	}
+	std::cout << std::endl;
+}
 
 /*
 	Print the elements of the red black tree in inorder order, as the tree is a binary search
@@ -126,10 +165,11 @@ void rightRotation(nodePointer *treeroot, nodePointer y) {
 	Fix the red black tree after an element is inserted into the tree.
 */
 void insertFixUp(nodePointer *treeroot, nodePointer n) {
-	// Iterate until z parent color is black
+	// Iterate until n parent color is black
 	while (n->parent->color == RED) {
+		// LEFT DIAGONAL
 		if (n->parent == n->parent->parent->left) {
-			// Store uncle in U
+			// Store uncle in u
 			nodePointer u = n->parent->parent->right;
 
 			// If uncle is RED, do following
@@ -142,22 +182,32 @@ void insertFixUp(nodePointer *treeroot, nodePointer n) {
 				n->parent->parent->color = RED;
 				n = n->parent->parent;
 			}
-			// Left-Left (LL) case, do following
-			// (i)  Swap color of parent and grandparent
-			// (ii) Right Rotate Grandparent
 			else {
+				// N left from P
+				// P right from G
+				/*			 Rotation -> TURN "<" u "/"			*/
 				if (n == n->parent->right) {
 					n = n->parent;
 					leftRotation(treeroot, n);
 				}
+
+				// N left from P
+				// P left from G
+				// Add color change to the rotation
 				n->parent->color = BLACK;
 				n->parent->parent->color = RED;
 				rightRotation(treeroot, n->parent->parent);
 			}
 		}
+		// RIGHT DIAGONAL
 		else {
 			// Store uncle in u
 			nodePointer u = n->parent->parent->left;
+
+			// If uncle is RED, do following
+			// (i)  Change color of parent and uncle as BLACK
+			// (ii) Change color of grandparent as RED
+			// (iii) Move n to grandparent
 			if (u->color == RED) {
 				n->parent->color = BLACK;
 				u->color = BLACK;
@@ -165,10 +215,18 @@ void insertFixUp(nodePointer *treeroot, nodePointer n) {
 				n = n->parent->parent;
 			}
 			else {
+				// N right from P
+				// P left from G
+				// Rotation
 				if (n == n->parent->left) {
 					n = n->parent;
+					/*		Rotation -> TURN ">" u "\"			*/
 					rightRotation(treeroot, n);
 				}
+
+				// N right from P
+				// P right from G
+				// Add color change to the rotation
 				n->parent->color = BLACK;
 				n->parent->parent->color = RED;
 				leftRotation(treeroot, n->parent->parent);
@@ -334,7 +392,7 @@ int main(int argc, char* argv[])
 
 	while (1) {
 		int n = 0;
-		cout << "\n\n*** CHOOSE INPUT ***\n1.Insert\n2.Delete\n3.Print(inorder)\n" << endl;
+		cout << "\n\n*** CHOOSE INPUT ***\n1.Insert\n2.Delete\n3.Print(inorder)\n4.Show levels\n5.Exit\n" << endl;
 		cin >> n;
 		int userInput = 0;
 		if (n == 1) {
@@ -347,12 +405,17 @@ int main(int argc, char* argv[])
 			cin >> userInput;
 			rbdelete(&tree, userInput);
 		}
+		else if (n == 4) {
+			printBinaryTree(tree);
+		}
+		else if (n == 5) {
+			break;
+		}
 		if (n == 1 || n == 2 || n == 3) {
 			inorder(tree);
 		}
 	}
 
-	exitPrgoram();
 	return 0;
 }
 

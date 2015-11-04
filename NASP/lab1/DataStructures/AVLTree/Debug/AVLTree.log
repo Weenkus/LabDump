@@ -1,4 +1,4 @@
-﻿Build started 4.11.2015. 0:57:52.
+﻿Build started 4.11.2015. 2:35:34.
      1>Project "E:\Programming\Workspace\Labosi\NASP\lab1\DataStructures\AVLTree\AVLTree.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          E:\Programming\IDE\Visual Studio 2015\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt AVL.cpp
@@ -11,4 +11,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.99
+Time Elapsed 00:00:00.97

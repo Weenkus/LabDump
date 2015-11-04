@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 	// Let user choose the operations on the AVL tree
 	while (true) {
 		int n = askUserByMessage("\n\n*** CHOOSE INPUT ***\n1.Insert\n2.Delete\n3.Height\n4.Print(inorder)\n5.Show levels\n6.Exit\n\n");
-		if (n == 1) 
+		if (n == 1)
 			AVLTree.insert(askUserByMessage("Enter any number: "));
 		else if (n == 2)
 			askUserByMessage("Enter the number to be deleted: ");

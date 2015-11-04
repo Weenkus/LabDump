@@ -6,7 +6,13 @@
 #include <utility>
 #include <iostream>
 
+
+
 namespace dataStructures {
+
+	int heightDiff(node * root);
+	node* rightRotate(node* y);
+	node* leftRotate(node* x);
 
 	AVL::AVL()
 	{
@@ -44,6 +50,37 @@ namespace dataStructures {
 				(*root)->height = this->height(*root);
 			}
 		}
+		/*int balance = heightDiff(*root);
+
+		// If this node becomes unbalanced, then there are 4 cases
+
+		// Left Left Case
+		if (balance > 1 && element < (*root)->left->element) {
+		*root = rightRotate(*root);
+		std::cout << "LL" << std::endl;
+		}
+
+		// Right Right Case
+		if (balance < -1 && element >(*root)->right->element) {
+		*root = leftRotate(*root);
+		std::cout << "RR" << std::endl;
+		}
+
+		// Left Right Case
+		if (balance > 1 && element > (*root)->left->element)
+		{
+		std::cout << "LR" << std::endl;
+		*root = leftRotate((*root)->left);
+		*root = rightRotate(*root);
+		}
+
+		// Right Left Case
+		if (balance < -1 && element < (*root)->right->element)
+		{
+		std::cout << "RL" << std::endl;
+		*root = rightRotate(((*root)->right));
+		*root = leftRotate(*root);
+		}*/
 	}
 
 	void AVL::inorder() const{
@@ -68,9 +105,30 @@ namespace dataStructures {
 		return height;
 	}
 
+	// Function used to calc the high for nodes inside the class
+	int calcHeight(node *root) {
+		int height{ 0 };
+		if (root != nullptr) {
+			int maxHeight = std::max(calcHeight(root->left), calcHeight(root->right));
+			height = maxHeight + 1;
+		}
+		return height;
+	}
+
+
 	int AVL::heightDifference(node * root)
 	{
+		if (root == nullptr)
+			return 0;
 		return AVL::height(root->left) - AVL::height(root->right);
+	}
+
+	// HeightDiff for nodes inside the tree
+	int heightDiff(node * root)
+	{
+		if (root == nullptr || root->left == nullptr || root->right == nullptr)
+			return 0;
+		return root->left->height - root->right->height;
 	}
 
 	void AVL::printPretty() {
@@ -110,6 +168,98 @@ namespace dataStructures {
 		}
 		std::cout << std::endl;
 	}
+
+	
+
+	// A utility function to right rotate subtree rooted with y
+	// See the diagram given above.
+	 node *rightRotate( node *y)
+	{
+		 node *x = y->left;
+		 node *T2 = x->right;
+
+		// Perform rotation
+		x->right = y;
+		y->left = T2;
+
+		// Update heights
+		y->height = std::max(y->left->height, y->right->height) + 1;
+		x->height = std::max(x->left->height, x->right->height) + 1;
+
+		// Return new root
+		return x;
+	}
+
+	// A utility function to left rotate subtree rooted with x
+	// See the diagram given above.
+	 node *leftRotate( node *x)
+	{
+		 node *y = x->right;
+		 node *T2 = y->left;
+
+		// Perform rotation
+		y->left = x;
+		x->right = T2;
+
+		//  Update heights
+		x->height = std::max(x->left->height, x->right->height) + 1;
+		y->height = std::max(y->left->height, y->right->height) + 1;
+
+		// Return new root
+		return y;
+	}
+
+	 /*void AVL::insertAVL(int element) {
+		 insertAVL(this->root, element);
+	 }
+
+	 node*  AVL::insertAVL(node* treeNode, int element)
+	 {
+	
+		 if (treeNode == nullptr) {
+			 node* newNode = new node(element);
+			 return newNode;
+		 }
+
+		 if (element < treeNode->element)
+			 treeNode->left = insertAVL(treeNode->left, element);
+		 else
+			 treeNode->right = insertAVL(treeNode->right, element);
+
+	
+		 treeNode->height = std::max(treeNode->left->height, treeNode->right->height) + 1;
+
+
+	
+		 int balance = heightDiff(treeNode);
+
+		 // If this node becomes unbalanced, then there are 4 cases
+
+		 // Left Left Case
+		 if (balance > 1 && element < treeNode->left->element)
+			 return rightRotate(treeNode);
+
+		 // Right Right Case
+		 if (balance < -1 && element > treeNode->right->element)
+			 return leftRotate(treeNode);
+
+		 // Left Right Case
+		 if (balance > 1 && element > treeNode->left->element)
+		 {
+			 treeNode->left = leftRotate(treeNode->left);
+			 return rightRotate(treeNode);
+		 }
+
+		 // Right Left Case
+		 if (balance < -1 && element < treeNode->right->element)
+		 {
+			 treeNode->right = rightRotate(treeNode->right);
+			 return leftRotate(treeNode);
+		 }
+
+	
+		 return treeNode;
+	 }*/
 
 	/*node* AVL::RRrotation(node* root) {
 		node* temp;
