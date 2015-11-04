@@ -1,9 +1,9 @@
-﻿Build started 4.11.2015. 2:38:32.
+﻿Build started 4.11.2015. 20:02:38.
      1>Project "E:\Programming\Workspace\Labosi\NASP\lab1\DataStructures\RedBlackTree\RedBlackTree.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          E:\Programming\IDE\Visual Studio 2015\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>e:\programming\workspace\labosi\nasp\lab1\datastructures\redblacktree\main.cpp(365): warning C4101: 'n': unreferenced local variable
+     1>e:\programming\workspace\labosi\nasp\lab1\datastructures\redblacktree\main.cpp(423): warning C4101: 'n': unreferenced local variable
        Link:
          E:\Programming\IDE\Visual Studio 2015\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\Programming\Workspace\Labosi\NASP\lab1\DataStructures\Debug\RedBlackTree.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"E:\Programming\Workspace\Labosi\NASP\lab1\DataStructures\Debug\RedBlackTree.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\Programming\Workspace\Labosi\NASP\lab1\DataStructures\Debug\RedBlackTree.lib" /MACHINE:X86 Debug\main.obj
          RedBlackTree.vcxproj -> E:\Programming\Workspace\Labosi\NASP\lab1\DataStructures\Debug\RedBlackTree.exe
@@ -11,4 +11,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.13
+Time Elapsed 00:00:01.84

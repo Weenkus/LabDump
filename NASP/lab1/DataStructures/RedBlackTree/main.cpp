@@ -15,7 +15,6 @@ enum COLOR {RED, BLACK};
 
 using namespace std;
 
-void exitPrgoram();
 vector<int> parseInputFile(const string& fileName);
 
 struct node {
@@ -87,6 +86,8 @@ void inorder(nodePointer x) {
 	Search for the element in the BST, go left if you value is less than the current node, otherwise
 	go right. If you node has you value voila, otherwise you will visit a NIL node meaning the tree
 	doesn't contain the given element.
+
+	Search allows us to delete a node in O(logn)
 */
 nodePointer search(nodePointer root, int number) {
 	if (root == NILpointer || root->key == number)
@@ -271,109 +272,147 @@ void insert(nodePointer *treeroot, int element) {
 	insertFixUp(treeroot, newNode);
 }
 
-void rbtransplant(nodePointer *treeroot, nodePointer u, nodePointer v) {
-	if (u->parent == NILpointer)
-		*treeroot = v;
-	else if (u == u->parent->left)
-		u->parent->left = v;
-	else
-		u->parent->right = v;
-	v->parent = u->parent;
-}
-
-void rbdeletefixup(nodePointer *treeroot, nodePointer x) {
-	while (x != *treeroot && x->color == BLACK) {
-		if (x == x->parent->left) {
-			nodePointer w = x->parent->right;
-			if (w->color == RED) {
-				w->color = BLACK;
-				x->parent->color = RED;
-				leftRotation(treeroot, x->parent);
-				w = x->parent->right;
+/*
+	Fix all red black rule violations that happend with the deletion of a node.
+*/
+void deleteFixUp(nodePointer *treeRoot, nodePointer startNode) {
+	// Iterate from the startNode to the root
+	while (startNode != *treeRoot && startNode->color == BLACK) {
+		// Start node is a left child
+		if (startNode == startNode->parent->left) {
+			nodePointer s = startNode->parent->right;
+			// S RED
+			if (s->color == RED) {
+				s->color = BLACK;
+				startNode->parent->color = RED;
+				leftRotation(treeRoot, startNode->parent);
+				s = startNode->parent->right;
 			}
-			if (w->left->color == BLACK && w->right->color == BLACK) {
-				w->color = RED;
-				x = x->parent;
+			// BB
+			if (s->left->color == BLACK && s->right->color == BLACK) {
+				s->color = RED;
+				startNode = startNode->parent;
 			}
 			else {
-				if (w->right->color == BLACK) {
-					w->left->color = BLACK;
-					w->color = RED;
-					rightRotation(treeroot, w);
-					w = x->parent->right;
+				// RB
+				if (s->right->color == BLACK) {
+					s->left->color = BLACK;
+					s->color = RED;
+					rightRotation(treeRoot, s);
+					s = startNode->parent->right;
 				}
-				w->color = x->parent->color;
-				x->parent->color = BLACK;
-				w->right->color = BLACK;
-				leftRotation(treeroot, x->parent);
-				x = *treeroot;
+				// RR and RB
+				s->color = startNode->parent->color;
+				startNode->parent->color = BLACK;
+				s->right->color = BLACK;
+				leftRotation(treeRoot, startNode->parent);
+				startNode = *treeRoot;
 			}
 		}
+		// Start node is a right child
 		else {
-			nodePointer w = x->parent->left;
-			if (w->color == RED) {
-				w->color = BLACK;
-				x->parent->color = RED;
-				rightRotation(treeroot, x->parent);
-				w = x->parent->left;
+			nodePointer s = startNode->parent->left;
+			// S RED
+			if (s->color == RED) {
+				s->color = BLACK;
+				startNode->parent->color = RED;
+				rightRotation(treeRoot, startNode->parent);
+				s = startNode->parent->left;
 			}
-			if (w->left->color == BLACK && w->right->color == BLACK) {
-				w->color = RED;
-				x = x->parent;
+			// BB
+			if (s->left->color == BLACK && s->right->color == BLACK) {
+				s->color = RED;
+				startNode = startNode->parent;
 			}
 			else {
-				if (w->left->color == BLACK) {
-					w->right->color = BLACK;
-					w->color = RED;
-					leftRotation(treeroot, w);
-					w = x->parent->left;
+				// BR
+				if (s->left->color == BLACK) {
+					s->right->color = BLACK;
+					s->color = RED;
+					leftRotation(treeRoot, s);
+					s = startNode->parent->left;
 				}
-				w->color = x->parent->color;
-				x->parent->color = BLACK;
-				w->left->color = BLACK;
-				rightRotation(treeroot, x->parent);
-				x = *treeroot;
+				// RR and BR
+				s->color = startNode->parent->color;
+				startNode->parent->color = BLACK;
+				s->left->color = BLACK;
+				rightRotation(treeRoot, startNode->parent);
+				startNode = *treeRoot;
 			}
 		}
 	}
-	x->color = BLACK;
+	startNode->color = BLACK;
 }
 
-void rbdelete(nodePointer *treeroot, int z) {
-	nodePointer Z = search(*treeroot, z);
-	if (Z == NILpointer) {
+/*
+Helper function for erasing leaves and nodes that have one NILpointer.
+*/
+void pointerReDirection(nodePointer *treeroot, nodePointer parent, nodePointer descendant) {
+	if (parent->parent == NILpointer)
+		*treeroot = descendant;
+	// Parent is left child -> left diagonal "/"
+	else if (parent == parent->parent->left)
+		parent->parent->left = descendant;
+	// Parent is right child => right diagonal "\"
+	else
+		parent->parent->right = descendant;
+	descendant->parent = parent->parent;
+}
+
+
+/*
+	Delete a node inside the tree. Use the copy deletion method to keep the tree
+	more balanced.
+*/
+void deleteElement(nodePointer *treeRoot, int element) {
+	nodePointer nodeToDelete = search(*treeRoot, element);
+	if (nodeToDelete == NILpointer) {
 		printf("Node to be deleted not found\n");
 		return;
 	}
-	nodePointer y = Z;
-	int yoc = y->color;
-	nodePointer x;
-	if (Z->left == NILpointer) {
-		x = Z->right;
-		rbtransplant(treeroot, Z, Z->right);
+
+	// Remove the node from the tree via pointer rearangement -> memory leak
+	nodePointer y = nodeToDelete;
+	int deletedNodeColor = y->color;
+	nodePointer fixFromThisNodeUpwards;
+
+	// Node is a leaf or has no left subtree
+	if (nodeToDelete->left == NILpointer) {
+		fixFromThisNodeUpwards = nodeToDelete->right;
+		pointerReDirection(treeRoot, nodeToDelete, nodeToDelete->right);
 	}
-	else if (Z->right == NILpointer) {
-		x = Z->left;
-		rbtransplant(treeroot, Z, Z->left);
+	// Node has no right subtree
+	else if (nodeToDelete->right == NILpointer) {
+		fixFromThisNodeUpwards = nodeToDelete->left;
+		pointerReDirection(treeRoot, nodeToDelete, nodeToDelete->left);
 	}
+	// Node is not a leaf
 	else {
-		y = minimum(Z->right);
-		yoc = y->color;
-		x = y->right;
-		if (y->parent == Z)
-			x->parent = y;
+		// Find the closest number for swap value deletion
+		y = minimum(nodeToDelete->right);	// same as max(node->left) => we are looking for closes element
+		deletedNodeColor = y->color;
+		fixFromThisNodeUpwards = y->right;
+
+		// Swap node and deletion node are parent->child
+		if (y->parent == nodeToDelete)
+			fixFromThisNodeUpwards->parent = y;
+		// Swap node and deletion node have nodes inbetween
 		else {
-			rbtransplant(treeroot, y, y->right);
-			y->right = Z->right;
+			// Redirect pointers so you can detach the closest value node
+			pointerReDirection(treeRoot, y, y->right);
+			y->right = nodeToDelete->right;
 			y->right->parent = y;
 		}
-		rbtransplant(treeroot, Z, y);
-		y->left = Z->left;
+
+		// Final step, swap deletion node and closest value 
+		pointerReDirection(treeRoot, nodeToDelete, y);
+		y->left = nodeToDelete->left;
 		y->left->parent = y;
-		y->color = Z->color;
+		y->color = nodeToDelete->color;
 	}
-	if (yoc == BLACK)
-		rbdeletefixup(treeroot, x);
+	// Solve 4 subcases
+	if (deletedNodeColor == BLACK)
+		deleteFixUp(treeRoot, fixFromThisNodeUpwards);
 }
 
 int main(int argc, char* argv[])
@@ -403,7 +442,7 @@ int main(int argc, char* argv[])
 		else if (n == 2) {
 			cout << "Enter the number to be deleted: ";
 			cin >> userInput;
-			rbdelete(&tree, userInput);
+			deleteElement(&tree, userInput);
 		}
 		else if (n == 4) {
 			printBinaryTree(tree);
@@ -441,9 +480,4 @@ vector<int> parseInputFile(const string& fileName) {
 	cout << endl;
 
 	return parsedNumbers;
-}
-
-void exitPrgoram() {
-	cout << "\nEnter any input to exit the program.";
-	getchar();
 }
