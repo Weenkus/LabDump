@@ -16,6 +16,7 @@ enum COLOR {RED, BLACK};
 using namespace std;
 
 vector<int> parseInputFile(const string& fileName);
+int getUserInput(const std::string& printToUser);
 
 struct node {
 	int key;
@@ -31,6 +32,7 @@ nodePointer NILpointer = &NIL;
 
 /*
 	Use BFS to print the tree in rows.
+
 */
 void printBinaryTree(nodePointer n) {
 	if (NILpointer == n) {
@@ -430,19 +432,12 @@ int main(int argc, char* argv[])
 	cout << "\nStarting RedBlackTree interface...\n" << endl << "Example of a RED node \"<number>\", BLACK node \"number\"";
 
 	while (1) {
-		int n = 0;
-		cout << "\n\n*** CHOOSE INPUT ***\n1.Insert\n2.Delete\n3.Print(inorder)\n4.Show levels\n5.Exit\n" << endl;
-		cin >> n;
-		int userInput = 0;
+		int n = getUserInput("\n\n*** CHOOSE INPUT ***\n1.Insert\n2.Delete\n3.Print(inorder)\n4.Show levels\n5.Exit\n");
 		if (n == 1) {
-			cout << "Enter any number: ";
-			cin >> userInput;
-			insert(&tree, userInput);
+			insert(&tree, getUserInput("Enter any number: "));
 		}
 		else if (n == 2) {
-			cout << "Enter the number to be deleted: ";
-			cin >> userInput;
-			deleteElement(&tree, userInput);
+			deleteElement(&tree, getUserInput("Enter the number to be deleted: "));
 		}
 		else if (n == 4) {
 			printBinaryTree(tree);
@@ -480,4 +475,15 @@ vector<int> parseInputFile(const string& fileName) {
 	cout << endl;
 
 	return parsedNumbers;
+}
+
+/*
+	Print the recived string to user and ask him for an input (integer),
+	return the value that the user has entered.
+*/
+int getUserInput(const std::string& printToUser) {
+	int userInput;
+	cout << printToUser;
+	cin >> userInput;
+	return userInput;
 }
