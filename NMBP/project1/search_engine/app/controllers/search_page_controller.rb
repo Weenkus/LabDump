@@ -17,11 +17,11 @@ class SearchPageController < ApplicationController
     if params[:time] == "day"
 		filter = "created_at::DATE as days"
 		groupBy = "days"
-		orderBy = "2"
+		orderBy = "1, 2"
 	elsif params[:time] == "hour"
 		filter = "date_trunc('hour', created_at) as hours"
 		groupBy = "hours"
-		orderBy = "2"
+		orderBy = "1, 2"
 	end
 	
 	# Execute the sql
@@ -169,9 +169,9 @@ class SearchPageController < ApplicationController
 		elsif params[:method]  == "dictionaries"
 			for i in 0..(values.length-1)
 				if i != values.length-1
-					sqlSubString = sqlSubString.to_s + " texttsv @@ '" + values[i].to_s.gsub(" ", " & ") + "'::TSQuery" + logicParam.to_s
+					sqlSubString = sqlSubString.to_s + " texttsv @@ to_tsquery('" + values[i].to_s.gsub(" ", " & ") + "')" + logicParam.to_s
 				else
-					sqlSubString = sqlSubString.to_s + " texttsv @@ '" + values[i].to_s.gsub(" ", " & ") + "'::TSQuery"
+					sqlSubString = sqlSubString.to_s + " texttsv @@ to_tsquery('" + values[i].to_s.gsub(" ", " & ") + "')"
 				end
 			end
 		elsif params[:method]  == "fuzzy"
@@ -183,7 +183,6 @@ class SearchPageController < ApplicationController
 				end
 			end
 		end
-		
 		
 		# Search with the constructed SQL string
 		if params[:method]  == "exact" || params[:method]  == "dictionaries" || params[:method]  == "fuzzy"
