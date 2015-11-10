@@ -48,6 +48,9 @@ void printBinaryTree(nodePointer n) {
 	while (!q.empty()) {
 		node_level nl = q.front();
 		q.pop();
+		if (n == NILpointer) {
+			cout << "NIL ";
+		}
 		if (NILpointer != (n = nl.first)) {
 			if (level != nl.second) {
 				std::cout << std::endl;
@@ -59,6 +62,7 @@ void printBinaryTree(nodePointer n) {
 				std::cout << "<" << n->key << ">  ";
 			else 
 				std::cout << n->key << "  ";
+			
 
 			q.push(node_level(n->left, 1 + level));
 			q.push(node_level(n->right, 1 + level));
@@ -391,7 +395,7 @@ void deleteElement(nodePointer *treeRoot, int element) {
 	// Node is not a leaf
 	else {
 		// Find the closest number for swap value deletion
-		y = minimum(nodeToDelete->right);	// same as max(node->left) => we are looking for closes element
+		y = maximum(nodeToDelete->left);	// same as max(node->left) => we are looking for closes element
 		deletedNodeColor = y->color;
 		fixFromThisNodeUpwards = y->right;
 
@@ -428,6 +432,8 @@ int main(int argc, char* argv[])
 	vector<int> numbers = parseInputFile(argv[1]);
 	for (auto num : numbers) {
 		insert(&tree, num);
+		printBinaryTree(tree);
+		cout << "\n-------------------------------------------\n";
 	}
 	cout << "\nStarting RedBlackTree interface...\n" << endl << "Example of a RED node \"<number>\", BLACK node \"number\"";
 
