@@ -49,7 +49,7 @@ void printBinaryTree(nodePointer n) {
 		node_level nl = q.front();
 		q.pop();
 		if (n == NILpointer) {
-			cout << "NIL ";
+			//cout << "NIL ";
 		}
 		if (NILpointer != (n = nl.first)) {
 			if (level != nl.second) {
@@ -58,6 +58,10 @@ void printBinaryTree(nodePointer n) {
 
 				level = nl.second;
 			}
+			if(n->parent->color == RED)
+				cout << "(<" << n->parent->key << ">)";
+			else
+				cout << "(" << n->parent->key << ")";
 			if(n->color == RED)
 				std::cout << "<" << n->key << ">  ";
 			else 
