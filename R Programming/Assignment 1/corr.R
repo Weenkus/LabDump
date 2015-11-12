@@ -9,4 +9,7 @@ corr <- function(directory, threshold = 0) {
 
         ## Return a numeric vector of correlations
         ## NOTE: Do not round the result!
+
+        # Get all the file names
+        filenames <- list.files(path = directory, full.names = TRUE )
 }
