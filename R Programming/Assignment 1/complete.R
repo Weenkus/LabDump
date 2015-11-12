@@ -3,12 +3,12 @@ complete <- function(directory, id = 1:332) {
         filenames <- list.files(path = directory, full.names = TRUE )
 
         # Count the number of not NA rows
+        nobs <- vector(mode="integer", length=0)
         for(i in id) {
-                dataFrame <- read.csv(filenames[i])
-                nops <- c(length(which(!is.na(dataFrame))))
+                nobs <- c(nobs, nrow(na.omit(read.csv(filenames[i]))))
         }
 
         # Create the dataframe and fill it with values
-        df <- data.frame(id, nops) 
+        df <- data.frame(id, nobs) 
         df
 }
