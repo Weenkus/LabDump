@@ -288,6 +288,128 @@ namespace PrvaDomacaZadaca_Kalkulator
                 Console.Out.WriteLine("Pao 16 {0}",displayState);
 
 
+            // 17. unit test
+            calculator.Press('O');
+            calculator.Press('2');
+            calculator.Press(',');
+            calculator.Press('5');
+            calculator.Press('+');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("2,5".Equals(displayState))
+                Console.Out.WriteLine("Prosao 17");
+            else
+                Console.Out.WriteLine("Pao 17 {0}", displayState);
+
+
+            // 18. unit test
+            calculator.Press('O');
+            calculator.Press('2');
+            calculator.Press(',');
+            calculator.Press('0');
+            calculator.Press('+');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("2".Equals(displayState))
+                Console.Out.WriteLine("Prosao 18");
+            else
+                Console.Out.WriteLine("Pao 18 {0}", displayState);
+
+
+            // 19. unit test
+            calculator.Press('O');
+            calculator.Press('2');
+
+            calculator.Press('+');
+            calculator.Press('=');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("4".Equals(displayState))
+                Console.Out.WriteLine("Prosao 19");
+            else
+                Console.Out.WriteLine("Pao 19 {0}", displayState);
+
+
+            // 20. i 21. unit test
+            calculator.Press('O');
+            calculator.Press('2');
+            calculator.Press('+');
+            calculator.Press('I');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("0,5".Equals(displayState))
+                Console.Out.WriteLine("Prosao 20");
+            else
+                Console.Out.WriteLine("Pao 20 {0}", displayState);
+
+            calculator.Press('3');
+            calculator.Press('=');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("5".Equals(displayState))
+                Console.Out.WriteLine("Prosao 21");
+            else
+                Console.Out.WriteLine("Pao 21 {0}", displayState);
+
+
+            // 22. unit test
+            calculator.Press('O');
+            calculator.Press('2');
+            calculator.Press(',');
+            calculator.Press('*'); //provjera uzastopnog unosa različitih binarnih operatora (zadnji se pamti)
+            calculator.Press('-');
+            calculator.Press('+');
+            calculator.Press('3');
+            calculator.Press('-'); //provjera uzastopnog unosa istog binarnog operatora
+            calculator.Press('-');
+            calculator.Press('-');
+            calculator.Press('2');
+            calculator.Press('Q');
+            calculator.Press('Q'); //provjera uzastopnog unosa unarnih operatora (svi se izračunavaju)
+            calculator.Press('*');
+            calculator.Press('2');
+            calculator.Press('-');
+            calculator.Press('3');
+            calculator.Press('C');
+            calculator.Press('1');
+            calculator.Press('=');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("-23".Equals(displayState))
+                Console.Out.WriteLine("Prosao 22");
+            else
+                Console.Out.WriteLine("Pao 22 {0}", displayState);
+
+
+            // 23., 24. and 25. unit test
+            calculator.Press('O');
+            calculator.Press('2');
+            calculator.Press('S');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("0,909297427".Equals(displayState))
+                Console.Out.WriteLine("Prosao 23");
+            else
+                Console.Out.WriteLine("Pao 23 {0}", displayState);
+
+            calculator.Press('+');
+            calculator.Press('3');
+            calculator.Press('K');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("-0,989992497".Equals(displayState))
+                Console.Out.WriteLine("Prosao 24");
+            else
+                Console.Out.WriteLine("Pao 24 {0}", displayState);
+
+            calculator.Press('=');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("-0,08069507".Equals(displayState))
+                Console.Out.WriteLine("Prosao 25");
+            else
+                Console.Out.WriteLine("Pao 25 {0}", displayState);
+
             Console.ReadLine();
         }
     }
