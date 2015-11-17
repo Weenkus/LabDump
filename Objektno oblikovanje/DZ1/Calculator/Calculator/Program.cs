@@ -244,6 +244,50 @@ namespace PrvaDomacaZadaca_Kalkulator
                 Console.Out.WriteLine("Pao 13 {0}", displayState);
 
 
+            // 14. unit test
+            calculator.Press('O');
+            calculator.Press('1');
+            calculator.Press('2');
+            calculator.Press('3');
+            calculator.Press(',');
+            calculator.Press('4');
+            calculator.Press('5');
+            calculator.Press('Q');
+            calculator.Press('=');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("15239,9025".Equals(displayState))
+                Console.Out.WriteLine("Prosao 14");
+            else
+                Console.Out.WriteLine("Pao 14");
+
+
+            // 15. unit test
+            calculator.Press('O');
+            calculator.Press('0');
+            calculator.Press('I');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("-E-".Equals(displayState))
+                Console.Out.WriteLine("Prosao 15");
+            else
+                Console.Out.WriteLine("Pao 15");
+
+
+            // 16. unit test
+            calculator.Press('O');
+            calculator.Press('2');
+            calculator.Press(',');
+            calculator.Press('0');
+            calculator.Press('=');
+
+            displayState = calculator.GetCurrentDisplayState();
+            if ("2".Equals(displayState))
+                Console.Out.WriteLine("Prosao 16");
+            else
+                Console.Out.WriteLine("Pao 16 {0}",displayState);
+
+
             Console.ReadLine();
         }
     }

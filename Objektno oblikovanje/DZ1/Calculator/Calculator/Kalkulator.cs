@@ -123,6 +123,9 @@ namespace PrvaDomacaZadaca_Kalkulator
                                 else
                                     this.display = (this.memory / Double.Parse(this.display)).ToString();
                                 break;
+                            default:
+
+                                break;
                         }
                         if (Double.Parse(this.display) >= 0)
                             this.calculatorsSign = Sign.POSITIVE;
@@ -168,11 +171,18 @@ namespace PrvaDomacaZadaca_Kalkulator
                     case Operations.ROOT:
                         break;
                     case Operations.INVERSE:
+                        if( this.display == "0")
+                        {
+                            this.display = "-E-";
+                        }
+                        else
+                        {
+                            this.display = (1 / convertDisplayToNumber()).ToString();
+                        }
                         break;
 
                     // Calculator based operation
                     case Operations.STORE_TO_MEMORY:
-                        //this.memory = Double.Parse(this.memory.ToString() + GetCurrentDisplayState());
                         if (this.calculatorsSign == Sign.NEGATIVE) {
                             this.memory = Double.Parse(this.memory.ToString() + GetCurrentDisplayState()) * -1;
                         }
@@ -203,6 +213,10 @@ namespace PrvaDomacaZadaca_Kalkulator
 
         public string GetCurrentDisplayState()
         {
+            // Check if already an error in the display
+            if (this.display == "-E-")
+                return this.display;
+
             // Return the display value
             string returnString;
             if (this.calculatorsSign == Sign.POSITIVE)
@@ -217,23 +231,20 @@ namespace PrvaDomacaZadaca_Kalkulator
                 }
             }
 
+            // 2,0 return as 2
+            if ( returnString.Contains(",") && returnString.ElementAt(returnString.Length - 1) == '0' && returnString.ElementAt(returnString.Length - 2) == ',') {
+                returnString.Remove(returnString.Length - 2, 2);
+            }
+
+
             // Ilegal display states
             returnString = returnString.Trim();
             if (returnString.Contains(",") && this.calculatorsSign == Sign.NEGATIVE && returnString.Length > 12)
-            {
-                //Console.WriteLine(returnString);
                 return "-E-";
-            }
             else if (!returnString.Contains(",") && this.calculatorsSign == Sign.NEGATIVE && returnString.Length > 11)
-            {
-                //Console.WriteLine(returnString);
                 return "-E-";
-            }
             else if (returnString.Contains(",") && this.calculatorsSign == Sign.POSITIVE && returnString.Length > 11)
-            {
-                //Console.WriteLine(returnString);
                 return "-E-";
-            }
             else if (!returnString.Contains(",") && this.calculatorsSign == Sign.POSITIVE && returnString.Length > 10)
                 return "-E-";
             else
@@ -241,7 +252,6 @@ namespace PrvaDomacaZadaca_Kalkulator
         }
 
         public double convertDisplayToNumber() {
-            //Console.WriteLine(GetCurrentDisplayState());
             return Double.Parse(GetCurrentDisplayState().Trim());
         }
 
