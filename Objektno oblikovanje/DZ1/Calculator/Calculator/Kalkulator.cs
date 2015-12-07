@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
 
 namespace PrvaDomacaZadaca_Kalkulator
 {
@@ -42,8 +41,11 @@ namespace PrvaDomacaZadaca_Kalkulator
             NEGATIVE = '-'
         }
 
+        const int MAX_DECIMAL_SPACES = 9;
+
         string display = "0";
         double memory = 0;
+        bool equaled = false;
 
         Sign calculatorsSign = Sign.POSITIVE;
         Operations storedOperation;
@@ -81,17 +83,6 @@ namespace PrvaDomacaZadaca_Kalkulator
             {
                 Operations operation = (Operations)inPressedDigit;
 
-                /*// Check for repeted operation pressing
-                if ((this.storedOperation == Operations.ADD || this.storedOperation == Operations.SUBSTRACT ||
-                    this.storedOperation == Operations.MULTIPLY || this.storedOperation == Operations.DIVIDE)
-                    && (operation == Operations.ADD || operation == Operations.SUBSTRACT ||
-                    operation == Operations.MULTIPLY || operation == Operations.DIVIDE))
-                {
-                    this.storedOperation = operation;
-                    operation = Operations.EMPTY;
-                }*/
-
-
                 switch (operation)
                 {
                     // Number based operations
@@ -120,6 +111,7 @@ namespace PrvaDomacaZadaca_Kalkulator
                         break;
 
                     case Operations.EQUAL:
+                        this.equaled = true;
                         // If the user send one argument, make the second argument the same as the one he sent 2 + = 4 (for example)
                         if (this.memory != 0 && this.display.Equals("0"))
                             this.display = this.memory.ToString();
@@ -155,10 +147,12 @@ namespace PrvaDomacaZadaca_Kalkulator
                                     this.display = (this.memory / Double.Parse(this.display)).ToString();
                                 break;
                             default:
+
                                 break;                                
                         }
 
                         this.storedOperation = Operations.EMPTY;
+
                         if (Double.Parse(this.display) >= 0)
                             this.calculatorsSign = Sign.POSITIVE;
                         else
@@ -168,10 +162,9 @@ namespace PrvaDomacaZadaca_Kalkulator
                     case Operations.DECIMAL:
                         if(this.display.Contains(","))
                         {
-                            this.display = "-E-";
-                            return;
+                            break;
                         }
-                        this.display = display + inPressedDigit;
+                        this.display = display + ",";
                         break;
 
                     case Operations.CHANGE_SIGN:
@@ -183,7 +176,7 @@ namespace PrvaDomacaZadaca_Kalkulator
                         break;
 
                     case Operations.SIN:
-                        this.display = Math.Round(Math.Sin(convertDisplayToNumber()), 9).ToString();
+                        this.display = Math.Round(Math.Sin(convertDisplayToNumber()), MAX_DECIMAL_SPACES).ToString();
                         if (Double.Parse(this.display) >= 0)
                             this.calculatorsSign = Sign.POSITIVE;
                         else
@@ -194,7 +187,7 @@ namespace PrvaDomacaZadaca_Kalkulator
                         break;
 
                     case Operations.COSIN:
-                        this.display = Math.Round(Math.Cos(convertDisplayToNumber()), 9).ToString();
+                        this.display = Math.Round(Math.Cos(convertDisplayToNumber()), MAX_DECIMAL_SPACES).ToString();
                         if (Double.Parse(this.display) >= 0)
                             this.calculatorsSign = Sign.POSITIVE;
                         else
@@ -205,15 +198,21 @@ namespace PrvaDomacaZadaca_Kalkulator
                         break;
 
                     case Operations.TAN:
-                        this.display = Math.Round(Math.Tan(convertDisplayToNumber()), 9).ToString();
+                        this.display = Math.Round(Math.Tan(convertDisplayToNumber()), MAX_DECIMAL_SPACES).ToString();
                         break;
 
                     case Operations.SQUARE:
-                        this.display = Math.Round(convertDisplayToNumber() * convertDisplayToNumber(), 9).ToString();
+                        this.display = Math.Round(convertDisplayToNumber() * convertDisplayToNumber(), MAX_DECIMAL_SPACES).ToString();
                         this.calculatorsSign = Sign.POSITIVE;
                         break;
 
                     case Operations.ROOT:
+                        if (this.calculatorsSign == Sign.NEGATIVE)
+                        {
+                            this.display = "-E-";
+                            break;
+                        }
+                        this.display = Math.Sqrt(convertDisplayToNumber()).ToString();
                         break;
 
                     case Operations.INVERSE:
@@ -255,6 +254,8 @@ namespace PrvaDomacaZadaca_Kalkulator
 
                     case Operations.CLEAR_DISPLAY:
                         clearDisplay();
+                        if (this.equaled == false)
+                            this.memory = 0;
                         break;
 
                     case Operations.RESET_CALCULATOR:
@@ -270,6 +271,9 @@ namespace PrvaDomacaZadaca_Kalkulator
 
         public string GetCurrentDisplayState()
         {
+            if (this.memory == 0 && this.display.Equals("0"))
+                return "0";
+
             // Check if already an error in the display
             if (this.display == "-E-")
                 return this.display;
@@ -278,19 +282,41 @@ namespace PrvaDomacaZadaca_Kalkulator
             if ((this.storedOperation == Operations.ADD || this.storedOperation == Operations.SUBSTRACT ||
                 this.storedOperation == Operations.MULTIPLY || this.storedOperation == Operations.DIVIDE)
                 && this.display.Equals("0"))
-               return this.memory.ToString();
+                return this.memory.ToString();
 
             // Return the display value
             string returnString;
-            if (this.calculatorsSign == Sign.POSITIVE)
-                returnString = Math.Round(Double.Parse(display), 9).ToString();
+
+            if (this.memory == 0 && this.calculatorsSign == Sign.POSITIVE)
+            {
+                // Handeling the case for 2,0
+                if ( this.equaled == true && display.Length >= 2 && display.ElementAt(display.Length - 1) == '0' && display.ElementAt(display.Length - 2) == ',')
+                    return display.Substring(0, display.Length - 2);
+                // Handeling the case for 2,
+                if(this.equaled == true && display.Length >= 2 && display.ElementAt(display.Length - 1) == ',')
+                    return display.Substring(0, display.Length - 1);
+                else
+                {
+                    int decimalPosition = display.IndexOf(",");
+                    if (decimalPosition >= 0 && ((display.Length - 1) - decimalPosition) > MAX_DECIMAL_SPACES)
+                    {
+                        int backTrimFor = ((display.Length - 1) - decimalPosition) - MAX_DECIMAL_SPACES;
+                        display = display.Substring(0, display.Length - backTrimFor);
+                    }      
+
+                    return display;
+                }
+            }
+
+            if (this.calculatorsSign == Sign.POSITIVE )
+                returnString = Math.Round(Double.Parse(display), MAX_DECIMAL_SPACES).ToString();
             else
             {
                 if (this.display.Contains("-"))
-                    returnString = Math.Round(Double.Parse(display), 9).ToString();
+                    returnString = Math.Round(Double.Parse(display), MAX_DECIMAL_SPACES).ToString();
                 else
                 {
-                    returnString = Math.Round(Double.Parse(display), 9).ToString().Insert(0, "-");
+                    returnString = Math.Round(Double.Parse(display), MAX_DECIMAL_SPACES).ToString().Insert(0, "-");
                 }
             }
 
@@ -310,12 +336,15 @@ namespace PrvaDomacaZadaca_Kalkulator
                 return "-E-";
             else if (!returnString.Contains(",") && this.calculatorsSign == Sign.POSITIVE && returnString.Length > 10)
                 return "-E-";
-            else
-                return returnString;
+            else {
+                if (returnString.Length >= 2 && returnString.ElementAt(returnString.Length - 1) == '0' && returnString.ElementAt(returnString.Length - 2) == ',' && this.equaled == true)
+                    return returnString.Substring(0, returnString.Length - 2);
+                else
+                    return returnString;
+            }
         }
 
         public double convertDisplayToNumber() {
-            //return Double.Parse(this.display);
             return Double.Parse(GetCurrentDisplayState().Trim());
         }
 
