@@ -8,11 +8,11 @@ int patternCount(std::string genome, std::string pattern);
 int main() {
 	
 	// Open and read the file
-	std::ifstream fileHandel("dataset_2_6.txt");
+	std::ifstream fileHandle("dataset_2_6.txt");
 	std::string genome, pattern;
 	
-	std::getline(fileHandel, genome);
-	std::getline(fileHandel, pattern);
+	std::getline(fileHandle, genome);
+	std::getline(fileHandle, pattern);
 		
 	int ptCountS = patternCount(genome, pattern);
 	std::cout << "The pattern " << pattern << " is repeted " << ptCountS << " times in the input genome.\n";

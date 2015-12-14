@@ -9,11 +9,11 @@ void printMaxFreqKmer(std::string genome, int k);
 int main() {
 
 	// Open and read the file
-	std::ifstream fileHandel("dataset_2_9.txt");
+	std::ifstream fileHandle("dataset_2_9.txt");
 	std::string genome, numb;
 
-	std::getline(fileHandel, genome);
-	std::getline(fileHandel, numb);
+	std::getline(fileHandle, genome);
+	std::getline(fileHandle, numb);
 	int k = stoi(numb);
 
 	printMaxFreqKmer(genome, k);

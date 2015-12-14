@@ -8,20 +8,20 @@ std::vector<char> complementSequence(std::string strand);
 int main() {
 
 	// Load the input file
-	std::ifstream fileHandel("dataset_3_2.txt");
+	std::ifstream fileHandle("dataset_3_2.txt");
 	std::string input;
-	std::getline(fileHandel, input);
+	std::getline(fileHandle, input);
 
 	// Generate and write the complementary strand
 	std::vector<char> complementSeq = complementSequence(input);
-	std::ofstream outputHandel("output.txt");
+	std::ofstream outputHandle("output.txt");
 
 	for (const auto& c : complementSeq) {
-		outputHandel << c;
+		outputHandle << c;
 	}
 
-	outputHandel.close();
-	fileHandel.close();
+	outputHandle.close();
+	fileHandle.close();
 	return 0;
 }
 

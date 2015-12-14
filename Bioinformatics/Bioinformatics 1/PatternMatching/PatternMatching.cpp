@@ -8,14 +8,14 @@ void patternMatch(std::string genome, std::string pattern);
 int main() {
 
 	// Open the file
-	std::ifstream inputHandel("Vibrio_cholerae.txt");
+	std::ifstream inputHandle("Vibrio_cholerae.txt");
 	std::string genome, pattern;
-	std::getline(inputHandel, pattern);
-	std::getline(inputHandel, genome);
+	std::getline(inputHandle, pattern);
+	std::getline(inputHandle, genome);
 
 	patternMatch(genome, pattern);
 
-	inputHandel.close();
+	inputHandle.close();
 	return 0;
 }
 
