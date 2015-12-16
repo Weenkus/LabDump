@@ -48,7 +48,11 @@ namespace OneHumpIterator
 
         private void draw()
         {
+            // Clear all previous compositions
             graph.Series[1].Points.Clear();
+            graph.Series[2].Points.Clear();
+            graph.Series[3].Points.Clear();
+
             double r = (double)sliderR.Value / 100;
             if (cbIterator.SelectedItem.ToString().Equals("r*x*(1-x)"))
             {
@@ -58,12 +62,47 @@ namespace OneHumpIterator
                     graph.Series[1].Points.AddXY(x, (r * x * (1 - x)));
 
                     // f^2(x)
+                    graph.Series[2].Points.AddXY(x, -r * r * (x - 1) * x * (r * x * x - r * x + 1));
 
                     // f^4(x)
+                    graph.Series[3].Points.AddXY(x, r * r * r * r * (x - 1) * x * (r * (x - 1) * x + 1) * (r * r * (-(x - 1)) * x * (r * (x - 1) * x + 1) - 1) * (r * r * r * r * r * (x - 1) * (x - 1) * x * x * (r * (x - 1) * x + 1) * (r * (x - 1) * x + 1) + r * r * r * (x - 1) * x * (r * (x - 1) * x + 1) + 1));
 
                     // f^8(x)
                 }
             }
+            else if (cbIterator.SelectedItem.ToString().Equals("r*x*sqrt(1-x)"))
+            {
+                for (double x = 0; x <= 1; x = x + 0.001)
+                {
+                    // f(x)
+                    graph.Series[1].Points.AddXY(x, (r * x * Math.Sqrt(1 - x)));
+
+                    // f^2(x)
+                    graph.Series[2].Points.AddXY(x, r * r * Math.Sqrt(1 - x) * x * Math.Sqrt(1 - r * Math.Sqrt(1 - x) * x));
+
+                    // f^4(x)
+                    graph.Series[3].Points.AddXY(x, r * r * r * r * Math.Sqrt(1 - x) * x * Math.Sqrt(1 - r * Math.Sqrt(1 - x) * x) * Math.Sqrt(1 - r * r * Math.Sqrt(1 - x) * x * Math.Sqrt(1 - r * Math.Sqrt(1 - x) * x)) * Math.Sqrt(1 - r * r * r * Math.Sqrt(1 - x) * x * Math.Sqrt(1 - r * Math.Sqrt(1 - x) * x) * Math.Sqrt(1 - r * r * Math.Sqrt(1 - x) * x * Math.Sqrt(1 - r * Math.Sqrt(1 - x) * x))));
+
+                    // f^8(x)
+                }
+            }
+            else if (cbIterator.SelectedItem.ToString().Equals("r - (x*x)")) {
+                for (double x = 0; x <= 1; x = x + 0.001)
+                {
+                    // f(x)
+                    graph.Series[1].Points.AddXY(x, r-x*x);
+
+                    // f^2(x)
+                    graph.Series[2].Points.AddXY(x, x*x*(2*r - x*x) + (1 - r)*r);
+
+                    // f^4(x)
+                    graph.Series[3].Points.AddXY(x, (-2*r*x*x + (r - 1)*r + x*x*x*x)* (-2 * r * x * x + (r - 1) * r + x * x * x * x)*(2*r - (-2*r*x*x + (r - 1)*r + x*x*x*x)* (-2 * r * x * x + (r - 1) * r + x * x * x * x))-(r - 1)*r);
+
+                    // f^8(x)
+                }
+            }
+
+
         }
 
 
