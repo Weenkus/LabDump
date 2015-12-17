@@ -68,6 +68,7 @@ namespace OneHumpIterator
                     graph.Series[3].Points.AddXY(x, r * r * r * r * (x - 1) * x * (r * (x - 1) * x + 1) * (r * r * (-(x - 1)) * x * (r * (x - 1) * x + 1) - 1) * (r * r * r * r * r * (x - 1) * (x - 1) * x * x * (r * (x - 1) * x + 1) * (r * (x - 1) * x + 1) + r * r * r * (x - 1) * x * (r * (x - 1) * x + 1) + 1));
 
                     // f^8(x)
+
                 }
             }
             else if (cbIterator.SelectedItem.ToString().Equals("r*x*sqrt(1-x)"))

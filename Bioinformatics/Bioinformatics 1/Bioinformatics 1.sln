@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kMerFreq", "kMerFreq\kMerFr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClumpFinding", "ClumpFinding\ClumpFinding.vcxproj", "{E7F67FB2-0691-4C3F-BA7C-456C36E03D3D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Skew", "Skew\Skew.vcxproj", "{964149E4-0B73-4CBE-87C1-FBDC34A7AFE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,14 @@ Global
 		{E7F67FB2-0691-4C3F-BA7C-456C36E03D3D}.Release|x64.Build.0 = Release|x64
 		{E7F67FB2-0691-4C3F-BA7C-456C36E03D3D}.Release|x86.ActiveCfg = Release|Win32
 		{E7F67FB2-0691-4C3F-BA7C-456C36E03D3D}.Release|x86.Build.0 = Release|Win32
+		{964149E4-0B73-4CBE-87C1-FBDC34A7AFE1}.Debug|x64.ActiveCfg = Debug|x64
+		{964149E4-0B73-4CBE-87C1-FBDC34A7AFE1}.Debug|x64.Build.0 = Debug|x64
+		{964149E4-0B73-4CBE-87C1-FBDC34A7AFE1}.Debug|x86.ActiveCfg = Debug|Win32
+		{964149E4-0B73-4CBE-87C1-FBDC34A7AFE1}.Debug|x86.Build.0 = Debug|Win32
+		{964149E4-0B73-4CBE-87C1-FBDC34A7AFE1}.Release|x64.ActiveCfg = Release|x64
+		{964149E4-0B73-4CBE-87C1-FBDC34A7AFE1}.Release|x64.Build.0 = Release|x64
+		{964149E4-0B73-4CBE-87C1-FBDC34A7AFE1}.Release|x86.ActiveCfg = Release|Win32
+		{964149E4-0B73-4CBE-87C1-FBDC34A7AFE1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
