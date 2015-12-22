@@ -42,20 +42,18 @@ namespace DrugaDomacaZadaca_Burza
             Assert.True(_stockExchange.StockExists(secondStockName));
         }
 
-       /* [Test]
-        [ExpectedException(typeof(StockExchangeException))]
+       [Test]
         public void Test_ListStock_SameNameAlreadyExists()
         {
             _stockExchange.ListStock("IBM", 1000000, 10m, DateTime.Now);
-            _stockExchange.ListStock("IBM", 1000000, 10m, DateTime.Now);
+            Assert.Throws<StockExchangeException>(() => _stockExchange.ListStock("IBM", 1000000, 10m, DateTime.Now));
         }
 
         [Test]
-        [ExpectedException(typeof(StockExchangeException))]
         public void Test_ListStock_IllegalPriceNegative()
         {
-            _stockExchange.ListStock("IBM", 1000000, -10m, DateTime.Now);
-        }*/
+            Assert.Throws<StockExchangeException>(() => _stockExchange.ListStock("IBM", 1000000, -10m, DateTime.Now));
+        }
 
         [Test]
         public void Test_SetStockPrice_NewPrice()
@@ -65,7 +63,6 @@ namespace DrugaDomacaZadaca_Burza
             _stockExchange.ListStock(stockName, 1000000, oldPrice, new DateTime(2012, 1, 10, 15, 22, 00));
             decimal newPrice = 20m;
             _stockExchange.SetStockPrice(stockName, new DateTime(2012, 1, 10, 15, 40, 00), newPrice);
-
             Assert.AreEqual(newPrice, _stockExchange.GetStockPrice(stockName, new DateTime(2012, 1, 10, 15, 50, 0, 0)));
         }
 
