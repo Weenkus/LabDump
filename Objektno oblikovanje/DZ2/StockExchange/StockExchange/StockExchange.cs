@@ -14,24 +14,30 @@ namespace DrugaDomacaZadaca_Burza
 
      public class StockExchange : IStockExchange
      {
-        private LinkedList<Portfolio> portoflios { get; set; }
-        private LinkedList<Stock> stocks { get; set; }
-        private LinkedList<Index> indexes { get; set; }
-
+        private List<Portfolio> portoflios = new List<Portfolio>();
+        private List<Stock> stocks = new List<Stock>();
+        private List<Index> indexes = new List<Index>();
 
          public void ListStock(string inStockName, long inNumberOfShares, decimal inInitialPrice, DateTime inTimeStamp)
          {
-             throw new NotImplementedException();
+            if (inInitialPrice <= 0)
+                throw new StockExchangeException("Value must be positive.");
+            Stock newStock = new Stock(inStockName, inNumberOfShares, inInitialPrice, inTimeStamp);
+            if( this.stocks.Contains(newStock))
+                throw new StockExchangeException("The new stock already exists.");
+            this.stocks.Add(newStock);
          }
 
          public void DelistStock(string inStockName)
          {
-             throw new NotImplementedException();
+            if( this.stocks.Any(i => i.name.Equals(inStockName)) == false)
+                throw new StockExchangeException("Stock with the given name doesn't exist.");
+            this.stocks.Remove(this.stocks.Find(i => i.name.Equals(inStockName)));
          }
 
          public bool StockExists(string inStockName)
          {
-             throw new NotImplementedException();
+            return this.stocks.Any(a => a.name.Equals(inStockName));
          }
 
          public int NumberOfStocks()
@@ -41,42 +47,48 @@ namespace DrugaDomacaZadaca_Burza
 
          public void SetStockPrice(string inStockName, DateTime inIimeStamp, decimal inStockValue)
          {
-             throw new NotImplementedException();
+            Stock changing = this.stocks.Find(i => i.name.Equals(inStockName));
+            changing.values.Add(inStockValue);
+            changing.history.Add(inIimeStamp);
          }
 
          public decimal GetStockPrice(string inStockName, DateTime inTimeStamp)
          {
-             throw new NotImplementedException();
+            Stock stock = this.stocks.Find(i => i.name.Equals(inStockName));
+            return stock.getValueByDate(inTimeStamp);
          }
 
          public decimal GetInitialStockPrice(string inStockName)
          {
-             throw new NotImplementedException();
+            return this.stocks.Find(i => i.name.Equals(inStockName)).values.ElementAt(0);
          }
 
          public decimal GetLastStockPrice(string inStockName)
          {
-             throw new NotImplementedException();
-         }
+            return this.stocks.Find(i => i.name.Equals(inStockName)).values.ElementAt(this.stocks.Find(i => i.name.Equals(inStockName)).values.Count()-1);
+        }
 
          public void CreateIndex(string inIndexName, IndexTypes inIndexType)
          {
-             throw new NotImplementedException();
+            Index newIndex = new Index(inIndexName, inIndexType);
+            this.indexes.Add(newIndex);
          }
 
          public void AddStockToIndex(string inIndexName, string inStockName)
          {
-             throw new NotImplementedException();
+            this.indexes.Find(a => a.name.Equals(inIndexName)).stocks.Add(this.stocks.Find(i => i.name.Equals(inStockName)));
          }
 
          public void RemoveStockFromIndex(string inIndexName, string inStockName)
          {
-             throw new NotImplementedException();
+            Stock rmStock = this.stocks.Find(i => i.name.Equals(inStockName));
+            this.indexes.Find(a => a.name.Equals(inIndexName)).stocks.Remove(rmStock);
          }
 
          public bool IsStockPartOfIndex(string inIndexName, string inStockName)
          {
-             throw new NotImplementedException();
+             return this.indexes.Find(a => a.name.Equals(inIndexName)).stocks.Any(i => i.name.Equals(inStockName));
+             
          }
 
          public decimal GetIndexValue(string inIndexName, DateTime inTimeStamp)
@@ -86,7 +98,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public bool IndexExists(string inIndexName)
          {
-             throw new NotImplementedException();
+            return this.indexes.Any(i => i.name.Equals(inIndexName));
          }
 
          public int NumberOfIndices()
@@ -96,12 +108,13 @@ namespace DrugaDomacaZadaca_Burza
 
          public int NumberOfStocksInIndex(string inIndexName)
          {
-             throw new NotImplementedException();
-         }
+            return this.indexes.Find(i => i.name.Equals(inIndexName)).stocks.Count();
+        }
 
          public void CreatePortfolio(string inPortfolioID)
          {
-             throw new NotImplementedException();
+            Portfolio port = new Portfolio(inPortfolioID);
+            this.portoflios.Add(port);
          }
 
          public void AddStockToPortfolio(string inPortfolioID, string inStockName, int numberOfShares)
@@ -126,22 +139,22 @@ namespace DrugaDomacaZadaca_Burza
 
          public int NumberOfStocksInPortfolio(string inPortfolioID)
          {
-             throw new NotImplementedException();
+            return this.portoflios.Find(i => i.id.Equals(inPortfolioID)).stock.Count();
          }
 
          public bool PortfolioExists(string inPortfolioID)
          {
-             throw new NotImplementedException();
+            return this.portoflios.Any(i => i.id.Equals(inPortfolioID));
          }
 
          public bool IsStockPartOfPortfolio(string inPortfolioID, string inStockName)
          {
-             throw new NotImplementedException();
+            return this.portoflios.Find(i => i.id.Equals(inPortfolioID)).stock.Any(a => a.name.Equals(inStockName));
          }
 
          public int NumberOfSharesOfStockInPortfolio(string inPortfolioID, string inStockName)
          {
-             throw new NotImplementedException();
+            return this.portoflios.Find(i => i.id.Equals(inPortfolioID)).stock.Where(a => a.name.Equals(inStockName)).Count();
          }
 
          public decimal GetPortfolioValue(string inPortfolioID, DateTime timeStamp)
@@ -157,23 +170,57 @@ namespace DrugaDomacaZadaca_Burza
 
     public class Stock
     {
-        private string name { get; set; }
-        private int number { get; set; }
-        private decimal value { get; set; }
-        private DateTime validTime { get; set; }
+        public string name { get; set; }
+        public long numberOfShares { get; set; }
+        public List<decimal> values = new List<decimal>();
+        public List<DateTime> history = new List<DateTime>();
+
+        public Stock(string name, long numberOfShares, decimal value, DateTime validTime)
+        {
+            this.name = name;
+            this.numberOfShares = numberOfShares;
+            this.values.Add(value);
+            this.history.Add(validTime);
+        }
+
+        public decimal getValueByDate(DateTime dateTime)
+        {
+            int i = 0;
+            foreach (DateTime dt in this.history)
+            {
+                int result = DateTime.Compare(dt, dateTime);
+                if (result < 0)
+                    return this.values.ElementAt(i);
+                ++i;
+            }
+            throw new StockExchangeException("Invalid timestamp.");
+        }
+
+
     }
 
     public class Index
     {
-        private string name { get; set; }
-        private IndexTypes indexType { get; set; }
-        private LinkedList<Stock> stocks { get; set; }
+        public string name { get; set; }
+        public IndexTypes indexType { get; set; }
+        public List<Stock> stocks = new List<Stock>();
+
+        public Index(string name, IndexTypes type)
+        {
+            this.name = name;
+            this.indexType = type;
+        }
     }
 
     public class Portfolio
     {
-        private int id { get; set; }
-        private LinkedList<Stock> stocks { get; set; }
+        public string id { get; set; }
+        public List<Stock> stock = new List<Stock>();
+
+        public Portfolio(string id)
+        {
+            this.id = id;
+        }
     }
 
 }
