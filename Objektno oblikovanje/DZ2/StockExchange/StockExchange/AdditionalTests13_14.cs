@@ -88,7 +88,6 @@ namespace DrugaDomacaZadaca_Burza
             string indeks1 = "indeks1";
             _stockExchange.CreateIndex(indeks1, IndexTypes.WEIGHTED);
 
-            _stockExchange.AddStockToIndex(indeks1, "dionicaKojaNePostoji");
             Assert.Throws<StockExchangeException>(() => _stockExchange.AddStockToIndex(indeks1, "dionicaKojaNePostoji"));
         }
 
