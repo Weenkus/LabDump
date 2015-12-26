@@ -71,14 +71,15 @@ namespace DrugaDomacaZadaca_Burza
                 throw new StockExchangeException("Value must be positive.");
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
-            if (this.stocks.Any(i => i.history.Contains(inIimeStamp)))
+            if (this.stocks.Any(i => i.transactions.Any(t => t.time.Equals(inIimeStamp))))
                 throw new StockExchangeException("Stock already has a price for that specific time.");
 
             // Update indexes and portoflios
+            this.stocks.Find(i => i.name.Equals(inStockName)).transactions.Add(new Transaction(inStockValue, inIimeStamp));
             Stock oldStock = this.stocks.Find(i => i.name.Equals(inStockName));
-            Stock newStock = new Stock(oldStock);
-            newStock.values.Add(inStockValue);
-            newStock.history.Add(inIimeStamp); 
+            Stock newStock = oldStock;
+            newStock.transactions.Add(new Transaction(inStockValue, inIimeStamp));
+
 
             // Delete the stock from portfolios and indexes if it existed and add the new one
             foreach (Portfolio p in this.portoflios)
@@ -99,10 +100,6 @@ namespace DrugaDomacaZadaca_Burza
                     i.stocks.Insert(oldIndex, newStock);
                 }
             }
-            //this.stocks.Remove(oldStock);
-            //this.stocks.Add(newStock);
-            this.stocks.Find(s => s.name.Equals(inStockName)).values.Add(inStockValue);
-            this.stocks.Find(s => s.name.Equals(inStockName)).history.Add(inIimeStamp);
             //this.stocks.Find(s => s.name.Equals(inStockName)).values.Sort((a,b) => a.CompareTo(b));
             //this.stocks.Find(s => s.name.Equals(inStockName)).history.Sort((a, b) => a.CompareTo(b));
         }
@@ -123,9 +120,8 @@ namespace DrugaDomacaZadaca_Burza
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
 
-            DateTime minDate = this.stocks.Find(i => i.name.Equals(inStockName)).history.Min(h => h.Date);
-            int index = this.stocks.Find(i => i.name.Equals(inStockName)).history.IndexOf(minDate);
-            return this.stocks.Find(i => i.name.Equals(inStockName)).values.ElementAt(index-1);
+            //return this.stocks.Find(s => s.name.Equals(inStockName)).transactions.First().value;
+            return this.stocks.Find(s => s.name.Equals(inStockName)).transactions.OrderBy(t => t.time).First().value;
          }
 
          public decimal GetLastStockPrice(string inStockName)
@@ -134,7 +130,8 @@ namespace DrugaDomacaZadaca_Burza
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
 
-            return this.stocks.Find(i => i.name.Equals(inStockName)).values.ElementAt(this.stocks.Find(i => i.name.Equals(inStockName)).values.Count()-1);
+            //return this.stocks.Find(s => s.name.Equals(inStockName)).transactions.Last().value;
+            return this.stocks.Find(s => s.name.Equals(inStockName)).transactions.OrderBy(t => t.time).Last().value;
         }
 
          public void CreateIndex(string inIndexName, IndexTypes inIndexType)
@@ -430,64 +427,60 @@ namespace DrugaDomacaZadaca_Burza
     {
         public string name { get; set; }
         public long numberOfShares { get; set; }
-        public List<decimal> values = new List<decimal>();
-        public List<DateTime> history = new List<DateTime>();
+        public List<Transaction> transactions = new List<Transaction>();
 
         public Stock(string name, long numberOfShares, decimal value, DateTime validTime)
         {
             this.name = name.ToLower();
             this.numberOfShares = numberOfShares;
-            this.values.Add(value);
-            this.history.Add(validTime);
+            this.transactions.Add(new Transaction(value, validTime));
         }
 
         public Stock(Stock s)
         {
             this.name = s.name.ToLower();
             this.numberOfShares = s.numberOfShares;
-            foreach (decimal d in s.values)
-                this.values.Add(d);
-            foreach (DateTime dt in s.history)
-                this.history.Add(dt);
+            foreach (Transaction t in s.transactions)
+                this.transactions.Add(t);
         }
 
         public decimal getValueByDate(DateTime dateTime)
         {
-            int i = 0;
-            foreach (DateTime dt in this.history)
+            foreach (Transaction t in this.transactions)
             {
+                DateTime dt = t.time;
                 int result = DateTime.Compare(dt, dateTime);
                 if (result < 0)
-                    return this.values.ElementAt(i);
-                ++i;
+                    return t.value;
             }
             throw new StockExchangeException("Invalid timestamp.");
         }
 
         public decimal getStockPrice(DateTime dateTime)
         {
-            if(dateTime.Ticks < this.history.First().Ticks)
+            if(dateTime.Ticks < this.transactions.First().time.Ticks)
                 throw new StockExchangeException("Invalid timestamp.");
 
-            if (this.history.Count == 1)
-                return this.values.First();
+            if (this.transactions.Count == 1)
+                return this.transactions.First().value;
 
-            int greater = DateTime.Compare(dateTime, this.history.Last());
+            int greater = DateTime.Compare(dateTime, this.transactions.Last().time);
             if (greater >= 0)
-                return this.values.Last();
+                return this.transactions.Last().value;
 
-            DateTime prev = this.history.First();
-            foreach(DateTime dt in this.history)
+            DateTime prev = this.transactions.First().time;
+            foreach(Transaction t in this.transactions)
             {
+                DateTime dt = t.time;
                 int rPrev = DateTime.Compare(prev, dateTime);
                 int rNext = DateTime.Compare(dt, dateTime);
-                
+
                 if (rPrev <= 0 && rNext > 0)
-                    return this.values.ElementAt(this.history.IndexOf(dt) - 1);
+                    return t.value;
 
                 prev = dt;
             }
-            return this.values.Last();
+            return this.transactions.Last().value;
         }
     }
 
@@ -515,4 +508,17 @@ namespace DrugaDomacaZadaca_Burza
         }
     }
 
+    public class Transaction
+    {
+        public decimal value { get; set; }
+        public DateTime time { get; set; }
+
+        public Transaction(decimal v, DateTime dt)
+        {
+            this.value = v;
+            this.time = dt;
+        }
+    }
+
 }
+
