@@ -20,6 +20,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public void ListStock(string inStockName, long inNumberOfShares, decimal inInitialPrice, DateTime inTimeStamp)
          {
+            inStockName = inStockName.ToLower();
             if (inNumberOfShares <= 0)
                 throw new StockExchangeException("Number of shares must be positive.");
             if (inInitialPrice <= 0)
@@ -33,14 +34,28 @@ namespace DrugaDomacaZadaca_Burza
 
          public void DelistStock(string inStockName)
          {
-            if( this.stocks.Any(i => i.name.Equals(inStockName)) == false)
+            inStockName = inStockName.ToLower();
+            if ( this.stocks.Any(i => i.name.Equals(inStockName)) == false)
                 throw new StockExchangeException("Stock with the given name doesn't exist.");
+
+            // Delete the stock from portfolios and indexes
+            foreach (Portfolio p in this.portoflios)
+            {
+                if (p.stock.Any(s => s.name.Equals(inStockName)))
+                    RemoveStockFromPortfolio(p.id, inStockName);
+            }
+            foreach (Index i in this.indexes)
+            {
+                if (i.stocks.Any(s => s.name.Equals(inStockName)))
+                    RemoveStockFromIndex(i.name, inStockName);
+            }
 
             this.stocks.Remove(this.stocks.Find(i => i.name.Equals(inStockName)));
          }
 
          public bool StockExists(string inStockName)
          {
+            inStockName = inStockName.ToLower();
             return this.stocks.Any(a => a.name.Equals(inStockName));
          }
 
@@ -51,6 +66,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public void SetStockPrice(string inStockName, DateTime inIimeStamp, decimal inStockValue)
          {
+            inStockName = inStockName.ToLower();
             if (inStockValue <= 0)
                 throw new StockExchangeException("Value must be positive.");
             if (!stocksContains(inStockName))
@@ -58,30 +74,63 @@ namespace DrugaDomacaZadaca_Burza
             if (this.stocks.Any(i => i.history.Contains(inIimeStamp)))
                 throw new StockExchangeException("Stock already has a price for that specific time.");
 
-            Stock changing = this.stocks.Find(i => i.name.Equals(inStockName));
-            changing.values.Add(inStockValue);
-            changing.history.Add(inIimeStamp);
-         }
+            // Update indexes and portoflios
+            Stock oldStock = this.stocks.Find(i => i.name.Equals(inStockName));
+            Stock newStock = new Stock(oldStock);
+            newStock.values.Add(inStockValue);
+            newStock.history.Add(inIimeStamp); 
+
+            // Delete the stock from portfolios and indexes if it existed and add the new one
+            foreach (Portfolio p in this.portoflios)
+            {
+                if (p.stock.Any(s => s.name.Equals(inStockName)))
+                {
+                    int oldIndex = p.stock.IndexOf(oldStock);
+                    RemoveStockFromPortfolio(p.id, inStockName);
+                    p.stock.Insert(oldIndex, newStock);
+                }      
+            }
+            foreach (Index i in this.indexes)
+            {
+                if (i.stocks.Any(s => s.name.Equals(inStockName))) 
+                {
+                    int oldIndex = i.stocks.IndexOf(oldStock);
+                    RemoveStockFromIndex(i.name, inStockName);
+                    i.stocks.Insert(oldIndex, newStock);
+                }
+            }
+            //this.stocks.Remove(oldStock);
+            //this.stocks.Add(newStock);
+            this.stocks.Find(s => s.name.Equals(inStockName)).values.Add(inStockValue);
+            this.stocks.Find(s => s.name.Equals(inStockName)).history.Add(inIimeStamp);
+            //this.stocks.Find(s => s.name.Equals(inStockName)).values.Sort((a,b) => a.CompareTo(b));
+            //this.stocks.Find(s => s.name.Equals(inStockName)).history.Sort((a, b) => a.CompareTo(b));
+        }
 
          public decimal GetStockPrice(string inStockName, DateTime inTimeStamp)
          {
+            inStockName = inStockName.ToLower();
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
 
             Stock stock = this.stocks.Find(i => i.name.Equals(inStockName));
-            return stock.getValueByDate(inTimeStamp);
+            return stock.getStockPrice(inTimeStamp);
          }
 
          public decimal GetInitialStockPrice(string inStockName)
         {
+            inStockName = inStockName.ToLower();
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
 
-            return this.stocks.Find(i => i.name.Equals(inStockName)).values.ElementAt(0);
+            DateTime minDate = this.stocks.Find(i => i.name.Equals(inStockName)).history.Min(h => h.Date);
+            int index = this.stocks.Find(i => i.name.Equals(inStockName)).history.IndexOf(minDate);
+            return this.stocks.Find(i => i.name.Equals(inStockName)).values.ElementAt(index-1);
          }
 
          public decimal GetLastStockPrice(string inStockName)
          {
+            inStockName = inStockName.ToLower();
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
 
@@ -90,7 +139,8 @@ namespace DrugaDomacaZadaca_Burza
 
          public void CreateIndex(string inIndexName, IndexTypes inIndexType)
          {
-            if( inIndexType != IndexTypes.AVERAGE && inIndexType != IndexTypes.WEIGHTED)
+            inIndexName = inIndexName.ToLower();
+            if ( inIndexType != IndexTypes.AVERAGE && inIndexType != IndexTypes.WEIGHTED)
                 throw new StockExchangeException("Index type not supported. Use weighted or avaerage.");
             if(indexContains(inIndexName))
                 throw new StockExchangeException("Index with that name already exsists.");
@@ -101,6 +151,8 @@ namespace DrugaDomacaZadaca_Burza
 
          public void AddStockToIndex(string inIndexName, string inStockName)
          {
+            inIndexName = inIndexName.ToLower();
+            inStockName = inStockName.ToLower();
             if (!indexContains(inIndexName))
                 throw new StockExchangeException("Index with that name doesn't exist.");
             if (!stocksContains(inStockName))
@@ -114,10 +166,14 @@ namespace DrugaDomacaZadaca_Burza
 
          public void RemoveStockFromIndex(string inIndexName, string inStockName)
          {
+            inIndexName = inIndexName.ToLower();
+            inStockName = inStockName.ToLower();
             if (!indexContains(inIndexName))
                 throw new StockExchangeException("Index with that name doesn't exist.");
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
+            if(!this.indexes.Find(i => i.name.Equals(inIndexName)).stocks.Any(s => s.name.Equals(inStockName)))
+                throw new StockExchangeException("The index doesn't contain the named stock.");
 
             Stock rmStock = this.stocks.Find(i => i.name.Equals(inStockName));
             this.indexes.Find(a => a.name.Equals(inIndexName)).stocks.Remove(rmStock);
@@ -125,9 +181,11 @@ namespace DrugaDomacaZadaca_Burza
 
          public bool IsStockPartOfIndex(string inIndexName, string inStockName)
          {
-            if (!indexContains(inIndexName))
+            inIndexName = inIndexName.ToLower();
+            inStockName = inStockName.ToLower();
+            if (!indexContains(inIndexName.ToLower()))
                 throw new StockExchangeException("Index with that name doesn't exist.");
-            if (!stocksContains(inStockName))
+            if (!stocksContains(inStockName.ToLower()))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
 
             return this.indexes.Find(a => a.name.Equals(inIndexName)).stocks.Any(i => i.name.Equals(inStockName));   
@@ -135,14 +193,42 @@ namespace DrugaDomacaZadaca_Burza
 
          public decimal GetIndexValue(string inIndexName, DateTime inTimeStamp)
          {
+            inIndexName = inIndexName.ToLower();
             if (!indexContains(inIndexName))
                 throw new StockExchangeException("Index with that name doesn't exist.");
 
-            throw new NotImplementedException();
+            Index index = this.indexes.Find(i => i.name.Equals(inIndexName));
+            decimal sum = 0, indexValue = 0;
+            if(index.indexType == IndexTypes.AVERAGE)
+            {
+                foreach(Stock s in index.stocks)
+                {
+                    sum += s.getStockPrice(inTimeStamp);
+                }
+                indexValue = sum / index.stocks.Count;
+            } else if(index.indexType == IndexTypes.WEIGHTED)
+            {
+                decimal sumStockValue = 0;
+                foreach (Stock s in index.stocks)
+                {
+                    // Value of all stocks in the index
+                    sumStockValue += s.getStockPrice(inTimeStamp);
+                }
+                decimal totalWeight = 0;
+                foreach (Stock s in index.stocks)
+                {
+                    decimal weight = (s.getStockPrice(inTimeStamp) * s.numberOfShares) / sumStockValue;
+                    totalWeight += weight;
+                    sum += (weight * s.getStockPrice(inTimeStamp));
+                }
+                indexValue = sum / totalWeight;
+            }
+            return Math.Round(indexValue, 3);
          }
 
          public bool IndexExists(string inIndexName)
          {
+            inIndexName = inIndexName.ToLower();
             return indexContains(inIndexName);
          }
 
@@ -153,7 +239,8 @@ namespace DrugaDomacaZadaca_Burza
 
          public int NumberOfStocksInIndex(string inIndexName)
          {
-            if (!indexContains(inIndexName))
+            inIndexName = inIndexName.ToLower();
+            if (!indexContains(inIndexName.ToLower()))
                 throw new StockExchangeException("Index with that name doesn't exist.");
 
             return this.indexes.Find(i => i.name.Equals(inIndexName)).stocks.Count();
@@ -164,30 +251,43 @@ namespace DrugaDomacaZadaca_Burza
             if(this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name already exists.");
 
-            Portfolio port = new Portfolio(inPortfolioID);
-            this.portoflios.Add(port);
+            this.portoflios.Add(new Portfolio(inPortfolioID));
          }
 
          public void AddStockToPortfolio(string inPortfolioID, string inStockName, int numberOfShares)
          {
-            if (this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
-                throw new StockExchangeException("Portoflio with that name already exists.");
+            inStockName = inStockName.ToLower();
+            if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
+                throw new StockExchangeException("Portoflio with that name doesn't exist.");
             if(numberOfShares <= 0)
                 throw new StockExchangeException("Number of shares must be greater than 0.");
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
 
-            Stock existingStack = this.stocks.Find(s => s.name.Equals(inPortfolioID));
-            if(existingStack.numberOfShares < numberOfShares)
-                throw new StockExchangeException("The named stock doesn't have that much shares.");
+            // Check if the stock is already a part of the portoflio
+            Portfolio port = this.portoflios.Find(p => p.id.Equals(inPortfolioID));
+            if( port.stock.Any(s => s.name.Equals(inStockName)) )
+            {
+                Stock exStock = port.stock.Find(s => s.name.Equals(inStockName));
+                exStock.numberOfShares += numberOfShares;
+                if(this.stocks.Find(s => s.name.Equals(inStockName)).numberOfShares < exStock.numberOfShares)
+                    throw new StockExchangeException("The named stock doesn't have that much shares.");
+            // The portoflio doesn't have the named stock
+            } else
+            {
+                Stock existingStack = this.stocks.Find(s => s.name.Equals(inStockName));
+                if (existingStack.numberOfShares < numberOfShares)
+                    throw new StockExchangeException("The named stock doesn't have that much shares.");
 
-            Stock newStock = new Stock(existingStack);
-            newStock.numberOfShares = numberOfShares;
-            this.portoflios.Find(i => i.id.Equals(inPortfolioID)).stock.Add(newStock);
+                Stock newStock = new Stock(existingStack);
+                newStock.numberOfShares = numberOfShares;
+                port.stock.Add(newStock);
+            }
          }
 
          public void RemoveStockFromPortfolio(string inPortfolioID, string inStockName, int numberOfShares)
          {
+            inStockName = inStockName.ToLower();
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
             if (numberOfShares <= 0)
@@ -211,6 +311,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public void RemoveStockFromPortfolio(string inPortfolioID, string inStockName)
          {
+            inStockName = inStockName.ToLower();
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
             if (!stocksContains(inStockName))
@@ -242,16 +343,16 @@ namespace DrugaDomacaZadaca_Burza
 
          public bool IsStockPartOfPortfolio(string inPortfolioID, string inStockName)
          {
+            inStockName = inStockName.ToLower();
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
-            if (!stocksContains(inStockName))
-                throw new StockExchangeException("The stock with that name doesn't exist.");
 
             return this.portoflios.Find(i => i.id.Equals(inPortfolioID)).stock.Any(a => a.name.Equals(inStockName));
          }
 
          public int NumberOfSharesOfStockInPortfolio(string inPortfolioID, string inStockName)
          {
+            inStockName = inStockName.ToLower();
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
             if (!stocksContains(inStockName))
@@ -271,19 +372,29 @@ namespace DrugaDomacaZadaca_Burza
             decimal sum = 0;
             foreach(Stock s in port.stock)
             {
-                sum = sum + (s.numberOfShares * s.values.Last());
+                sum = sum + (s.numberOfShares * s.getStockPrice(timeStamp));
             }
             return sum;
          }
 
          public decimal GetPortfolioPercentChangeInValueForMonth(string inPortfolioID, int Year, int Month)
          {
-             throw new NotImplementedException();
+            if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
+                throw new StockExchangeException("Portoflio with that name doesn't exists.");
+
+            DateTime begMonth = new DateTime(Year, Month, 1, 0, 0, 0);
+            DateTime endgMonth = new DateTime(Year, Month, 29, 23, 59, 59);
+
+            /*decimal differnece = GetPortfolioValue(inPortfolioID, begMonth) - GetPortfolioValue(inPortfolioID, endgMonth);
+            decimal result = differnece / GetPortfolioValue(inPortfolioID, begMonth) * 100;
+            return Math.Round(result, 3);*/
+            return GetPortfolioValue(inPortfolioID, endgMonth);
          }
 
         public bool stocksContains(string stockName)
         {
-            foreach(Stock s in this.stocks) {
+            stockName = stockName.ToLower();
+            foreach (Stock s in this.stocks) {
                 if (s.name.ToLower().Equals(stockName.ToLower()))
                     return true;
             }
@@ -291,9 +402,10 @@ namespace DrugaDomacaZadaca_Burza
         }
 
         public bool indexContains(string indexName) {
+            indexName = indexName.ToLower();
             foreach (Index i in this.indexes)
             {
-                if (i.name.ToLower().Equals(indexName.ToLower()))
+                if (i.name.ToLower().Equals(indexName))
                     return true;
             }
             return false;
@@ -301,11 +413,12 @@ namespace DrugaDomacaZadaca_Burza
 
         public bool indeciesContainAstock(string stockName)
         {
-            foreach(Index i in this.indexes)
+            stockName = stockName.ToLower();
+            foreach (Index i in this.indexes)
             {
                 foreach(Stock s in i.stocks)
                 {
-                    if (s.name.ToLower().Equals(stockName.ToLower()))
+                    if (s.name.ToLower().Equals(stockName))
                         return true;
                 }
             }
@@ -322,7 +435,7 @@ namespace DrugaDomacaZadaca_Burza
 
         public Stock(string name, long numberOfShares, decimal value, DateTime validTime)
         {
-            this.name = name;
+            this.name = name.ToLower();
             this.numberOfShares = numberOfShares;
             this.values.Add(value);
             this.history.Add(validTime);
@@ -330,7 +443,7 @@ namespace DrugaDomacaZadaca_Burza
 
         public Stock(Stock s)
         {
-            this.name = s.name;
+            this.name = s.name.ToLower();
             this.numberOfShares = s.numberOfShares;
             foreach (decimal d in s.values)
                 this.values.Add(d);
@@ -350,6 +463,32 @@ namespace DrugaDomacaZadaca_Burza
             }
             throw new StockExchangeException("Invalid timestamp.");
         }
+
+        public decimal getStockPrice(DateTime dateTime)
+        {
+            if(dateTime.Ticks < this.history.First().Ticks)
+                throw new StockExchangeException("Invalid timestamp.");
+
+            if (this.history.Count == 1)
+                return this.values.First();
+
+            int greater = DateTime.Compare(dateTime, this.history.Last());
+            if (greater >= 0)
+                return this.values.Last();
+
+            DateTime prev = this.history.First();
+            foreach(DateTime dt in this.history)
+            {
+                int rPrev = DateTime.Compare(prev, dateTime);
+                int rNext = DateTime.Compare(dt, dateTime);
+                
+                if (rPrev <= 0 && rNext > 0)
+                    return this.values.ElementAt(this.history.IndexOf(dt) - 1);
+
+                prev = dt;
+            }
+            return this.values.Last();
+        }
     }
 
     public class Index
@@ -360,7 +499,7 @@ namespace DrugaDomacaZadaca_Burza
 
         public Index(string name, IndexTypes type)
         {
-            this.name = name;
+            this.name = name.ToLower();
             this.indexType = type;
         }
     }
