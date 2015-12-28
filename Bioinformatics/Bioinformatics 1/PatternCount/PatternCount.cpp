@@ -23,7 +23,7 @@ int main() {
 
 int patternCount(std::string genome, std::string pattern) {
 	int genLen = genome.length(), patLen = pattern.length(), count{ 0 };
-	for (int i{ 0 }; i < genLen - patLen; i++) {
+	for (int i{ 0 }; i < genLen - patLen - 1; i++) { 
 		if (genome.substr(i, patLen).compare(pattern) == 0 ) {
 			++count;
 		}

@@ -6,7 +6,8 @@
 #include <vector>
 #include <string>
 
-std::vector<int> minSkewLocation(const std::string& genome);
+std::vector<int> findMinimumInAfunction(const std::vector<int> function);
+std::vector<int> calculateSkew(const std::string& genome);
 
 int main() {
     // Open file handles
@@ -15,7 +16,9 @@ int main() {
     std::string genome;
     std::getline(inputHandle, genome);
 
-	std::vector<int> minSkew = minSkewLocation(genome);
+	std::vector<int> skew = calculateSkew(genome);
+	std::vector<int> minSkew = findMinimumInAfunction(skew);
+
 	for (const auto& n : minSkew)
 		outputHandle << n << ' ';
 
@@ -25,47 +28,25 @@ int main() {
     return 0;
 }
 
-std::vector<int> minSkewLocation(const std::string& genome) {
-    int genLen = genome.length(), count{0};
-    std::vector<int> countVector, minSkew;
-
-    for(const auto& c : genome) {
-        if(c == 'C')
-            --count;
-        if(c == 'G')
-            ++count;
-        countVector.push_back(count);
-    }
-
-    bool falling = true, changed = false;
-    if(countVector[0] >= 0)
-        falling = false;
-
-    for(int i{0}; i < countVector.size(); ++i) {
-        if( i > 0 && countVector[i-1] < countVector[i] ) {
-            if( falling == true)
-                changed = true;
-            falling = false;
-        } else {
-            if( falling == false)
-                changed = true;
-            falling = true;
-        }
-
-        if(changed) {
-			minSkew.push_back(i);
-            changed = false;
-        }
-    }
-	return minSkew;
+std::vector<int> findMinimumInAfunction(const std::vector<int> function) {
+	std::vector<int> mins;
+	for (const auto& n : function) {
+		mins.push_back(n);
+	}
+	return mins;
 }
 
+std::vector<int> calculateSkew(const std::string& genome) {
+	int genLen = genome.length(), count{ 0 };
+	std::vector<int> skew;
 
-bool fall(int previous, int current, bool wasRising) {
-    bool rising = false;
-    if( previous < current) {
-        rising = true;
-    }
-	return true;
+	skew.push_back(0);
+	for (const auto& c : genome) {
+		if (c == 'G')
+			++count;
+		else if (c == 'C')
+			--count;
+		skew.push_back(count);
+	}
+	return skew;
 }
-

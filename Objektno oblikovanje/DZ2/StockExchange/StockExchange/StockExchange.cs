@@ -100,6 +100,12 @@ namespace DrugaDomacaZadaca_Burza
                     i.stocks.Insert(oldIndex, newStock);
                 }
             }
+            // Sort tranasactions by time
+            foreach (Stock s in this.stocks)
+            {
+                s.transactions = s.transactions.OrderBy(t => t.time).ToList();
+            }
+
             //this.stocks.Find(s => s.name.Equals(inStockName)).values.Sort((a,b) => a.CompareTo(b));
             //this.stocks.Find(s => s.name.Equals(inStockName)).history.Sort((a, b) => a.CompareTo(b));
         }
@@ -461,26 +467,27 @@ namespace DrugaDomacaZadaca_Burza
             if(dateTime.Ticks < this.transactions.First().time.Ticks)
                 throw new StockExchangeException("Invalid timestamp.");
 
+            this.transactions = this.transactions.OrderBy(t => t.time).ToList();
+
             if (this.transactions.Count == 1)
                 return this.transactions.First().value;
 
-            int greater = DateTime.Compare(dateTime, this.transactions.Last().time);
+            int greater = DateTime.Compare(dateTime, this.transactions.OrderBy(t => t.time).Last().time);
             if (greater >= 0)
-                return this.transactions.Last().value;
+                return this.transactions.OrderBy(t => t.time).Last().value;
 
-            DateTime prev = this.transactions.First().time;
+            Transaction prev = this.transactions.First();
             foreach(Transaction t in this.transactions)
             {
-                DateTime dt = t.time;
-                int rPrev = DateTime.Compare(prev, dateTime);
-                int rNext = DateTime.Compare(dt, dateTime);
+                int rPrev = DateTime.Compare(prev.time, dateTime);
+                int rNext = DateTime.Compare(t.time, dateTime);
 
                 if (rPrev <= 0 && rNext > 0)
-                    return t.value;
+                    return prev.value;
 
-                prev = dt;
+                prev = t;
             }
-            return this.transactions.Last().value;
+            return prev.value;
         }
     }
 
