@@ -4,7 +4,7 @@
 #include <iostream>
 #include <set>
 
-std::vector<std::string> neigbours(std::string pattern, int d);
+std::set<std::string> neigbours(std::string pattern, int d);
 int countMissmatch(const std::string& genome1, const std::string& genome2);
 
 int main() {
@@ -16,15 +16,10 @@ int main() {
 
 	// Parse input files
 	inputHandle >> pattern >> d;
-	std::vector<std::string> dNeigbours = neigbours(pattern, d);
 
-	std::vector<std::string> neigboursInTheHood = neigbours(pattern, d);
-	std::set<std::string> neigboursInTheHoodDistrinct;
-	for (const auto& s : neigboursInTheHood)
-		neigboursInTheHoodDistrinct.insert(s);
+	std::set<std::string> neigboursInTheHood = neigbours(pattern, d);
 
-	for (const auto s : neigboursInTheHoodDistrinct) {
-		if(s.size() == pattern.size())
+	for (const auto s : neigboursInTheHood) {
 			outputHandle << s << std::endl;
 	}
 		
@@ -35,27 +30,29 @@ int main() {
 	return 0;
 }
 
-std::vector<std::string> neigbours(std::string pattern, int d) {
-	std::vector<std::string> fourNucleotides = { "A", "C", "G", "T" };
-	if (d == 0) {
-		std::vector<std::string> tempPattern = { pattern };
+std::set<std::string> neigbours(std::string pattern, int d) {
+	std::set<std::string> fourNucleotides = { "A", "C", "G", "T" };
+	std::set<std::string> tempPattern = { pattern };
+
+	if (d == 0) 
 		return tempPattern;
-	}
-	if (pattern.size() == 0) {
-		return fourNucleotides;
-	}
-	std::vector<std::string> negibourhood;
-	std::vector<std::string> suffixNegibourhood = neigbours(pattern.substr(1, pattern.size() - 1), d);
+	if (pattern.size() == 1) 
+		return fourNucleotides;	
+
+	std::set<std::string> negibourhood;
+	std::string suffix = pattern.substr(1, pattern.size() - 1);
+	std::set<std::string> suffixNegibourhood  = neigbours(suffix, d);
+
 	for (auto n : suffixNegibourhood) {
-		if (countMissmatch(pattern.substr(1, pattern.size() - 1), n) < d) {
+		if (countMissmatch(suffix, n) < d) {
 			for (auto b : fourNucleotides) {
-				negibourhood.insert(negibourhood.begin(), b);
+				negibourhood.insert(b.append(n));
 			}
 		}
 		else {
 			std::string concat = n;
 			concat.insert(concat.begin(), pattern.at(0));
-			negibourhood.push_back(concat);
+			negibourhood.insert(concat);
 		}
 	}
 	return negibourhood;
