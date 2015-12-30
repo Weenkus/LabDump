@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <set>
 
 std::string numberToPattern(long unsigned int number, int k);
 long unsigned int patternToNumberNonRecursive(std::string pattern);
@@ -13,22 +14,21 @@ int numberToSymbol(int number);
 long unsigned int quotient(long unsigned int number, int divider);
 int remainder(long unsigned int number, int divider);
 
-std::vector<int> computingFreq(std::string text, int k);
+std::vector<int> computingFreq(std::string text, int k, int d);
 
 int main() {
 
 	// Open files for input/output
-	std::ifstream inputHandle("dataset_3010_2.txt");
+	std::ifstream inputHandle("input.txt");
 	std::ofstream outputHandle("output.txt");
 
 	std::string input;
-	std::getline(inputHandle, input);
-	int number{ 0 }, k{ 0 };
-	inputHandle >> k;
+	int number{ 0 }, k{ 0 }, int d{ 0 };
+	inputHandle >> input >> k >> d;
 
 	//outputHandle << patternToNumberNonRecursive(input);
 	//outputHandle << numberToPattern(number, k);
-	std::vector<int> freqArray = computingFreq(input, k);
+	std::vector<int> freqArray = computingFreq(input, k, d);
 	for (const auto& n : freqArray)
 		outputHandle << n << " ";
 
@@ -102,7 +102,7 @@ int remainder(long unsigned int number, int divider) {
 	return number % divider;
 }
 
-std::vector<int> computingFreq(std::string text, int k) {
+std::vector<int> computingFreq(std::string text, int k, int d) {
 	// Initialise the freq array
 	std::vector<int> freqs;
 	int freqLen = pow(4, k) - 1, textLen = text.length();
