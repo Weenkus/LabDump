@@ -11,6 +11,8 @@ namespace OneHumpIterator
 {
     public partial class Form1 : Form
     {
+        string[] iterators = { "r * x * (1 - x)" , "r * x * sqrt(1 - x)" , "r * (x - x^3)", "r * x * exp(-x)" };
+
         // Content item for the combo box
         private class OneHumpIterator
         {
@@ -43,6 +45,7 @@ namespace OneHumpIterator
 
         private void sliderR_ValueChanged(object sender, EventArgs e)
         {
+            dynamicThickness();
             draw();
         }
 
@@ -52,54 +55,107 @@ namespace OneHumpIterator
             graph.Series[1].Points.Clear();
             graph.Series[2].Points.Clear();
             graph.Series[3].Points.Clear();
+            graph.Series[4].Points.Clear();
+
+            // Set the axis to proper values
+            graph.ChartAreas[0].AxisX.Minimum = 0;
+            graph.ChartAreas[0].AxisX.Maximum = 1;
+
+            graph.ChartAreas[0].AxisY.Minimum = 0;
+            graph.ChartAreas[0].AxisY.Maximum = 1;
 
             double r = (double)sliderR.Value / 100;
-            if (cbIterator.SelectedItem.ToString().Equals("r*x*(1-x)"))
+            double f1, f2, f4, f8;
+            double smoothness = 0.003;
+            if (cbIterator.SelectedItem.ToString().Equals(iterators[0]))
             {
-                for (double x = 0; x <= 1; x = x + 0.001)
+                for (double x = 0; x <= 1; x += smoothness)
                 {
                     // f(x)
-                    graph.Series[1].Points.AddXY(x, (r * x * (1 - x)));
+                    f1 = (r * x * (1 - x));
+                    graph.Series[1].Points.AddXY(x, f1);
+
 
                     // f^2(x)
-                    graph.Series[2].Points.AddXY(x, -r * r * (x - 1) * x * (r * x * x - r * x + 1));
+                    f2 = (r * f1 * (1 - f1));
+                    graph.Series[2].Points.AddXY(x, f2);
 
                     // f^4(x)
-                    graph.Series[3].Points.AddXY(x, r * r * r * r * (x - 1) * x * (r * (x - 1) * x + 1) * (r * r * (-(x - 1)) * x * (r * (x - 1) * x + 1) - 1) * (r * r * r * r * r * (x - 1) * (x - 1) * x * x * (r * (x - 1) * x + 1) * (r * (x - 1) * x + 1) + r * r * r * (x - 1) * x * (r * (x - 1) * x + 1) + 1));
+                    f4 = (r * f2 * (1 - f2));
+                    graph.Series[3].Points.AddXY(x, f4);
+
 
                     // f^8(x)
-
+                    f8 = (r * f4 * (1 - f4));
+                    graph.Series[4].Points.AddXY(x, f8);
                 }
             }
-            else if (cbIterator.SelectedItem.ToString().Equals("r*x*sqrt(1-x)"))
+            else if (cbIterator.SelectedItem.ToString().Equals(iterators[1]))
             {
-                for (double x = 0; x <= 1; x = x + 0.001)
+                for (double x = 0; x <= 1; x += smoothness)
                 {
                     // f(x)
-                    graph.Series[1].Points.AddXY(x, (r * x * Math.Sqrt(1 - x)));
+                    f1 = (r * x * Math.Sqrt(1 - x));
+                    graph.Series[1].Points.AddXY(x, f1);
 
                     // f^2(x)
-                    graph.Series[2].Points.AddXY(x, r * r * Math.Sqrt(1 - x) * x * Math.Sqrt(1 - r * Math.Sqrt(1 - x) * x));
+                    f2 = (r * f1 * Math.Sqrt(1 - f1));
+                    graph.Series[2].Points.AddXY(x, f2);
 
                     // f^4(x)
-                    graph.Series[3].Points.AddXY(x, r * r * r * r * Math.Sqrt(1 - x) * x * Math.Sqrt(1 - r * Math.Sqrt(1 - x) * x) * Math.Sqrt(1 - r * r * Math.Sqrt(1 - x) * x * Math.Sqrt(1 - r * Math.Sqrt(1 - x) * x)) * Math.Sqrt(1 - r * r * r * Math.Sqrt(1 - x) * x * Math.Sqrt(1 - r * Math.Sqrt(1 - x) * x) * Math.Sqrt(1 - r * r * Math.Sqrt(1 - x) * x * Math.Sqrt(1 - r * Math.Sqrt(1 - x) * x))));
+                    f4 = (r * f2 * Math.Sqrt(1 - f2));
+                    graph.Series[3].Points.AddXY(x, f4);
 
                     // f^8(x)
+                    f8 = (r * f4 * Math.Sqrt(1 - f4));
+                    graph.Series[4].Points.AddXY(x, f8);
                 }
             }
-            else if (cbIterator.SelectedItem.ToString().Equals("r - (x*x)")) {
-                for (double x = 0; x <= 1; x = x + 0.001)
+            else if (cbIterator.SelectedItem.ToString().Equals(iterators[2])) {
+                for (double x = 0; x <= 1; x += smoothness)
                 {
                     // f(x)
-                    graph.Series[1].Points.AddXY(x, r-x*x);
+                    f1 = r * (x - x * x * x);
+                    graph.Series[1].Points.AddXY(x, f1);
 
                     // f^2(x)
-                    graph.Series[2].Points.AddXY(x, x*x*(2*r - x*x) + (1 - r)*r);
+                    f2 = r * (f1 - f1 * f1 * f1);
+                    graph.Series[2].Points.AddXY(x, f2);
 
                     // f^4(x)
-                    graph.Series[3].Points.AddXY(x, (-2*r*x*x + (r - 1)*r + x*x*x*x)* (-2 * r * x * x + (r - 1) * r + x * x * x * x)*(2*r - (-2*r*x*x + (r - 1)*r + x*x*x*x)* (-2 * r * x * x + (r - 1) * r + x * x * x * x))-(r - 1)*r);
+                    f4 = r * (f2 - f2 * f2 * f2);
+                    graph.Series[3].Points.AddXY(x, f4);
 
                     // f^8(x)
+                    f8 = r * (f4 - f4 * f4 * f4);
+                    graph.Series[4].Points.AddXY(x, f8);
+                }
+            }
+            else if (cbIterator.SelectedItem.ToString().Equals(iterators[3]))
+            {
+                // Set the axis to proper values
+                graph.ChartAreas[0].AxisX.Minimum = 0;
+                graph.ChartAreas[0].AxisX.Maximum = 2;
+
+                graph.ChartAreas[0].AxisY.Minimum = 0;
+                graph.ChartAreas[0].AxisY.Maximum = 2;
+                for (double x = 0; x <= 2; x += smoothness)
+                {
+                    // f(x)
+                    f1 = r * x * Math.Exp(- Math.Pow(x, 2));
+                    graph.Series[1].Points.AddXY(x, f1);
+
+                    // f^2(x)
+                    f2 = r * f1 * Math.Exp(-Math.Pow(f1, 2));
+                    graph.Series[2].Points.AddXY(x, f2);
+
+                    // f^4(x)
+                    f4 = r * f2 * Math.Exp(-Math.Pow(f2, 2));
+                    graph.Series[3].Points.AddXY(x, f4);
+
+                    // f^8(x)
+                    f8 = r * f4 * Math.Exp(-Math.Pow(f4, 2));
+                    graph.Series[4].Points.AddXY(x, f8);
                 }
             }
 
@@ -117,6 +173,12 @@ namespace OneHumpIterator
             graph.Series.Add("f^4(x)");
             graph.Series.Add("f^8(x)");
 
+            graph.Series["f(x) = x"].BorderWidth = 2;
+            graph.Series["f(x)"].BorderWidth = 3;
+            graph.Series["f^2(x)"].BorderWidth = 3;
+            graph.Series["f^4(x)"].BorderWidth = 3;
+            graph.Series["f^8(x)"].BorderWidth = 3;
+
             // Set the axis to proper values
             graph.ChartAreas[0].AxisX.Minimum = 0;
             graph.ChartAreas[0].AxisX.Maximum = 1;
@@ -128,7 +190,7 @@ namespace OneHumpIterator
             // Add the linear line
             graph.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             graph.Series[0].Points.AddXY(0, 0);
-            graph.Series[0].Points.AddXY(1, 1);
+            graph.Series[0].Points.AddXY(2, 2);
 
             // Set function typesg
             graph.Series[1].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -139,14 +201,80 @@ namespace OneHumpIterator
 
         private void initialiseTheComboBox() {
             // Fill the comobo box with one hump iterator equations
-            cbIterator.Items.Add(new OneHumpIterator("r*x*(1-x)", 0));
-            cbIterator.Items.Add(new OneHumpIterator("r*x*sqrt(1-x)", 1));
-            cbIterator.Items.Add(new OneHumpIterator("r - (x*x)", 2));
-            cbIterator.Items.Add(new OneHumpIterator("r*x*exp(-x)", 3));
+            cbIterator.Items.Add(new OneHumpIterator(iterators[0], 0));
+            cbIterator.Items.Add(new OneHumpIterator(iterators[1], 1));
+            cbIterator.Items.Add(new OneHumpIterator(iterators[2], 2));
+            cbIterator.Items.Add(new OneHumpIterator(iterators[3], 3));
         }
 
         private void initialiseTheSlider() {
             sliderR.SetRange(0, 1000);
+        }
+
+        private void defultLineThicness() {
+            graph.Series["f(x) = x"].BorderWidth = 2;
+            graph.Series["f(x)"].BorderWidth = 2;
+            graph.Series["f^2(x)"].BorderWidth = 2;
+            graph.Series["f^4(x)"].BorderWidth = 2;
+            graph.Series["f^8(x)"].BorderWidth = 2;
+        }
+
+        private void dynamicThickness() {
+            // Adjust thickness for the leading hump
+            defaultThickness();
+            double r = (double)sliderR.Value / 100;
+            int leadingHumpThickness = 7;
+          
+            if (cbIterator.SelectedItem.ToString().Equals(iterators[0]))
+            {
+                if (r < 3)
+                {
+                    defultLineThicness();
+                    graph.Series[1].BorderWidth = leadingHumpThickness;
+                }
+                else if (r > 3 && r < 3.48)
+                {
+                    defultLineThicness();
+                    graph.Series[2].BorderWidth = leadingHumpThickness;
+                }
+                else if (r > 3.48 && r < 3.54)
+                {
+                    defultLineThicness();
+                    graph.Series[3].BorderWidth = leadingHumpThickness;
+                }
+                else if (r > 3.54) {
+                    defultLineThicness();
+                    graph.Series[4].BorderWidth = leadingHumpThickness;
+                }
+
+                  
+            }
+            else if (cbIterator.SelectedItem.ToString().Equals(iterators[1]))
+            {
+                if (r < 1)
+                {
+                    defultLineThicness();
+                    graph.Series["f(x)"].BorderWidth = leadingHumpThickness;
+                }
+                else if (r > 1 && r < Math.Sqrt(5))
+                {
+                    defultLineThicness();
+                    graph.Series["f^2(x)"].BorderWidth = leadingHumpThickness;
+                }
+            }
+            else if (cbIterator.SelectedItem.ToString().Equals(iterators[2]))
+            {
+
+            }
+        }
+
+        private void defaultThickness()
+        {
+            graph.Series["f(x) = x"].BorderWidth = 2;
+            graph.Series["f(x)"].BorderWidth = 3;
+            graph.Series["f^2(x)"].BorderWidth = 3;
+            graph.Series["f^4(x)"].BorderWidth = 3;
+            graph.Series["f^8(x)"].BorderWidth = 3;
         }
 
 
