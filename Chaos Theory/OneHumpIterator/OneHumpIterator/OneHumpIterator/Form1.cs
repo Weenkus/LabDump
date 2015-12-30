@@ -11,7 +11,7 @@ namespace OneHumpIterator
 {
     public partial class Form1 : Form
     {
-        string[] iterators = { "r * x * (1 - x)" , "r * x * sqrt(1 - x)" , "r * (x - x^3)", "r * x * exp(-x)" };
+        string[] iterators = { "r * x * (1 - x)", "r * x * sqrt(1 - x)", "r * (x - x^3)", "r * x * exp(-x)" };
 
         // Content item for the combo box
         private class OneHumpIterator
@@ -45,8 +45,11 @@ namespace OneHumpIterator
 
         private void sliderR_ValueChanged(object sender, EventArgs e)
         {
-            dynamicThickness();
-            draw();
+            if(cbIterator.SelectedItem != null)
+            {
+                dynamicThickness();
+                draw();
+            }
         }
 
         private void draw()
@@ -63,6 +66,9 @@ namespace OneHumpIterator
 
             graph.ChartAreas[0].AxisY.Minimum = 0;
             graph.ChartAreas[0].AxisY.Maximum = 1;
+
+            graph.Series[0].Points.AddXY(0, 0);
+            graph.Series[0].Points.AddXY(1, 1);
 
             double r = (double)sliderR.Value / 100;
             double f1, f2, f4, f8;
@@ -139,6 +145,9 @@ namespace OneHumpIterator
 
                 graph.ChartAreas[0].AxisY.Minimum = 0;
                 graph.ChartAreas[0].AxisY.Maximum = 2;
+
+                graph.Series[0].Points.AddXY(0, 0);
+                graph.Series[0].Points.AddXY(2, 2);
                 for (double x = 0; x <= 2; x += smoothness)
                 {
                     // f(x)
@@ -190,7 +199,7 @@ namespace OneHumpIterator
             // Add the linear line
             graph.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             graph.Series[0].Points.AddXY(0, 0);
-            graph.Series[0].Points.AddXY(2, 2);
+            graph.Series[0].Points.AddXY(1, 1);
 
             // Set function typesg
             graph.Series[1].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -254,17 +263,39 @@ namespace OneHumpIterator
                 if (r < 1)
                 {
                     defultLineThicness();
-                    graph.Series["f(x)"].BorderWidth = leadingHumpThickness;
+                    graph.Series[1].BorderWidth = leadingHumpThickness;
                 }
                 else if (r > 1 && r < Math.Sqrt(5))
                 {
                     defultLineThicness();
-                    graph.Series["f^2(x)"].BorderWidth = leadingHumpThickness;
+                    graph.Series[2].BorderWidth = leadingHumpThickness;
                 }
             }
             else if (cbIterator.SelectedItem.ToString().Equals(iterators[2]))
             {
-
+                if (r < 1)
+                {
+                    defultLineThicness();
+                    graph.Series[1].BorderWidth = leadingHumpThickness;
+                }
+                else if (r > 1 && r < 2)
+                {
+                    defultLineThicness();
+                    graph.Series[2].BorderWidth = leadingHumpThickness;
+                }
+            }
+            else if (cbIterator.SelectedItem.ToString().Equals(iterators[3]))
+            {
+                if (r < 1)
+                {
+                    defultLineThicness();
+                    graph.Series[1].BorderWidth = leadingHumpThickness;
+                }
+                else if (r > 1 && r < Math.Exp(1))
+                {
+                    defultLineThicness();
+                    graph.Series[2].BorderWidth = leadingHumpThickness;
+                }
             }
         }
 
