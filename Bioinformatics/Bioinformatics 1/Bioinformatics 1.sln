@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreqWordsWithMismatch", "Fr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Neighbours", "Neighbours\Neighbours.vcxproj", "{0D63DACC-C7A1-4A67-A103-E85DF0324905}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MotifEnumeration", "MotifEnumeration\MotifEnumeration.vcxproj", "{5D82FF6F-2316-4CE9-BC94-1E288E1A7B42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -141,6 +143,14 @@ Global
 		{0D63DACC-C7A1-4A67-A103-E85DF0324905}.Release|x64.Build.0 = Release|x64
 		{0D63DACC-C7A1-4A67-A103-E85DF0324905}.Release|x86.ActiveCfg = Release|Win32
 		{0D63DACC-C7A1-4A67-A103-E85DF0324905}.Release|x86.Build.0 = Release|Win32
+		{5D82FF6F-2316-4CE9-BC94-1E288E1A7B42}.Debug|x64.ActiveCfg = Debug|x64
+		{5D82FF6F-2316-4CE9-BC94-1E288E1A7B42}.Debug|x64.Build.0 = Debug|x64
+		{5D82FF6F-2316-4CE9-BC94-1E288E1A7B42}.Debug|x86.ActiveCfg = Debug|Win32
+		{5D82FF6F-2316-4CE9-BC94-1E288E1A7B42}.Debug|x86.Build.0 = Debug|Win32
+		{5D82FF6F-2316-4CE9-BC94-1E288E1A7B42}.Release|x64.ActiveCfg = Release|x64
+		{5D82FF6F-2316-4CE9-BC94-1E288E1A7B42}.Release|x64.Build.0 = Release|x64
+		{5D82FF6F-2316-4CE9-BC94-1E288E1A7B42}.Release|x86.ActiveCfg = Release|Win32
+		{5D82FF6F-2316-4CE9-BC94-1E288E1A7B42}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
