@@ -8,6 +8,9 @@ std::vector<std::string> motifEnumeration(std::vector<std::string> DNAstrings, i
 std::set<std::string> neigbours(std::string pattern, int d);
 int countMissmatch(const std::string& genome1, const std::string& genome2);
 
+bool patternMatchWithMissmatch(std::string genome, std::string pattern, int d);
+int countMissmatch(const std::string& genome1, const std::string& genome2);
+
 int main() {
 	// Open file handles
 	std::ifstream inputHandle("input.txt");
@@ -19,14 +22,17 @@ int main() {
 
 	std::string line;
 	std::vector<std::string> DNAstrings;
-	while (std::getline(inputHandle, line))
-		DNAstrings.push_back(line);
+	while (std::getline(inputHandle, line)) {
+		if (!line.empty())
+			DNAstrings.push_back(line);
+	}
 
 	// Get result and print it
 	std::vector<std::string> motifs = motifEnumeration(DNAstrings, k, d);
 	for (auto m : motifs)
-		outputHandle << m << std::endl;
+		outputHandle << m << " ";
 
+	getchar();
 	// Clean up
 	inputHandle.close();
 	outputHandle.close();
@@ -39,19 +45,19 @@ std::vector<std::string> motifEnumeration(std::vector<std::string> DNAstrings, i
 	// Check every DNAstring
 	for (auto DNAstring : DNAstrings) {
 		// Loop all k-mesr
-		for (int i{ 0 }; i < DNAstring.length() - k + 1; ++i) {
+		for (int i{ 0 }; i < DNAstring.length() - k - 1; ++i) {
 			std::set<std::string> neighbourHood = neigbours(DNAstring.substr(i, k), d);
 			bool noMatch = true;
 			// See if a neighbour
 			for (auto neighbour : neighbourHood) {
 				for (auto DNA : DNAstrings) {
-					if (DNA.find(neighbour) == false) {
+					if (patternMatchWithMissmatch(DNA, neighbour, d) == false) {
 						noMatch = false;
 						break;
 					}
 				}
 			}
-			if (noMatch)
+			if (!noMatch)
 				patterns.push_back(DNAstring.substr(i, k));
 		}
 	}
@@ -92,4 +98,13 @@ int countMissmatch(const std::string& genome1, const std::string& genome2) {
 	for (int i{ 0 }; i < lenMin; ++i)
 		count += genome1.at(i) != genome2.at(i) ? 1 : 0;
 	return count;
+}
+
+bool patternMatchWithMissmatch(std::string genome, std::string pattern, int d) {
+	int genLen = genome.length(), patLen = pattern.length(), count{ 0 };
+	for (int i{ 0 }; i < genLen - patLen; i++) {
+		if (countMissmatch(genome.substr(i, patLen), pattern) < d)
+			return true;
+	}
+	return false;
 }
