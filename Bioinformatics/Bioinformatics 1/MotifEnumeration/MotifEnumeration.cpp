@@ -4,7 +4,7 @@
 #include <vector>
 #include <set>
 
-std::vector<std::string> motifEnumeration(std::vector<std::string> DNAstrings, int k, int d);
+std::set<std::string> motifEnumeration(std::vector<std::string> DNAstrings, int k, int d, int lineNum);
 std::set<std::string> neigbours(std::string pattern, int d);
 int countMissmatch(const std::string& genome1, const std::string& genome2);
 
@@ -17,48 +17,50 @@ int main() {
 	std::ofstream outputHandle("output.txt");
 
 	// Parse the file
-	int d{ 0 }, k{ 0 };
+	int d{ 0 }, k{ 0 }, lineNum{ 0 };
 	inputHandle >> k >> d;
 
 	std::string line;
 	std::vector<std::string> DNAstrings;
 	while (std::getline(inputHandle, line)) {
-		if (!line.empty())
+		if (!line.empty()) {
 			DNAstrings.push_back(line);
+			++lineNum;
+		}		
 	}
 
 	// Get result and print it
-	std::vector<std::string> motifs = motifEnumeration(DNAstrings, k, d);
+	std::set<std::string> motifs = motifEnumeration(DNAstrings, k, d, lineNum);
 	for (auto m : motifs)
 		outputHandle << m << " ";
 
-	getchar();
 	// Clean up
 	inputHandle.close();
 	outputHandle.close();
 	return 0;
 }
 
-std::vector<std::string> motifEnumeration(std::vector<std::string> DNAstrings, int k, int d) {
-	std::vector<std::string> patterns;
+std::set<std::string> motifEnumeration(std::vector<std::string> DNAstrings, int k, int d, int lineNum) {
+	std::set<std::string> patterns;
 
 	// Check every DNAstring
 	for (auto DNAstring : DNAstrings) {
 		// Loop all k-mesr
-		for (int i{ 0 }; i < DNAstring.length() - k - 1; ++i) {
+		for (int i{ 0 }; i <= DNAstring.length() - k; ++i) {
 			std::set<std::string> neighbourHood = neigbours(DNAstring.substr(i, k), d);
-			bool noMatch = true;
 			// See if a neighbour
 			for (auto neighbour : neighbourHood) {
+				int foindInAllDNAstrings{ 0 };
 				for (auto DNA : DNAstrings) {
-					if (patternMatchWithMissmatch(DNA, neighbour, d) == false) {
-						noMatch = false;
-						break;
+					if (patternMatchWithMissmatch(DNA, neighbour, d) == true) {
+						++foindInAllDNAstrings;
+						continue;
 					}
 				}
+				if (foindInAllDNAstrings == lineNum)
+					patterns.insert(neighbour);
 			}
-			if (!noMatch)
-				patterns.push_back(DNAstring.substr(i, k));
+
 		}
 	}
 	return patterns;
@@ -102,8 +104,8 @@ int countMissmatch(const std::string& genome1, const std::string& genome2) {
 
 bool patternMatchWithMissmatch(std::string genome, std::string pattern, int d) {
 	int genLen = genome.length(), patLen = pattern.length(), count{ 0 };
-	for (int i{ 0 }; i < genLen - patLen; i++) {
-		if (countMissmatch(genome.substr(i, patLen), pattern) < d)
+	for (int i{ 0 }; i <= genLen - patLen; ++i) {
+		if (countMissmatch(genome.substr(i, patLen), pattern) <= d)
 			return true;
 	}
 	return false;
