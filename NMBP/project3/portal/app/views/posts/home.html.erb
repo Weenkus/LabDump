@@ -20,10 +20,51 @@
 					</a>
 				</div>
 				<div class="col-md-8">
+				
 					<h3><%= post.title %></h3>
 					<h4><%= post.author %></h4>
-					<p><%= post.content %></p>
-					<a class="btn btn-primary" href="#">View Project <span class="glyphicon glyphicon-chevron-right"></span></a>
+					<p><%= post.content %></p>					
+					
+					
+					<div class="page-header">
+					</div> 				
+					
+					<% if !post.comments.nil? %> 
+						<% post.comments.each do |c| %>
+							<% if !c.nil? %> 
+							
+								<div class="comments-list">
+									<div class="media">
+										<div class="media-body">
+                                
+										<h4 class="media-heading user_name">Anonymous</h4>
+											<%= c["content"] %>.
+			
+										</div>
+									</div>
+								</div>
+							
+								<br>
+							<% end %>
+						<% end %>
+					<% end %>
+
+					
+					<%= button_to 'Comment', :controller => "posts", :action => "comment", :class => 'btn btn-primary',  :id => post.id %>
+					
+					<!--<%= form_for :comment do |f| %>
+					
+					  
+					  <p>
+						<%= f.label :comments %><br>
+						<%= f.text_field :comment %>
+					  </p>
+					  
+					  <p>
+						<%= f.submit 'Comment', :class => 'btn btn-primary' %>
+					  </p>
+					<% end %>-->
+					
 				</div>
 			</div>
 			<!-- /.row -->

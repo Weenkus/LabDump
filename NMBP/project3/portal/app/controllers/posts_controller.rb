@@ -14,6 +14,17 @@ class PostsController < ApplicationController
 		redirect_to action: "home"
 	end
 	
+	def comment
+		@commentingPost = Post.find(params[:id])
+	end
+	
+	def addComment
+		@commentingPost = Post.find(params[:id])
+		@commentingPost.add_to_set(comments: params[:comment])
+		@commentingPost.save
+	
+		redirect_to action: "home"
+	end
 	
 	private
 		def post_params
