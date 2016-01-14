@@ -10,8 +10,7 @@
 <!-- Page Content -->
     <div class="container">
     
-    
-
+	<% if !@posts.nil? %>
 	  <% @posts.each do |post| %>
 		  <div class="row">
 				<div class="col-md-4">
@@ -70,6 +69,7 @@
 			<!-- /.row -->
 			   <hr>
 	  <% end %>
+	<% end %>
 
 
 
