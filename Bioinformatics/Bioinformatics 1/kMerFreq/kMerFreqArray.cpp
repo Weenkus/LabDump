@@ -23,7 +23,7 @@ int main() {
 	std::ofstream outputHandle("output.txt");
 
 	std::string input;
-	int number{ 0 }, k{ 0 }, int d{ 0 };
+	int number{ 0 }, k{ 0 }, d{ 0 };
 	inputHandle >> input >> k >> d;
 
 	//outputHandle << patternToNumberNonRecursive(input);
