@@ -1,0 +1,30 @@
+<!-- Page Heading -->
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-header">
+        <small>Comment on the post <%= @commentingPost.title %> by the author <%= @commentingPost.author %></small>
+        </h1>
+    </div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-5">
+	</div>
+    <div class="col-md-5">
+          <%= form_for :comment, :url => url_for(:controller => 'posts', :action => 'addComment') do |f| %>
+			  <p>
+				<%= f.label :comment %><br>
+				<%= f.text_field :content %>
+			  </p>
+			  
+			  <%= hidden_field_tag "id", @commentingPost.id %>
+			 
+			  <p>
+				<%= f.submit 'Comment', :class => 'btn btn-primary'  %>
+			  </p>
+		  <% end %>
+     </div>
+</div>        
+        
+

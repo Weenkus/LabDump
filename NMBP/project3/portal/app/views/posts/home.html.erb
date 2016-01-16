@@ -1,0 +1,119 @@
+	<!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">PortalOut
+                    <small>a fresh look of the web</small>
+                </h1>
+            </div>
+        </div>
+
+<!-- Page Content -->
+    <div class="container">
+    
+	<% if !@posts.nil? %>
+	  <% @posts.each do |post| %>
+		  <div class="row">
+				<div class="col-md-4">
+					<a href="#">
+						<img class="img-responsive" src="<%= post.image %>" alt="">
+					</a>
+				</div>
+				<div class="col-md-8">
+				
+					<h3><%= post.title %></h3>
+					<h4><%= post.author %></h4>
+					<p><%= post.content %></p>					
+					
+					
+					<div class="page-header">
+					</div> 				
+					
+					<% if !post.comments.nil? %> 
+						<% post.comments.each do |c| %>
+							<% if !c.nil? %> 
+							
+								<div class="comments-list">
+									<div class="media">
+										<div class="media-body">
+                                
+										<h4 class="media-heading user_name">Anonymous</h4>
+											<%= c["content"] %>.
+			
+										</div>
+									</div>
+								</div>
+							
+								<br>
+							<% end %>
+						<% end %>
+					<% end %>
+
+					
+					<%= button_to 'Comment', :controller => "posts", :action => "comment", :class => 'btn btn-primary',  :id => post.id %>
+					
+					<!--<%= form_for :comment do |f| %>
+					
+					  
+					  <p>
+						<%= f.label :comments %><br>
+						<%= f.text_field :comment %>
+					  </p>
+					  
+					  <p>
+						<%= f.submit 'Comment', :class => 'btn btn-primary' %>
+					  </p>
+					<% end %>-->
+					
+				</div>
+			</div>
+			<!-- /.row -->
+			   <hr>
+	  <% end %>
+	<% end %>
+
+
+
+        <!-- Pagination -->
+        <div class="row text-center">
+            <div class="col-lg-12">
+                <ul class="pagination">
+                    <li>
+                        <a href="#">&laquo;</a>
+                    </li>
+                    <li class="active">
+                        <a href="#">1</a>
+                    </li>
+                    <li>
+                        <a href="#">2</a>
+                    </li>
+                    <li>
+                        <a href="#">3</a>
+                    </li>
+                    <li>
+                        <a href="#">4</a>
+                    </li>
+                    <li>
+                        <a href="#">5</a>
+                    </li>
+                    <li>
+                        <a href="#">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Your Website 2014</p>
+                </div>
+            </div>
+            <!-- /.row -->
+        </footer>
+
+    </div>
+    <!-- /.container -->

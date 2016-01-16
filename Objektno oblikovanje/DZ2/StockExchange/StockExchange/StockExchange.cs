@@ -20,6 +20,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public void ListStock(string inStockName, long inNumberOfShares, decimal inInitialPrice, DateTime inTimeStamp)
          {
+            // Check if the inputs are valid
             inStockName = inStockName.ToLower();
             if (inNumberOfShares <= 0)
                 throw new StockExchangeException("Number of shares must be positive.");
@@ -28,12 +29,14 @@ namespace DrugaDomacaZadaca_Burza
             if( stocksContains(inStockName))
                 throw new StockExchangeException("The new stock already exists.");
 
+            // Add new stock
             Stock newStock = new Stock(inStockName, inNumberOfShares, inInitialPrice, inTimeStamp);
             this.stocks.Add(newStock);
          }
 
          public void DelistStock(string inStockName)
          {
+            // Check if the inputs are valid
             inStockName = inStockName.ToLower();
             if ( this.stocks.Any(i => i.name.Equals(inStockName)) == false)
                 throw new StockExchangeException("Stock with the given name doesn't exist.");
@@ -66,6 +69,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public void SetStockPrice(string inStockName, DateTime inIimeStamp, decimal inStockValue)
          {
+            // Check if the inputs are valid
             inStockName = inStockName.ToLower();
             if (inStockValue <= 0)
                 throw new StockExchangeException("Value must be positive.");
@@ -105,13 +109,11 @@ namespace DrugaDomacaZadaca_Burza
             {
                 s.transactions = s.transactions.OrderBy(t => t.time).ToList();
             }
-
-            //this.stocks.Find(s => s.name.Equals(inStockName)).values.Sort((a,b) => a.CompareTo(b));
-            //this.stocks.Find(s => s.name.Equals(inStockName)).history.Sort((a, b) => a.CompareTo(b));
         }
 
          public decimal GetStockPrice(string inStockName, DateTime inTimeStamp)
          {
+            // Check if the inputs are valid
             inStockName = inStockName.ToLower();
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
@@ -122,38 +124,41 @@ namespace DrugaDomacaZadaca_Burza
 
          public decimal GetInitialStockPrice(string inStockName)
         {
+            // Check if the inputs are valid
             inStockName = inStockName.ToLower();
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
 
-            //return this.stocks.Find(s => s.name.Equals(inStockName)).transactions.First().value;
             return this.stocks.Find(s => s.name.Equals(inStockName)).transactions.OrderBy(t => t.time).First().value;
          }
 
          public decimal GetLastStockPrice(string inStockName)
          {
+            // Check if the inputs are valid
             inStockName = inStockName.ToLower();
             if (!stocksContains(inStockName))
                 throw new StockExchangeException("The stock with that name doesn't exist.");
 
-            //return this.stocks.Find(s => s.name.Equals(inStockName)).transactions.Last().value;
             return this.stocks.Find(s => s.name.Equals(inStockName)).transactions.OrderBy(t => t.time).Last().value;
         }
 
          public void CreateIndex(string inIndexName, IndexTypes inIndexType)
          {
+            // Check if the inputs are valid
             inIndexName = inIndexName.ToLower();
             if ( inIndexType != IndexTypes.AVERAGE && inIndexType != IndexTypes.WEIGHTED)
                 throw new StockExchangeException("Index type not supported. Use weighted or avaerage.");
             if(indexContains(inIndexName))
                 throw new StockExchangeException("Index with that name already exsists.");
 
+            // Add the new index
             Index newIndex = new Index(inIndexName, inIndexType);
             this.indexes.Add(newIndex);
          }
 
          public void AddStockToIndex(string inIndexName, string inStockName)
          {
+            // Check if the inputs are valid
             inIndexName = inIndexName.ToLower();
             inStockName = inStockName.ToLower();
             if (!indexContains(inIndexName))
@@ -163,12 +168,12 @@ namespace DrugaDomacaZadaca_Burza
             if (indeciesContainAstock(inStockName))
                 throw new StockExchangeException("There already exists an index with that stock.");
 
-
             this.indexes.Find(a => a.name.Equals(inIndexName)).stocks.Add(this.stocks.Find(i => i.name.Equals(inStockName)));
          }
 
          public void RemoveStockFromIndex(string inIndexName, string inStockName)
          {
+            // Check if the inputs are valid
             inIndexName = inIndexName.ToLower();
             inStockName = inStockName.ToLower();
             if (!indexContains(inIndexName))
@@ -184,6 +189,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public bool IsStockPartOfIndex(string inIndexName, string inStockName)
          {
+            // Check if the inputs are valid
             inIndexName = inIndexName.ToLower();
             inStockName = inStockName.ToLower();
             if (!indexContains(inIndexName.ToLower()))
@@ -196,6 +202,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public decimal GetIndexValue(string inIndexName, DateTime inTimeStamp)
          {
+            // Check if the inputs are valid
             inIndexName = inIndexName.ToLower();
             if (!indexContains(inIndexName))
                 throw new StockExchangeException("Index with that name doesn't exist.");
@@ -242,6 +249,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public int NumberOfStocksInIndex(string inIndexName)
          {
+            // Check if the input is valid
             inIndexName = inIndexName.ToLower();
             if (!indexContains(inIndexName.ToLower()))
                 throw new StockExchangeException("Index with that name doesn't exist.");
@@ -251,7 +259,8 @@ namespace DrugaDomacaZadaca_Burza
 
          public void CreatePortfolio(string inPortfolioID)
          {
-            if(this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
+            // Check if the input is valid
+            if (this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name already exists.");
 
             this.portoflios.Add(new Portfolio(inPortfolioID));
@@ -259,6 +268,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public void AddStockToPortfolio(string inPortfolioID, string inStockName, int numberOfShares)
          {
+            // Check if the inputs are valid
             inStockName = inStockName.ToLower();
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exist.");
@@ -290,6 +300,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public void RemoveStockFromPortfolio(string inPortfolioID, string inStockName, int numberOfShares)
          {
+            // Check if the inputs are valid
             inStockName = inStockName.ToLower();
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
@@ -314,6 +325,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public void RemoveStockFromPortfolio(string inPortfolioID, string inStockName)
          {
+            // Check if the inputs are valid
             inStockName = inStockName.ToLower();
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
@@ -333,6 +345,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public int NumberOfStocksInPortfolio(string inPortfolioID)
          {
+            // Check if the input is valid
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
 
@@ -346,6 +359,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public bool IsStockPartOfPortfolio(string inPortfolioID, string inStockName)
          {
+            // Check if the input is valid
             inStockName = inStockName.ToLower();
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
@@ -355,6 +369,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public int NumberOfSharesOfStockInPortfolio(string inPortfolioID, string inStockName)
          {
+            // Check if the input is valid
             inStockName = inStockName.ToLower();
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
@@ -368,6 +383,7 @@ namespace DrugaDomacaZadaca_Burza
 
          public decimal GetPortfolioValue(string inPortfolioID, DateTime timeStamp)
          {
+            // Check if the inputs are valid
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
 
@@ -382,20 +398,18 @@ namespace DrugaDomacaZadaca_Burza
 
          public decimal GetPortfolioPercentChangeInValueForMonth(string inPortfolioID, int Year, int Month)
          {
+            // Check if the inputs are valid
             if (!this.portoflios.Any(i => i.id.Equals(inPortfolioID)))
                 throw new StockExchangeException("Portoflio with that name doesn't exists.");
 
-            DateTime begMonth = new DateTime(Year, Month, 1, 0, 0, 0);
-            DateTime endgMonth = new DateTime(Year, Month, 29, 23, 59, 59);
+            DateTime endOfTheMonth = new DateTime(Year, Month, 29, 23, 59, 59);
 
-            /*decimal differnece = GetPortfolioValue(inPortfolioID, begMonth) - GetPortfolioValue(inPortfolioID, endgMonth);
-            decimal result = differnece / GetPortfolioValue(inPortfolioID, begMonth) * 100;
-            return Math.Round(result, 3);*/
-            return GetPortfolioValue(inPortfolioID, endgMonth);
+            return GetPortfolioValue(inPortfolioID, endOfTheMonth);
          }
 
         public bool stocksContains(string stockName)
         {
+            // Loop through all stocks and try to find the one that matches the given stock name
             stockName = stockName.ToLower();
             foreach (Stock s in this.stocks) {
                 if (s.name.ToLower().Equals(stockName.ToLower()))
@@ -405,6 +419,7 @@ namespace DrugaDomacaZadaca_Burza
         }
 
         public bool indexContains(string indexName) {
+            // Loop through all indexes and try to find the one that matches the given index name
             indexName = indexName.ToLower();
             foreach (Index i in this.indexes)
             {
@@ -452,6 +467,7 @@ namespace DrugaDomacaZadaca_Burza
 
         public decimal getValueByDate(DateTime dateTime)
         {
+            // Return the value of all transactions for the given dateTime
             foreach (Transaction t in this.transactions)
             {
                 DateTime dt = t.time;
@@ -464,18 +480,22 @@ namespace DrugaDomacaZadaca_Burza
 
         public decimal getStockPrice(DateTime dateTime)
         {
-            if(dateTime.Ticks < this.transactions.First().time.Ticks)
+            // Check if the inputs are valid
+            if (dateTime.Ticks < this.transactions.First().time.Ticks)
                 throw new StockExchangeException("Invalid timestamp.");
 
             this.transactions = this.transactions.OrderBy(t => t.time).ToList();
 
+            // If there is only one value return it
             if (this.transactions.Count == 1)
                 return this.transactions.First().value;
 
+            // Check if the last transactions is needed, in that case return it 
             int greater = DateTime.Compare(dateTime, this.transactions.OrderBy(t => t.time).Last().time);
             if (greater >= 0)
                 return this.transactions.OrderBy(t => t.time).Last().value;
 
+            // Check all transactions and return the one with the given dateTime
             Transaction prev = this.transactions.First();
             foreach(Transaction t in this.transactions)
             {
