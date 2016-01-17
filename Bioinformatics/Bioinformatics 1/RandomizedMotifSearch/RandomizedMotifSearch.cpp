@@ -24,18 +24,32 @@ int main() {
 	std::ifstream input("input.txt");
 	std::ofstream output("output.txt");
 
+	srand((unsigned)time(NULL));
+
 	// Parse
 	int k{ 0 }, t{ 0 };
+	input >> k >> t;
+
 	std::vector<std::string> DNAs;
 	std::string line;
-	
 	while (std::getline(input, line)) {
-		if (!line.empty())
+		if (!line.empty()) {
 			DNAs.push_back(line);
+		}
 	}
 
-	// Run the algorithm
-	std::vector<std::string> bestMotifs = randomizedMotifSearch(DNAs, k, t);
+	// Run the algorithm 1000 times and take the best result
+	int iterationNumber{ 1000 };
+	std::vector<std::string> bestMotifs;
+	for (int i{ 0 }; i < iterationNumber; ++i) {
+		std::vector<std::string> motifs = randomizedMotifSearch(DNAs, k, t);
+		if (i == 0)
+			bestMotifs = motifs;
+
+		if (score(motifs) < score(bestMotifs)) {
+			bestMotifs = motifs;
+		}
+	}
 	
 	for (auto s : bestMotifs)
 		output << s << std::endl;
@@ -47,8 +61,6 @@ int main() {
 }
 
 std::vector<std::string> randomizedMotifSearch(std::vector<std::string> DNAs, int k, int t) {
-	srand((unsigned)time(NULL));
-
 	// Randomly select k-mer motif
 	std::vector<std::string> motifs, bestMotifs;
 	for (auto dna : DNAs) {
