@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rental
 {
-    public interface IRentable
+    class ApartmanFactory
     {
-        double getMonthlyPrice();
-        Client getOwner();
-        String getDescription();
-        String getName();
     }
 }

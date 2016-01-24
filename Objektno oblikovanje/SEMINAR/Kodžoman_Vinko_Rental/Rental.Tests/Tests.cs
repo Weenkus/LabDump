@@ -11,20 +11,20 @@ namespace Rental
     public class Tests
     {
         [Fact]
-        public void PassingTest()
+        public void PersonCreation()
         {
-            Assert.Equal(4, Add(2, 2));
-        }
+            Employee employee = new Employee("Vinko", "Zadric");
+            Client client = new Client("Marin", "Veljko", employee);
 
-        [Fact]
-        public void FailingTest()
-        {
-            Assert.Equal(5, Add(2, 2));
-        }
+            PersonRepository.Instance.Add(employee);
+            PersonRepository.Instance.Add(client);
 
-        int Add(int x, int y)
-        {
-            return x + y;
+            // Check if the repository saved successfully
+            Assert.Equal(client, PersonRepository.Instance.Get(client));
+            Assert.Equal(employee, PersonRepository.Instance.Get(employee));
+
+            // Test the client link created via the constructor
+            Assert.Equal(client.DedicatedAgent, employee);
         }
     }
 }

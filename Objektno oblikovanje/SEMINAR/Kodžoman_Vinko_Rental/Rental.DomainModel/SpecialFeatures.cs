@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Rental
 {
-    class SpecialFeatures
+    public class SpecialFeatures
     {
+        private double _price;
+        private String _description;
     }
 }
