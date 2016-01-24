@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Xunit;
 
-namespace Apartmani.Tests
+namespace Rental
 {
     public class Tests
     {

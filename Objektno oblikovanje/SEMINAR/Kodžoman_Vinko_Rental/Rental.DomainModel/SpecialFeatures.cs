@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Apartmani.App
+namespace Rental
 {
-    class App
+    class SpecialFeatures
     {
-        static void Main()
-        {
-
-        }
     }
 }

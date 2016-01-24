@@ -1,4 +1,4 @@
-﻿namespace Apartmani.PresentationLayer
+﻿namespace Rental
 {
     partial class Form1
     {
