@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rental
 {
-    class RentalRepository
+    public class RentalRepository
     {
         // Repo is a singlton, make data consistancy easier and more practical
         private static RentalRepository instance;
@@ -49,6 +49,11 @@ namespace Rental
         public void Remove(int id)
         {
             _rentableList.RemoveAll(p => p.Id == id);
+        }
+
+        public void Clear()
+        {
+            _rentableList.Clear();
         }
     }
 }

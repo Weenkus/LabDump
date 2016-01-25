@@ -31,5 +31,17 @@ namespace Rental
             get { return _name; }
             set { _name = value; }
         }
+
+        public String Description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
+
+        public Double MonthlyPrice
+        {
+            get { return _monthlyPrice; }
+            set { _monthlyPrice = value; }
+        }
     }
 }

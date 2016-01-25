@@ -10,5 +10,11 @@ namespace Rental
     {
         private double _price;
         private String _description;
+
+        public SpecialFeatures(Double price, String description)
+        {
+            this._price = price;
+            this._description = description;
+        }
     }
 }

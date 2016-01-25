@@ -45,9 +45,11 @@
     <Compile Include="Client.cs" />
     <Compile Include="Employee.cs" />
     <Compile Include="Factories\ApartmanFactory.cs" />
+    <Compile Include="Offer.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rental.cs" />
+    <Compile Include="RentalInclude.cs" />
     <Compile Include="Repositories\RentalRepository.cs" />
     <Compile Include="Repositories\PersonRepository.cs" />
     <Compile Include="SpecialFeatures.cs" />

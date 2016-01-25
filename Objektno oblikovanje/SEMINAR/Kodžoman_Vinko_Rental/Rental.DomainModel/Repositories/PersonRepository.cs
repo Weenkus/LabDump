@@ -50,5 +50,20 @@ namespace Rental
         {
             _personList.RemoveAll(p => p.Id == id);
         }
+
+        public void Remove(Person person)
+        {
+            _personList.RemoveAll(p => p.Equals(person));
+        }
+
+        public void Clear()
+        {
+            _personList.Clear();
+        }
+
+        public bool Contains(Person person)
+        {
+            return _personList.Any(p => p.Equals(person));
+        }
     }
 }
