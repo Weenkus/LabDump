@@ -16,6 +16,7 @@ namespace Rental
         public Apartment(Client owner, String name, String description, String postal,
             String address, Double MonthlyPrice, List<RentalInclude> rFeatures, List<SpecialFeatures> sFeatures)
         {
+            this.Id = this.Id++;
             this.Name = name;
             this.Description = description;
             this._postalCode = postal;

@@ -81,6 +81,65 @@ namespace Rental
             Assert.Equal(PersonRepository.Instance.Count(), 3);
 
             Assert.Equal(PersonRepository.Instance.Contains(employee3), false);
+
+            // Update
+            Employee emp = (Employee)PersonRepository.Instance.Get(employee2);
+            int empId = emp.Id;
+            emp.LastName = "Brega";
+            PersonRepository.Instance.Update(empId, emp);
+
+            // Check if update worked
+            Assert.Equal(PersonRepository.Instance.Get(empId), emp);
+        }
+
+        [Fact]
+        public void RepositoryCRUDTestingRental()
+        {
+            Employee employee = new Employee("Vinko", "Zadric");
+            Client client = new Client("Marin", "Veljko", employee);
+
+            // Clean repos (because they are singeltons, they might still have some data left in them)
+            PersonRepository.Instance.Clear();
+            RentalRepository.Instance.Clear();
+
+            // Fill the repos
+            PersonRepository.Instance.Add(employee);
+            PersonRepository.Instance.Add(client);
+
+            // Create some features (payed and included)
+            List<SpecialFeatures> sF = new List<SpecialFeatures>();
+            sF.Add(new SpecialFeatures(200, "Izlet na more."));
+            sF.Add(new SpecialFeatures(150, "Vecer u finom restoranu."));
+
+            List<RentalInclude> rF = new List<RentalInclude>();
+            rF.Add(new RentalInclude(Offer.balcony, 2));
+            rF.Add(new RentalInclude(Offer.kitchen, 2));
+            rF.Add(new RentalInclude(Offer.room, 4));
+
+            // Create the apartmant via the factory and add it to the repo
+            Apartment a = ApartmanFactory.createApartman(client, "Vila zrinka", "Prekrasna vila na moru...",
+                "12004", "Torovinkova 5", 200, rF, sF);
+            RentalRepository.Instance.Add(a);
+
+            // Check repo numbers
+            Assert.Equal(PersonRepository.Instance.Count(), 2);
+            Assert.Equal(RentalRepository.Instance.Count(), 1);
+
+            // Check delete function of a repo
+            RentalRepository.Instance.Remove(a);
+            Assert.Equal(RentalRepository.Instance.Count(), 0);
+
+            Assert.Equal(RentalRepository.Instance.Contains(a), false);
+
+            // Update
+            RentalRepository.Instance.Add(a);
+            Apartment a1 = (Apartment)RentalRepository.Instance.Get(a);
+            int aId = a1.Id;
+            a1.Name = "Vila Markica";
+            RentalRepository.Instance.Update(aId, a1);
+
+            // Check if update worked
+            Assert.Equal(RentalRepository.Instance.Get(aId), a1);
         }
     }
 }

@@ -10,11 +10,19 @@ using System.Windows.Forms;
 
 namespace Rental
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        public Form1()
+        private IController _controller;
+
+        public MainForm(IController con)
         {
+            _controller = con;
             InitializeComponent();
+        }
+
+        private void viewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _controller.ShowEmplyoees();
         }
     }
 }

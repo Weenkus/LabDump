@@ -12,6 +12,7 @@ namespace Rental
 
         public Client(String name, String lastName, Employee emp)
         {
+            this.Id = this.Id++;
             this.Name = name;
             this.LastName = lastName;
             this._dedicatedAgent = emp;

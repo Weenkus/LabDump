@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6BEDEA66-BD96-4E1F-9A11-C15782522016}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{66317B55-E90A-4CEB-ACC4-1582BD5707D2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Apartmani.App</RootNamespace>
-    <AssemblyName>Apartmani.App</AssemblyName>
+    <RootNamespace>Rental.App</RootNamespace>
+    <AssemblyName>Rental.App</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,13 +33,60 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
+    <ProjectReference Include="..\Rental.Controller\Rental.Controller.csproj">
+      <Project>{a5571ede-1776-4be9-b186-c53b5db44b6a}</Project>
+      <Name>Rental.Controller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rental.DomainModel\Rental.DomainModel.csproj">
+      <Project>{ac4fd523-4129-4871-acb7-27c2ad8f6b81}</Project>
+      <Name>Rental.DomainModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rental.Interfaces\Rental.Interfaces.csproj">
+      <Project>{4859eaf0-0ebf-4d51-bf57-14a09f6fb32c}</Project>
+      <Name>Rental.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rental.View\Rental.View.csproj">
+      <Project>{d6eade28-e653-43ea-b451-a169016097b8}</Project>
+      <Name>Rental.View</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

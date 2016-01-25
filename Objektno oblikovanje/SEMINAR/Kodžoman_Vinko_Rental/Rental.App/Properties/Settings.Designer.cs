@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Apartmani.PresentationLayer.Properties
+namespace Rental.App.Properties
 {
 
 

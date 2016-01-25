@@ -41,6 +41,11 @@ namespace Rental
             return _rentableList.Where(p => p.Equals(rental)).SingleOrDefault();
         }
 
+        public List<Rental> GetAll()
+        {
+            return _rentableList;
+        }
+
         public void Add(Rental rental)
         {
             _rentableList.Add(rental);
@@ -51,9 +56,25 @@ namespace Rental
             _rentableList.RemoveAll(p => p.Id == id);
         }
 
+        public void Remove(Rental rental)
+        {
+            _rentableList.RemoveAll(p => p.Equals(rental));
+        }
+
         public void Clear()
         {
             _rentableList.Clear();
+        }
+
+        public bool Contains(Rental rental)
+        {
+            return _rentableList.Any(p => p.Equals(rental));
+        }
+
+        public void Update(int id, Rental rental)
+        {
+            _rentableList.RemoveAll(p => p.Id == id);
+            _rentableList.Add(rental);
         }
     }
 }

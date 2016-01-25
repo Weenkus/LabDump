@@ -69,10 +69,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rental.App\Rental.App.csproj">
-      <Project>{6bedea66-bd96-4e1f-9a11-c15782522016}</Project>
-      <Name>Rental.App</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Rental.Controller\Rental.Controller.csproj">
       <Project>{a5571ede-1776-4be9-b186-c53b5db44b6a}</Project>
       <Name>Rental.Controller</Name>
@@ -80,10 +76,6 @@
     <ProjectReference Include="..\Rental.DomainModel\Rental.DomainModel.csproj">
       <Project>{ac4fd523-4129-4871-acb7-27c2ad8f6b81}</Project>
       <Name>Rental.DomainModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rental.PresentationLayer\Rental.PresentationLayer.csproj">
-      <Project>{3aca4449-d9e1-4912-b757-598f38d77c14}</Project>
-      <Name>Rental.PresentationLayer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

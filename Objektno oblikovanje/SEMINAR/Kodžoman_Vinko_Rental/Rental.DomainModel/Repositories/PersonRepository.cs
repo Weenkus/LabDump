@@ -41,6 +41,11 @@ namespace Rental
             return _personList.Where(p => p.Equals(person)).SingleOrDefault();
         }
 
+        public List<Person> GetAll()
+        {
+            return _personList;
+        }
+
         public void Add(Person person)
         {
             _personList.Add(person);
@@ -64,6 +69,12 @@ namespace Rental
         public bool Contains(Person person)
         {
             return _personList.Any(p => p.Equals(person));
+        }
+
+        public void Update(int id, Person person)
+        {
+            _personList.RemoveAll(p => p.Id == id);
+            _personList.Add(person);
         }
     }
 }

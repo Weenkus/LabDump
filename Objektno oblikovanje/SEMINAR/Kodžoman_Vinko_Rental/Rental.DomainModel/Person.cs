@@ -7,7 +7,7 @@ namespace Rental
 {
     public abstract class Person
     {
-        private int _id;
+        private static int _id = 0;
         private String _name;
         private String _lastName;
 

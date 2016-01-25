@@ -14,9 +14,12 @@ namespace Rental
         [STAThread]
         static void Main()
         {
+            // Create the app controller
+            AppController controller = new AppController();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new MainForm(controller));
         }
     }
 }

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Rental
 {
-    public class Class1
+    public interface IController
     {
+        void ShowEmplyoees();
     }
 }

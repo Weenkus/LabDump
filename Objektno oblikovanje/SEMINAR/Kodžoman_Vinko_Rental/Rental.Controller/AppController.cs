@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Rental
 {
-    public class App
+    public class AppController : IController
     {
-        static void Main()
+        public void ShowEmplyoees()
         {
-
+            
         }
     }
 }

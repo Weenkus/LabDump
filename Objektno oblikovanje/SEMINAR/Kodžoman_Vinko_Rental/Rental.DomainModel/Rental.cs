@@ -8,7 +8,7 @@ namespace Rental
 {
     public abstract class Rental
     {
-        private int _id;
+        private static int _id = 0;
         private Client _owner;
         private String _name;
         private String _description;
