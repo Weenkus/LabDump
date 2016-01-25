@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,6 +48,10 @@
     <ProjectReference Include="..\Rental.Interfaces\Rental.Interfaces.csproj">
       <Project>{4859eaf0-0ebf-4d51-bf57-14a09f6fb32c}</Project>
       <Name>Rental.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rental.View\Rental.View.csproj">
+      <Project>{d6eade28-e653-43ea-b451-a169016097b8}</Project>
+      <Name>Rental.View</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

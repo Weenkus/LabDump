@@ -10,7 +10,8 @@ namespace Rental
     {
         public void ShowEmplyoees()
         {
-            
+            FormEmployeeView f = new FormEmployeeView(this);
+            f.Show();
         }
     }
 }
