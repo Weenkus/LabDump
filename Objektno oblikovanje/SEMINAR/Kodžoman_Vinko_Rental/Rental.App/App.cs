@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rental
 {
-    class App
+    public class App
     {
         static void Main()
         {
