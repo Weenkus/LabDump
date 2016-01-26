@@ -46,6 +46,14 @@ namespace Rental
             return _rentableList;
         }
 
+        public Rental GetByIndex(int index)
+        {
+            if (index < _rentableList.Count)
+                return _rentableList.ElementAt(index);
+            else
+                return null;
+        }
+
         public void Add(Rental rental)
         {
             _rentableList.Add(rental);

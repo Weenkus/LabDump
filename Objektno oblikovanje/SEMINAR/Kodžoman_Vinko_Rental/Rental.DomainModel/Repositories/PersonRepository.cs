@@ -41,6 +41,14 @@ namespace Rental
             return _personList.Where(p => p.Equals(person)).SingleOrDefault();
         }
 
+        public Person GetByIndex(int index)
+        {
+            if (index < _personList.Count)
+                return _personList.ElementAt(index);
+            else
+                return null;
+        }
+
         public List<Person> GetAll()
         {
             return _personList;

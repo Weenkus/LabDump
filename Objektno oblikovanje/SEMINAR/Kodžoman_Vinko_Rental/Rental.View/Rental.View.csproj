@@ -89,6 +89,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Rental.DomainModel\Rental.DomainModel.csproj">
+      <Project>{ac4fd523-4129-4871-acb7-27c2ad8f6b81}</Project>
+      <Name>Rental.DomainModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rental.Interfaces\Rental.Interfaces.csproj">
       <Project>{4859eaf0-0ebf-4d51-bf57-14a09f6fb32c}</Project>
       <Name>Rental.Interfaces</Name>
