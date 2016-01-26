@@ -12,7 +12,7 @@ namespace Rental
         private Client _owner;
         private String _name;
         private String _description;
-        private Double _monthlyPrice;
+        private Double _daylyPrice;
 
         public int Id
         {
@@ -40,8 +40,8 @@ namespace Rental
 
         public Double MonthlyPrice
         {
-            get { return _monthlyPrice; }
-            set { _monthlyPrice = value; }
+            get { return _daylyPrice; }
+            set { _daylyPrice = value; }
         }
     }
 }
