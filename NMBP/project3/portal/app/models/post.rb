@@ -7,4 +7,5 @@ class Post
   field :author, type: String
   field :image, type: String
   field :comments, type: Array
+  
 end
