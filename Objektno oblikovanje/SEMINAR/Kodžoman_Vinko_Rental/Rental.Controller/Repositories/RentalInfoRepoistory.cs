@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rental
 {
-    public class RentalInfoRepository
+    public class RentalInfoRepository : IRentalInfoRepository
     {
         private static RentalInfoRepository instance;
         private List<RentalInformation> _rentalInfoList = new List<RentalInformation>();

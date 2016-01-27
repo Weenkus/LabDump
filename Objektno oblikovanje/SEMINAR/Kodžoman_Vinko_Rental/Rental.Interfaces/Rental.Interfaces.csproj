@@ -41,7 +41,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IController.cs" />
+    <Compile Include="IPersonRepository.cs" />
+    <Compile Include="IRentalInfoRepoistory.cs" />
+    <Compile Include="IRentalRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rental.DomainModel\Rental.DomainModel.csproj">
+      <Project>{ac4fd523-4129-4871-acb7-27c2ad8f6b81}</Project>
+      <Name>Rental.DomainModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rental
 {
-    public class PersonRepository
+    public class PersonRepository : IPersonRepository
     {
         // Repo is a singlton, make data consistancy easier and more practical
         private static PersonRepository instance;

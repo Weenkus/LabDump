@@ -51,9 +51,6 @@
     <Compile Include="Rental.cs" />
     <Compile Include="RentalInclude.cs" />
     <Compile Include="RentalInformation.cs" />
-    <Compile Include="Repositories\RentalInfoRepoistory.cs" />
-    <Compile Include="Repositories\RentalRepository.cs" />
-    <Compile Include="Repositories\PersonRepository.cs" />
     <Compile Include="SpecialFeatures.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,9 +13,9 @@ namespace Rental
     public partial class FormEmployeeView : Form
     {
         private IController _controller;
-        private PersonRepository _repo;
+        private IPersonRepository _repo;
 
-        public FormEmployeeView(IController con, PersonRepository r)
+        public FormEmployeeView(IController con, IPersonRepository r)
         {
             _repo = r;
             _controller = con;
