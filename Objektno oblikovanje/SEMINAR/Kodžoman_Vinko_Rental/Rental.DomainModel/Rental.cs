@@ -8,40 +8,42 @@ namespace Rental
 {
     public abstract class Rental
     {
-        private static int _id = 0;
+        private int _id;
         private Client _owner;
         private String _name;
         private String _description;
-        private Double _daylyPrice;
+        private Double _dailyPrice;
 
-        public int Id
+        public Rental() { }
+
+        public virtual int Id
         {
             get { return _id; }
             set { _id = value; }
         }
 
-        public Client Owner
+        public virtual Client Owner
         {
             get { return _owner; }
             set { _owner = value; }
         }
 
-        public String Name
+        public virtual String Name
         {
             get { return _name; }
             set { _name = value; }
         }
 
-        public String Description
+        public virtual String Description
         {
             get { return _description; }
             set { _description = value; }
         }
 
-        public Double MonthlyPrice
+        public virtual Double DailyPrice
         {
-            get { return _daylyPrice; }
-            set { _daylyPrice = value; }
+            get { return _dailyPrice; }
+            set { _dailyPrice = value; }
         }
     }
 }

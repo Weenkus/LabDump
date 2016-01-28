@@ -4,13 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using NHibernate.Cfg;
+using NHibernate;
+using NHibernate.Tool.hbm2ddl;
+using NHibernate.Criterion;
+using System.Text.RegularExpressions;
+
 namespace Rental
 {
     public class PersonRepository : IPersonRepository
     {
         // Repo is a singlton, make data consistancy easier and more practical
         private static PersonRepository instance;
-        private List<Person> _personList = new List<Person>();
+        private IList<Person> _personList = new List<Person>();
 
         private PersonRepository() { }
 
@@ -23,6 +29,14 @@ namespace Rental
                     instance = new PersonRepository();
                 }
                 return instance;
+            }
+        }
+
+        private void LoadData()
+        {
+            using (ISession session = NHibernateService.OpenSession())
+            {
+                _personList = session.CreateCriteria(typeof(Person)).List<Person>();
             }
         }
 
@@ -49,24 +63,32 @@ namespace Rental
                 return null;
         }
 
-        public List<Person> GetAll()
+        public IList<Person> GetAll()
         {
+            LoadData();
             return _personList;
         }
 
         public void Add(Person person)
         {
-            _personList.Add(person);
+            using (ISession session = NHibernateService.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    session.Save(person);
+                    transaction.Commit();
+                }
+            }
         }
 
         public void Remove(int id)
         {
-            _personList.RemoveAll(p => p.Id == id);
+            //_personList.RemoveAll(p => p.Id == id);
         }
 
         public void Remove(Person person)
         {
-            _personList.RemoveAll(p => p.Equals(person));
+           // _personList.RemoveAll(p => p.Equals(person));
         }
 
         public void Clear()
@@ -81,7 +103,7 @@ namespace Rental
 
         public void Update(int id, Person person)
         {
-            _personList.RemoveAll(p => p.Id == id);
+            //_personList.RemoveAll(p => p.Id == id);
             _personList.Add(person);
         }
     }

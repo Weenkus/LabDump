@@ -10,9 +10,10 @@ namespace Rental
     {
         private List<Client> _advasingClients = new List<Client>();
 
+        public Employee() { }
+
         public Employee(String name, String lastName, List<Client> clients)
         {
-            this.Id = this.Id++;
             this.Name = name;
             this.LastName = lastName;
             this._advasingClients = clients;
@@ -20,7 +21,6 @@ namespace Rental
 
         public Employee(String name, String lastName, Client client)
         {
-            this.Id = this.Id++;
             this.Name = name;
             this.LastName = lastName;
             this._advasingClients.Add(client);
@@ -28,9 +28,21 @@ namespace Rental
 
         public Employee(String name, String lastName)
         {
-            this.Id = this.Id++;
             this.Name = name;
             this.LastName = lastName;
+        }
+
+        public virtual List<Client> AdvasingClients
+        {
+            get
+            {
+                return _advasingClients;
+            }
+
+            set
+            {
+                _advasingClients = value;
+            }
         }
     }
 }

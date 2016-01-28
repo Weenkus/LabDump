@@ -10,15 +10,16 @@ namespace Rental
     {
         private Employee _dedicatedAgent;
 
+        public Client() { }
+
         public Client(String name, String lastName, Employee emp)
         {
-            this.Id = this.Id++;
             this.Name = name;
             this.LastName = lastName;
             this._dedicatedAgent = emp;
         }
 
-        public Employee DedicatedAgent
+        public virtual Employee DedicatedAgent
         {
             get
             {

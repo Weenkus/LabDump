@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="Rental.DomainModel" namespace="Rental">
+  <class name="Rental.Person, Rental.DomainModel" table="Person" lazy="false" discriminator-value="Person">
+    <id name="Id" column="Id">
+      <generator class="native"/>
+    </id>
+    <discriminator column="PersonType"/>
+    <property name="Name" column="Name"/>
+    <property name="LastName" column="LastName"/>
+    
+    <subclass name="Client" discriminator-value="Client" lazy="false"></subclass>
+    <subclass name="Employee" discriminator-value="Employee" lazy="false"></subclass>
+  </class>
+</hibernate-mapping>
