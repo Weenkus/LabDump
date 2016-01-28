@@ -8,15 +8,15 @@ namespace Rental
 {
     public class Apartment : Rental
     {
-        private List<SpecialFeatures> _payedFeatures;
-        private List<RentalInclude> _includedFeatures;
+        private IList<SpecialFeatures> _payedFeatures;
+        private IList<RentalInclude> _includedFeatures;
         private String _postalCode;
         private String _address;
 
         public Apartment() { }
 
         public Apartment(Client owner, String name, String description, String postal,
-            String address, Double MonthlyPrice, List<RentalInclude> rFeatures, List<SpecialFeatures> sFeatures)
+            String address, Double MonthlyPrice, IList<RentalInclude> rFeatures, IList<SpecialFeatures> sFeatures)
         {
             this.Name = name;
             this.Description = description;
@@ -27,7 +27,7 @@ namespace Rental
             this.Owner = owner;
         }
 
-        public virtual List<SpecialFeatures> PayedFeatures
+        public virtual IList<SpecialFeatures> PayedFeatures
         {
             get
             {
@@ -40,7 +40,7 @@ namespace Rental
             }
         }
 
-        public virtual List<RentalInclude> IncludedFeatures
+        public virtual IList<RentalInclude> IncludedFeatures
         {
             get
             {

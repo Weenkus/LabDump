@@ -8,7 +8,7 @@ namespace Rental
 {
     public class Employee : Person
     {
-        private IList<Client> _advasingClients = new List<Client>();
+        private IList<Client> _advisingClients = new List<Client>();
 
         public Employee() { }
 
@@ -16,14 +16,14 @@ namespace Rental
         {
             this.Name = name;
             this.LastName = lastName;
-            this._advasingClients = clients;
+            this._advisingClients = clients;
         }
 
         public Employee(String name, String lastName, Client client)
         {
             this.Name = name;
             this.LastName = lastName;
-            this._advasingClients.Add(client);
+            this._advisingClients.Add(client);
         }
 
         public Employee(String name, String lastName)
@@ -32,16 +32,16 @@ namespace Rental
             this.LastName = lastName;
         }
 
-        public virtual IList<Client> AdvasingClients
+        public virtual IList<Client> AdvisingClients
         {
             get
             {
-                return _advasingClients;
+                return _advisingClients;
             }
 
             set
             {
-                _advasingClients = value;
+                _advisingClients = value;
             }
         }
     }

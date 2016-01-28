@@ -90,16 +90,34 @@ namespace Rental
 
         public void Remove(int id)
         {
-            //_personList.RemoveAll(p => p.Id == id);
-            LoadData();
-            _personList.Remove(this.Get(id));
+            if (_personList.Any(x => x.Id == id))
+            {
+                using (var session = NHibernateService.SessionFactory.OpenSession())
+                {
+                    using (var transaction = session.BeginTransaction())
+                    {
+
+                        session.Delete(_personList.Where(x => x.Id == id).SingleOrDefault());
+                        transaction.Commit();
+                    }
+                }
+            }
         }
 
         public void Remove(Person person)
         {
-            // _personList.RemoveAll(p => p.Equals(person));
-            LoadData();
-            _personList.Remove(person);
+            if (_personList.Any(x => x.Id == person.Id))
+            {
+                using (var session = NHibernateService.SessionFactory.OpenSession())
+                {
+                    using (var transaction = session.BeginTransaction())
+                    {
+
+                        session.Delete(_personList.Where(x => x.Id == person.Id).SingleOrDefault());
+                        transaction.Commit();
+                    }
+                }
+            }
         }
 
         public void Clear()
@@ -114,12 +132,17 @@ namespace Rental
             return _personList.Any(p => p.Equals(person));
         }
 
-        public void Update(int id, Person person)
+        public void Update(Person person)
         {
-            LoadData();
-            //_personList.RemoveAll(p => p.Id == id);
-            _personList.Remove(this.Get(id));
-            _personList.Add(person);
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+
+                    session.SaveOrUpdate(person);
+                    transaction.Commit();
+                }
+            }
         }
     }
 }

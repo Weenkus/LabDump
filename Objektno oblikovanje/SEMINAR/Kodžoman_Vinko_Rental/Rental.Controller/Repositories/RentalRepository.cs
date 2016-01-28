@@ -10,7 +10,7 @@ namespace Rental
     {
         // Repo is a singlton, make data consistancy easier and more practical
         private static RentalRepository instance;
-        private static List<Rental> _rentableList = new List<Rental>();
+        private static IList<Rental> _rentableList = new List<Rental>();
 
         private RentalRepository() { }
 
@@ -26,28 +26,44 @@ namespace Rental
             }
         }
 
+        private void LoadData()
+        {
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    _rentableList = session.CreateCriteria(typeof(Rental)).List<Rental>();
+                }
+            }
+        }
+
         public int Count()
         {
+            LoadData();
             return _rentableList.Count;
         }
 
         public Rental Get(int id)
         {
+            LoadData();
             return _rentableList.Where(p => p.Id == id).SingleOrDefault();
         }
 
         public Rental Get(Rental rental)
         {
+            LoadData();
             return _rentableList.Where(p => p.Equals(rental)).SingleOrDefault();
         }
 
-        public List<Rental> GetAll()
+        public IList<Rental> GetAll()
         {
+            LoadData();
             return _rentableList;
         }
 
         public Rental GetByIndex(int index)
         {
+            LoadData();
             if (index < _rentableList.Count)
                 return _rentableList.ElementAt(index);
             else
@@ -56,33 +72,71 @@ namespace Rental
 
         public void Add(Rental rental)
         {
-            _rentableList.Add(rental);
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(rental);
+                    transaction.Commit();
+                }
+            }
         }
 
         public void Remove(int id)
         {
-            _rentableList.RemoveAll(p => p.Id == id);
+            if (_rentableList.Any(x => x.Id == id))
+            {
+                using (var session = NHibernateService.SessionFactory.OpenSession())
+                {
+                    using (var transaction = session.BeginTransaction())
+                    {
+
+                        session.Delete(_rentableList.Where(x => x.Id == id).SingleOrDefault());
+                        transaction.Commit();
+                    }
+                }
+            }
         }
 
         public void Remove(Rental rental)
         {
-            _rentableList.RemoveAll(p => p.Equals(rental));
+            if (_rentableList.Any(x => x.Id == rental.Id))
+            {
+                using (var session = NHibernateService.SessionFactory.OpenSession())
+                {
+                    using (var transaction = session.BeginTransaction())
+                    {
+
+                        session.Delete(_rentableList.Where(x => x.Id == rental.Id).SingleOrDefault());
+                        transaction.Commit();
+                    }
+                }
+            }
         }
 
         public void Clear()
         {
+            LoadData();
             _rentableList.Clear();
         }
 
         public bool Contains(Rental rental)
         {
+            LoadData();
             return _rentableList.Any(p => p.Equals(rental));
         }
 
-        public void Update(int id, Rental rental)
+        public void Update(Rental rental)
         {
-            _rentableList.RemoveAll(p => p.Id == id);
-            _rentableList.Add(rental);
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+
+                    session.SaveOrUpdate(rental);
+                    transaction.Commit();
+                }
+            }
         }
     }
 }

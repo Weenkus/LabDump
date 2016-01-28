@@ -14,7 +14,7 @@ namespace Rental
 
         RentalInformation Get(RentalInformation rentalInfo);
 
-        List<RentalInformation> GetAll();
+        IList<RentalInformation> GetAll();
 
         RentalInformation GetByIndex(int index);
 
@@ -28,6 +28,6 @@ namespace Rental
 
         bool Contains(RentalInformation rentalInfo);
 
-        void Update(int id, RentalInformation rentalInfo);
+        void Update(RentalInformation rentalInfo);
     }
 }

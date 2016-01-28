@@ -23,7 +23,7 @@ namespace Rental
     {
         public ClientMap()
         {
-            HasOne(x => x.DedicatedAgent);
+            References(x => x.DedicatedAgent);
         }
     }
 
@@ -31,7 +31,7 @@ namespace Rental
     {
         public EmployeeMap()
         {
-            HasMany(x => x.AdvasingClients);
+            HasMany(x => x.AdvisingClients).Cascade.All().Not.LazyLoad();
         }
     }
 
@@ -42,7 +42,7 @@ namespace Rental
             Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.Description);
-            HasOne(x => x.Owner);
+            HasOne(x => x.Owner).Cascade.All().Not.LazyLoad();
             Map(x => x.DailyPrice);
         }
     }
@@ -53,8 +53,8 @@ namespace Rental
         {
             Map(x => x.Address);
             Map(x => x.PostalCode);
-            HasMany(x => x.IncludedFeatures);
-            HasMany(x => x.PayedFeatures);
+            HasMany(x => x.IncludedFeatures).Cascade.All().Not.LazyLoad();
+            HasMany(x => x.PayedFeatures).Cascade.All().Not.LazyLoad();
         }
     }
 
@@ -86,8 +86,8 @@ namespace Rental
             //Map(x => x.To).CustomType<NHibernate.Type.TimeType>(); ;
             //Map(x => x.From).CustomType<NHibernate.Type.TimeType>(); ;
             Map(x => x.DailyCost);
-            HasOne(x => x.Rented);
-            HasOne(x => x.Client);
+            HasOne(x => x.Rented).Cascade.All().Not.LazyLoad();
+            HasOne(x => x.Client).Cascade.All().Not.LazyLoad();
         }
     }
 

@@ -9,7 +9,7 @@ namespace Rental
     public class RentalInfoRepository : IRentalInfoRepository
     {
         private static RentalInfoRepository instance;
-        private List<RentalInformation> _rentalInfoList = new List<RentalInformation>();
+        private IList<RentalInformation> _rentalInfoList = new List<RentalInformation>();
 
         private RentalInfoRepository() { }
 
@@ -22,6 +22,17 @@ namespace Rental
                     instance = new RentalInfoRepository();
                 }
                 return instance;
+            }
+        }
+
+        private void LoadData()
+        {
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    _rentalInfoList = session.CreateCriteria(typeof(RentalInformation)).List<RentalInformation>();
+                }
             }
         }
 
@@ -40,7 +51,7 @@ namespace Rental
             return _rentalInfoList.Where(p => p.Equals(rentalInfo)).SingleOrDefault();
         }
 
-        public List<RentalInformation> GetAll()
+        public IList<RentalInformation> GetAll()
         {
             return _rentalInfoList;
         }
@@ -55,17 +66,46 @@ namespace Rental
 
         public void Add(RentalInformation rentalInfo)
         {
-            _rentalInfoList.Add(rentalInfo);
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(rentalInfo);
+                    transaction.Commit();
+                }
+            }
         }
 
         public void Remove(int id)
         {
-            _rentalInfoList.RemoveAll(p => p.Id == id);
+            if (_rentalInfoList.Any(x => x.Id == id))
+            {
+                using (var session = NHibernateService.SessionFactory.OpenSession())
+                {
+                    using (var transaction = session.BeginTransaction())
+                    {
+
+                        session.Delete(_rentalInfoList.Where(x => x.Id == id).SingleOrDefault());
+                        transaction.Commit();
+                    }
+                }
+            }
         }
 
         public void Remove(RentalInformation rentalInfo)
         {
-            _rentalInfoList.RemoveAll(p => p.Equals(rentalInfo));
+            if (_rentalInfoList.Any(x => x.Id == rentalInfo.Id))
+            {
+                using (var session = NHibernateService.SessionFactory.OpenSession())
+                {
+                    using (var transaction = session.BeginTransaction())
+                    {
+
+                        session.Delete(_rentalInfoList.Where(x => x.Id == rentalInfo.Id).SingleOrDefault());
+                        transaction.Commit();
+                    }
+                }
+            }
         }
 
         public void Clear()
@@ -78,10 +118,17 @@ namespace Rental
             return _rentalInfoList.Any(p => p.Equals(rentalInfo));
         }
 
-        public void Update(int id, RentalInformation rentalInfo)
+        public void Update(RentalInformation rentalInfo)
         {
-            _rentalInfoList.RemoveAll(p => p.Id == id);
-            _rentalInfoList.Add(rentalInfo);
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+
+                    session.SaveOrUpdate(rentalInfo);
+                    transaction.Commit();
+                }
+            }
         }
     }
 }

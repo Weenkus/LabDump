@@ -29,6 +29,6 @@ namespace Rental
 
         bool Contains(Person person);
 
-        void Update(int id, Person person);
+        void Update(Person person);
     }
 }
