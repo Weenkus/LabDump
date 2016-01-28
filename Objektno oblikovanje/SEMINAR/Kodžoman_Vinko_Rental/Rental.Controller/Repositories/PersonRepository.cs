@@ -34,29 +34,36 @@ namespace Rental
 
         private void LoadData()
         {
-            using (ISession session = NHibernateService.OpenSession())
+            using (var session = NHibernateService.SessionFactory.OpenSession())
             {
-                _personList = session.CreateCriteria(typeof(Person)).List<Person>();
+                using (var transaction = session.BeginTransaction())
+                {
+                    _personList = session.CreateCriteria(typeof(Person)).List<Person>();
+                }
             }
         }
 
         public int Count()
         {
+            LoadData();
             return _personList.Count;
         }
 
         public Person Get(int id)
         {
+            LoadData();
             return _personList.Where(p => p.Id == id).SingleOrDefault();
         }
 
         public Person Get(Person person)
         {
-            return _personList.Where(p => p.Equals(person)).SingleOrDefault();
+            LoadData();
+            return _personList.Where(p => p.Id == person.Id).SingleOrDefault();
         }
 
         public Person GetByIndex(int index)
         {
+            LoadData();
             if (index < _personList.Count)
                 return _personList.ElementAt(index);
             else
@@ -71,11 +78,11 @@ namespace Rental
 
         public void Add(Person person)
         {
-            using (ISession session = NHibernateService.OpenSession())
+            using (var session = NHibernateService.SessionFactory.OpenSession())
             {
-                using (ITransaction transaction = session.BeginTransaction())
+                using (var transaction = session.BeginTransaction())
                 {
-                    session.Save(person);
+                    session.SaveOrUpdate(person);
                     transaction.Commit();
                 }
             }
@@ -84,26 +91,34 @@ namespace Rental
         public void Remove(int id)
         {
             //_personList.RemoveAll(p => p.Id == id);
+            LoadData();
+            _personList.Remove(this.Get(id));
         }
 
         public void Remove(Person person)
         {
-           // _personList.RemoveAll(p => p.Equals(person));
+            // _personList.RemoveAll(p => p.Equals(person));
+            LoadData();
+            _personList.Remove(person);
         }
 
         public void Clear()
         {
+            LoadData();
             _personList.Clear();
         }
 
         public bool Contains(Person person)
         {
+            LoadData();
             return _personList.Any(p => p.Equals(person));
         }
 
         public void Update(int id, Person person)
         {
+            LoadData();
             //_personList.RemoveAll(p => p.Id == id);
+            _personList.Remove(this.Get(id));
             _personList.Add(person);
         }
     }

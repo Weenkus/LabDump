@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="Rental.DomainModel" namespace="Rental">
+  <class name="Rental.Person, Rental.DomainModel" table="Person" lazy="false">
+    <id name="Id" column="Id">
+      <generator class="identity"/>
+    </id>
+    <discriminator column="PersonType"  type="System.String"/>
+    <property name="Name" column="Name"/>
+    <property name="LastName" column="LastName"/>
+    
+    <joined-subclass name="Client" table="Clients">
+        <key column="PersonId"/>
+        <one-to-one name="DedicatedAgent" class="Employee"/>
+    </joined-subclass>
+    
+    <joined-subclass name="Employee" table="Employees">
+        <key column="PersonId"/>
+        <many-to-one  name="AdvasingClients" class="Client"/>
+    </joined-subclass>
+      
+
+  
+  </class>
+</hibernate-mapping>

@@ -8,13 +8,55 @@ namespace Rental
 {
     public class SpecialFeatures
     {
+        private int _id;
         private double _price;
         private String _description;
+
+        public SpecialFeatures() { }
 
         public SpecialFeatures(Double price, String description)
         {
             this._price = price;
             this._description = description;
+        }
+
+        public virtual int Id
+        {
+            get
+            {
+                return _id;
+            }
+
+            set
+            {
+                _id = value;
+            }
+        }
+
+        public virtual double Price
+        {
+            get
+            {
+                return _price;
+            }
+
+            set
+            {
+                _price = value;
+            }
+        }
+
+        public virtual string Description
+        {
+            get
+            {
+                return _description;
+            }
+
+            set
+            {
+                _description = value;
+            }
         }
     }
 }

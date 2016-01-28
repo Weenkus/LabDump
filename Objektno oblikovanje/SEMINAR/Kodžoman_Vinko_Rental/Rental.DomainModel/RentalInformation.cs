@@ -11,10 +11,22 @@ namespace Rental
         private int _id;
         private Client _client;
         private Rental _rented;
-        private DateTime _from, _to;
+        private DateTime _from;
+        private DateTime  _to;
         private Double _dailyCost;
 
-        public Client Client
+        public RentalInformation() { }
+
+        public RentalInformation(Client c, Rental r, DateTime from, DateTime to, Double dailyCost)
+        {
+            this.Client = c;
+            this.Rented = r;
+            this.From = from;
+            this.To = to;
+            this.DailyCost = dailyCost;
+        }
+
+        public virtual Client Client
         {
             get
             {
@@ -27,7 +39,7 @@ namespace Rental
             }
         }
 
-        public Rental Rented
+        public virtual Rental Rented
         {
             get
             {
@@ -40,7 +52,7 @@ namespace Rental
             }
         }
 
-        public DateTime From
+        public virtual DateTime From
         {
             get
             {
@@ -53,7 +65,7 @@ namespace Rental
             }
         }
 
-        public DateTime To
+        public virtual DateTime To
         {
             get
             {
@@ -66,7 +78,7 @@ namespace Rental
             }
         }
 
-        public double DailyCost
+        public virtual double DailyCost
         {
             get
             {
@@ -79,7 +91,7 @@ namespace Rental
             }
         }
 
-        public int Id
+        public virtual int Id
         {
             get
             {
@@ -91,5 +103,6 @@ namespace Rental
                 _id = value;
             }
         }
+
     }
 }
