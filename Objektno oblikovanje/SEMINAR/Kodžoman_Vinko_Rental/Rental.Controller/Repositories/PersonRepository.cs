@@ -38,11 +38,11 @@ namespace Rental
             {
                 using (var transaction = session.BeginTransaction())
                 {
-                    _personList = session.CreateCriteria(typeof(Person)).List<Person>();
+                    _personList = session.CreateCriteria<Person>().List<Person>();
                 }
             }
         }
-
+        
         public int Count()
         {
             LoadData();
@@ -51,14 +51,30 @@ namespace Rental
 
         public Person Get(int id)
         {
-            LoadData();
-            return _personList.Where(p => p.Id == id).SingleOrDefault();
+            //LoadData();
+            //return _personList.Where(p => p.Id == id).SingleOrDefault();
+
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    return session.Get<Person>(id);
+                }
+            }
         }
 
         public Person Get(Person person)
         {
-            LoadData();
-            return _personList.Where(p => p.Id == person.Id).SingleOrDefault();
+            //LoadData();
+            //return _personList.Where(p => p.Id == person.Id).SingleOrDefault();
+
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    return session.Get<Person>(person.Id);
+                }
+            }
         }
 
         public Person GetByIndex(int index)
@@ -112,7 +128,6 @@ namespace Rental
                 {
                     using (var transaction = session.BeginTransaction())
                     {
-
                         session.Delete(_personList.Where(x => x.Id == person.Id).SingleOrDefault());
                         transaction.Commit();
                     }
@@ -129,7 +144,7 @@ namespace Rental
         public bool Contains(Person person)
         {
             LoadData();
-            return _personList.Any(p => p.Equals(person));
+            return _personList.Any(p => p.Id == person.Id);
         }
 
         public void Update(Person person)

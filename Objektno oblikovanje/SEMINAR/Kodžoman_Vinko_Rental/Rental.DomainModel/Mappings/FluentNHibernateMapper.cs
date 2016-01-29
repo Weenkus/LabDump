@@ -14,8 +14,8 @@ namespace Rental
         public PersonMap()
         {
             Id(x => x.Id);
-            Map(x => x.Name);
-            Map(x => x.LastName);
+            Map(x => x.Name).Not.LazyLoad();
+            Map(x => x.LastName).Not.LazyLoad();
         }
     }
 
@@ -23,7 +23,7 @@ namespace Rental
     {
         public ClientMap()
         {
-            References(x => x.DedicatedAgent);
+            References(x => x.DedicatedAgent).Nullable().Not.LazyLoad();
         }
     }
 

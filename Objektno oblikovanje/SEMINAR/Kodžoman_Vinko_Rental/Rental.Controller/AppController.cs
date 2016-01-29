@@ -11,7 +11,7 @@ namespace Rental
         public void ShowEmplyoees()
         {
             // Initialise NH and SQLite
-            NHibernateService.Init();
+           /* NHibernateService.Init();
 
             // Insert some data
             Employee employee1 = new Employee("Vinko", "Zadric");
@@ -26,7 +26,7 @@ namespace Rental
             PersonRepository.Instance.Add(employee1);
             PersonRepository.Instance.Add(employee2);
             PersonRepository.Instance.Add(employee3);
-            PersonRepository.Instance.Add(client);
+            PersonRepository.Instance.Add(client);*/
 
             FormEmployeeView f = new FormEmployeeView(this, PersonRepository.Instance);
             f.Show();

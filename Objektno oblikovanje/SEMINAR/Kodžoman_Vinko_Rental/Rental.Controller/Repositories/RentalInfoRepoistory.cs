@@ -38,16 +38,19 @@ namespace Rental
 
         public int Count()
         {
+            LoadData();
             return _rentalInfoList.Count;
         }
 
         public RentalInformation Get(int id)
         {
+            LoadData();
             return _rentalInfoList.Where(p => p.Id == id).SingleOrDefault();
         }
 
         public RentalInformation Get(RentalInformation rentalInfo)
         {
+            LoadData();
             return _rentalInfoList.Where(p => p.Equals(rentalInfo)).SingleOrDefault();
         }
 
@@ -58,6 +61,7 @@ namespace Rental
 
         public RentalInformation GetByIndex(int index)
         {
+            LoadData();
             if (index < _rentalInfoList.Count)
                 return _rentalInfoList.ElementAt(index);
             else
@@ -78,13 +82,13 @@ namespace Rental
 
         public void Remove(int id)
         {
+            LoadData();
             if (_rentalInfoList.Any(x => x.Id == id))
             {
                 using (var session = NHibernateService.SessionFactory.OpenSession())
                 {
                     using (var transaction = session.BeginTransaction())
                     {
-
                         session.Delete(_rentalInfoList.Where(x => x.Id == id).SingleOrDefault());
                         transaction.Commit();
                     }
@@ -94,6 +98,7 @@ namespace Rental
 
         public void Remove(RentalInformation rentalInfo)
         {
+            LoadData();
             if (_rentalInfoList.Any(x => x.Id == rentalInfo.Id))
             {
                 using (var session = NHibernateService.SessionFactory.OpenSession())
@@ -110,11 +115,13 @@ namespace Rental
 
         public void Clear()
         {
+            LoadData();
             _rentalInfoList.Clear();
         }
 
         public bool Contains(RentalInformation rentalInfo)
         {
+            LoadData();
             return _rentalInfoList.Any(p => p.Equals(rentalInfo));
         }
 

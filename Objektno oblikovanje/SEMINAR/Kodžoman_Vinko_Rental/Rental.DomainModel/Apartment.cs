@@ -27,6 +27,21 @@ namespace Rental
             this.Owner = owner;
         }
 
+        public override bool Equals(object other)
+        {
+            var toCompareWith = other as Apartment;
+            if (toCompareWith == null)
+                return false;
+            return this.Id == toCompareWith.Id
+                && this.Address == toCompareWith.Address
+                && this.Owner.Id == toCompareWith.Owner.Id
+                && this.DailyPrice == toCompareWith.DailyPrice
+                && this.Description == toCompareWith.Description
+                && this.PostalCode == toCompareWith.PostalCode
+                && this.PayedFeatures == toCompareWith.PayedFeatures;
+        }
+
+
         public virtual IList<SpecialFeatures> PayedFeatures
         {
             get

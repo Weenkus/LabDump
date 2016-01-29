@@ -65,6 +65,7 @@
     <Compile Include="Repositories\PersonRepository.cs" />
     <Compile Include="Repositories\RentalInfoRepoistory.cs" />
     <Compile Include="Repositories\RentalRepository.cs" />
+    <Compile Include="SessionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rental.DomainModel\Rental.DomainModel.csproj">

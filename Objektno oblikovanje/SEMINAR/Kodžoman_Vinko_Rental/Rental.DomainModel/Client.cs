@@ -17,6 +17,18 @@ namespace Rental
             this.Name = name;
             this.LastName = lastName;
             this._dedicatedAgent = emp;
+            emp.AdvisingClients.Add(this);
+        }
+
+        public override bool Equals(object other)
+        {
+            var toCompareWith = other as Client;
+            if (toCompareWith == null)
+                return false;
+            return this.Id == toCompareWith.Id
+                && this.Name == toCompareWith.Name
+                && this.LastName == toCompareWith.LastName
+                && this.DedicatedAgent.Equals(toCompareWith.DedicatedAgent);
         }
 
         public virtual Employee DedicatedAgent

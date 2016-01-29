@@ -11,6 +11,16 @@ namespace Rental
         private String _name;
         private String _lastName;
 
+        public override bool Equals(object other)
+        {
+            var toCompareWith = other as Person;
+            if (toCompareWith == null)
+                return false;
+            return this.Id == toCompareWith.Id
+                && this.Name == toCompareWith.Name
+                && this.LastName == toCompareWith.LastName;
+        }
+
         public virtual int Id
         {
             get { return _id; }

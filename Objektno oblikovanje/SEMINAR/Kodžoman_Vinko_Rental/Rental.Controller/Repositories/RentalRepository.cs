@@ -45,14 +45,30 @@ namespace Rental
 
         public Rental Get(int id)
         {
-            LoadData();
-            return _rentableList.Where(p => p.Id == id).SingleOrDefault();
+            //LoadData();
+            //return _rentableList.Where(p => p.Id == id).SingleOrDefault();
+
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    return session.Get<Rental>(id);
+                }
+            }
         }
 
         public Rental Get(Rental rental)
         {
-            LoadData();
-            return _rentableList.Where(p => p.Equals(rental)).SingleOrDefault();
+            //LoadData();
+            //return _rentableList.Where(p => p.Equals(rental)).SingleOrDefault();
+
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    return session.Get<Rental>(rental.Id);
+                }
+            }
         }
 
         public IList<Rental> GetAll()
@@ -106,8 +122,8 @@ namespace Rental
                 {
                     using (var transaction = session.BeginTransaction())
                     {
-
-                        session.Delete(_rentableList.Where(x => x.Id == rental.Id).SingleOrDefault());
+                        SessionHelper.Delete<Rental>(session, rental.Id);
+                        //session.Delete(_rentableList.Where(x => x.Id == rental.Id).SingleOrDefault());
                         transaction.Commit();
                     }
                 }
@@ -123,7 +139,7 @@ namespace Rental
         public bool Contains(Rental rental)
         {
             LoadData();
-            return _rentableList.Any(p => p.Equals(rental));
+            return _rentableList.Any(p => p.Id == rental.Id);
         }
 
         public void Update(Rental rental)
