@@ -34,5 +34,10 @@ namespace Rental
         {
             _controller.ShowApartmants();
         }
+
+        private void addToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            _controller.AddClient();
+        }
     }
 }

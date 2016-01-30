@@ -26,5 +26,12 @@ namespace Rental
             f.ShowDialog();
         }
 
+        public void AddClient()
+        {
+            FormClientAdd f = new FormClientAdd(this, PersonRepository.Instance);
+            f.ShowDialog();
+        }
+
+
     }
 }
