@@ -51,9 +51,6 @@ namespace Rental
 
         public Person Get(int id)
         {
-            //LoadData();
-            //return _personList.Where(p => p.Id == id).SingleOrDefault();
-
             using (var session = NHibernateService.SessionFactory.OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
@@ -65,9 +62,6 @@ namespace Rental
 
         public Person Get(Person person)
         {
-            //LoadData();
-            //return _personList.Where(p => p.Id == person.Id).SingleOrDefault();
-
             using (var session = NHibernateService.SessionFactory.OpenSession())
             {
                 using (var transaction = session.BeginTransaction())

@@ -45,9 +45,6 @@ namespace Rental
 
         public Rental Get(int id)
         {
-            //LoadData();
-            //return _rentableList.Where(p => p.Id == id).SingleOrDefault();
-
             using (var session = NHibernateService.SessionFactory.OpenSession())
             {
                 using (var transaction = session.BeginTransaction())
@@ -59,9 +56,6 @@ namespace Rental
 
         public Rental Get(Rental rental)
         {
-            //LoadData();
-            //return _rentableList.Where(p => p.Equals(rental)).SingleOrDefault();
-
             using (var session = NHibernateService.SessionFactory.OpenSession())
             {
                 using (var transaction = session.BeginTransaction())

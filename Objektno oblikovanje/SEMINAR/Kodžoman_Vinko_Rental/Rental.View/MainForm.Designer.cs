@@ -112,14 +112,15 @@
             this.viewToolStripMenuItem2,
             this.addToolStripMenuItem2});
             this.apartmantsToolStripMenuItem.Name = "apartmantsToolStripMenuItem";
-            this.apartmantsToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.apartmantsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.apartmantsToolStripMenuItem.Text = "Apartmants";
             // 
             // viewToolStripMenuItem2
             // 
             this.viewToolStripMenuItem2.Name = "viewToolStripMenuItem2";
-            this.viewToolStripMenuItem2.Size = new System.Drawing.Size(99, 22);
+            this.viewToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
             this.viewToolStripMenuItem2.Text = "View";
+            this.viewToolStripMenuItem2.Click += new System.EventHandler(this.viewToolStripMenuItem2_Click);
             // 
             // addToolStripMenuItem2
             // 

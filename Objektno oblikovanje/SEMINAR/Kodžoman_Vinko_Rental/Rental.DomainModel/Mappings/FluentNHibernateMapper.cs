@@ -42,7 +42,7 @@ namespace Rental
             Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.Description);
-            HasOne(x => x.Owner).Cascade.All().Not.LazyLoad();
+            References(x => x.Owner).Cascade.All().Not.Nullable().Not.LazyLoad();
             Map(x => x.DailyPrice);
         }
     }

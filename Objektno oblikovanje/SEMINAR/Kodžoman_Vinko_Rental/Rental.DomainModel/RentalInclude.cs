@@ -14,6 +14,11 @@ namespace Rental
 
         public RentalInclude() { }
 
+        public override string ToString()
+        {
+            return Offer.ToString() + "(" + Number + ")";
+        }
+
         public RentalInclude(Offer offer, int number)
         {
             this._offer = offer;

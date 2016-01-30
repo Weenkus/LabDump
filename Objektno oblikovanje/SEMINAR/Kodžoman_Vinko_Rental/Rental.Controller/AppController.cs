@@ -20,5 +20,11 @@ namespace Rental
             f.ShowDialog();
         }
 
+        public void ShowApartmants()
+        {
+            FormApartmantView f = new FormApartmantView(this, RentalRepository.Instance);
+            f.ShowDialog();
+        }
+
     }
 }

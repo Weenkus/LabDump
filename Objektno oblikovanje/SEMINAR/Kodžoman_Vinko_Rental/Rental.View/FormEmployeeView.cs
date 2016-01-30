@@ -39,9 +39,9 @@ namespace Rental
                 {
                     Client c = p.AdvisingClients[i];
                     if (i == p.AdvisingClients.Count - 1)
-                        clients += c.Name + " " + c.LastName;
+                        clients += "[" + Convert.ToString(c.Id) + "] " + c.Name + " " + c.LastName;
                     else
-                        clients += c.Name + " " + c.LastName + ", ";
+                        clients += "[" + Convert.ToString(c.Id) + "] " + c.Name + " " + c.LastName + ", ";
                 }
 
                 listViewItemNew.SubItems.Add(clients);

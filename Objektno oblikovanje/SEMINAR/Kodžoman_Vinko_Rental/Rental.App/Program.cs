@@ -38,9 +38,6 @@ namespace Rental
             Client client2 = new Client("Mark", "Shannon", employee3);
             Client client3 = new Client("Laplace", "Smith", employee1);
 
-            // Clean repos (because they are singeltons, they might still have some data left in them)
-            // PersonRepository.Instance.Clear();
-
             // Fill the repos
             PersonRepository.Instance.Add(employee1);
             PersonRepository.Instance.Add(employee2);
@@ -49,6 +46,23 @@ namespace Rental
             PersonRepository.Instance.Add(client1);
             PersonRepository.Instance.Add(client2);
             PersonRepository.Instance.Add(client3);
+
+            // Add some rentals
+            // Create some features (payed and included)
+            IList<SpecialFeatures> sF = new List<SpecialFeatures>();
+            sF.Add(new SpecialFeatures(200, "Boat trip"));
+            sF.Add(new SpecialFeatures(150, "Dinner near the sea"));
+
+            IList<RentalInclude> rF = new List<RentalInclude>();
+            rF.Add(new RentalInclude(Offer.balcony, 2));
+            rF.Add(new RentalInclude(Offer.kitchen, 2));
+            rF.Add(new RentalInclude(Offer.room, 4));
+
+            // Create the apartmant via the factory and add it to the repo
+            Apartment apartmant = ApartmanFactory.createApartman(client, "Vila Zrinka",
+                "A beautiful vila on the sea, breathtaking view. Enjoy the warm sun on your skin and let go all your woories.",
+                "12004", "Torovinkova 5", 200, rF, sF);
+            RentalRepository.Instance.Add(apartmant);
         }
     }
 }

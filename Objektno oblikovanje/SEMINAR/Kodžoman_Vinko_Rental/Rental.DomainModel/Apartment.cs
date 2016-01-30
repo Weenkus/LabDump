@@ -16,15 +16,16 @@ namespace Rental
         public Apartment() { }
 
         public Apartment(Client owner, String name, String description, String postal,
-            String address, Double MonthlyPrice, IList<RentalInclude> rFeatures, IList<SpecialFeatures> sFeatures)
+            String address, Double price, IList<RentalInclude> rFeatures, IList<SpecialFeatures> sFeatures)
         {
+            this.Owner = owner;
             this.Name = name;
             this.Description = description;
             this._postalCode = postal;
             this._address = address;
             this._payedFeatures = sFeatures;
             this._includedFeatures = rFeatures;
-            this.Owner = owner;
+            this.DailyPrice = price;
         }
 
         public override bool Equals(object other)

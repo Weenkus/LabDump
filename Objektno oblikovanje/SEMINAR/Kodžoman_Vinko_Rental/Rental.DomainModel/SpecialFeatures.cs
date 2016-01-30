@@ -14,6 +14,11 @@ namespace Rental
 
         public SpecialFeatures() { }
 
+        public override string ToString()
+        {
+            return _description + " (" + Convert.ToInt32(Price) + "€)";
+        }
+
         public SpecialFeatures(Double price, String description)
         {
             this._price = price;

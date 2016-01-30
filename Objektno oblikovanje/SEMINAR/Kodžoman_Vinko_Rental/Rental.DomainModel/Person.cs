@@ -11,6 +11,11 @@ namespace Rental
         private String _name;
         private String _lastName;
 
+        public override string ToString()
+        {
+            return Name + " " + LastName;
+        }
+
         public override bool Equals(object other)
         {
             var toCompareWith = other as Person;
