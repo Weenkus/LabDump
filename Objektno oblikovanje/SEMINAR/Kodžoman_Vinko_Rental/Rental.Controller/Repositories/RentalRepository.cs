@@ -77,6 +77,17 @@ namespace Rental
             return _rentableList;
         }
 
+        public IList<Apartment> GetAllApartmants()
+        {
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    return session.CreateCriteria<Apartment>().List<Apartment>();
+                }
+            }
+        }
+
         public Rental GetByIndex(int index)
         {
             LoadData();

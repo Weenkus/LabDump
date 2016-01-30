@@ -22,7 +22,7 @@ namespace Rental
             InitializeComponent();
         }
 
-        private void FormEmployeeView_Load(object sender, EventArgs e)
+        private void FormClientView_Load(object sender, EventArgs e)
         {
             listView1.Items.Clear();
 

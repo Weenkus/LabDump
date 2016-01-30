@@ -16,6 +16,8 @@ namespace Rental
 
         IList<Rental> GetAll();
 
+        IList<Apartment> GetAllApartmants();
+
         Rental GetByIndex(int index);
 
         void Add(Rental rental);

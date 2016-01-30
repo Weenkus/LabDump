@@ -77,6 +77,7 @@
             this.Controls.Add(this.listView1);
             this.Name = "FormClientView";
             this.Text = "FormClientView";
+            this.Load += new System.EventHandler(this.FormClientView_Load);
             this.ResumeLayout(false);
 
         }

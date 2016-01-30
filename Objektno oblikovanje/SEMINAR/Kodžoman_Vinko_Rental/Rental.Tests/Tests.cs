@@ -127,8 +127,8 @@ namespace Rental
 
             // Create some features (payed and included)
             IList<SpecialFeatures> sF = new List<SpecialFeatures>();
-            sF.Add(new SpecialFeatures(200, "Izlet na more."));
-            sF.Add(new SpecialFeatures(150, "Vecer u finom restoranu."));
+            sF.Add(new SpecialFeatures(200, "Boat trip."));
+            sF.Add(new SpecialFeatures(150, "Dinner near the sea."));
 
             IList<RentalInclude> rF = new List<RentalInclude>();
             rF.Add(new RentalInclude(Offer.balcony, 2));
@@ -136,7 +136,7 @@ namespace Rental
             rF.Add(new RentalInclude(Offer.room, 4));
 
             // Create the apartmant via the factory and add it to the repo
-            Apartment a = ApartmanFactory.createApartman(client, "Vila zrinka", "Prekrasna vila na moru...",
+            Apartment a = ApartmanFactory.createApartman(client, "Vila zrinka", "A beautiful vila on the sea, breathtaking view...",
                 "12004", "Torovinkova 5", 200, rF, sF);
             RentalRepository.Instance.Add(a);
 

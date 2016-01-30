@@ -59,6 +59,8 @@ namespace Rental
             return _rentalInfoList;
         }
 
+
+
         public RentalInformation GetByIndex(int index)
         {
             LoadData();
