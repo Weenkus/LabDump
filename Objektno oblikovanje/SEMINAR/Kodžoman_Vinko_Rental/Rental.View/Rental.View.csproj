@@ -64,6 +64,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormClientView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormClientView.Designer.cs">
+      <DependentUpon>FormClientView.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormEmployeeView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +84,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormClientView.resx">
+      <DependentUpon>FormClientView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormEmployeeView.resx">
       <DependentUpon>FormEmployeeView.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,6 +1,6 @@
 ﻿namespace Rental
 {
-    partial class FormEmployeeView
+    partial class FormClientView
     {
         /// <summary>
         /// Required designer variable.
@@ -45,7 +45,7 @@
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(551, 326);
+            this.listView1.Size = new System.Drawing.Size(523, 309);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -57,27 +57,26 @@
             // columnHeader2
             // 
             this.columnHeader2.Text = "Name";
-            this.columnHeader2.Width = 80;
+            this.columnHeader2.Width = 79;
             // 
             // columnHeader3
             // 
             this.columnHeader3.Text = "Surname";
-            this.columnHeader3.Width = 90;
+            this.columnHeader3.Width = 115;
             // 
             // columnHeader4
             // 
-            this.columnHeader4.Text = "Advising Clients";
-            this.columnHeader4.Width = 314;
+            this.columnHeader4.Text = "Dedicated Agent";
+            this.columnHeader4.Width = 262;
             // 
-            // FormEmployeeView
+            // FormClientView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(551, 326);
+            this.ClientSize = new System.Drawing.Size(523, 309);
             this.Controls.Add(this.listView1);
-            this.Name = "FormEmployeeView";
-            this.Text = "Employees";
-            this.Load += new System.EventHandler(this.FormEmployeeView_Load);
+            this.Name = "FormClientView";
+            this.Text = "FormClientView";
             this.ResumeLayout(false);
 
         }

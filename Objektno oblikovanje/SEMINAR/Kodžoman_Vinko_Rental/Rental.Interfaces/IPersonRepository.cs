@@ -19,6 +19,10 @@ namespace Rental
 
         IList<Person> GetAll();
 
+        IList<Employee> GetAllEmpoyees();
+
+        IList<Client> GetAllClients();
+
         void Add(Person person);
 
         void Remove(int id);

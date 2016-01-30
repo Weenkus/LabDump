@@ -9,5 +9,6 @@ namespace Rental
     public interface IController
     {
         void ShowEmplyoees();
+        void ShowClients();
     }
 }

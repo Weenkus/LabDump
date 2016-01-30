@@ -24,5 +24,10 @@ namespace Rental
         {
             _controller.ShowEmplyoees();
         }
+
+        private void viewToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            _controller.ShowClients();
+        }
     }
 }

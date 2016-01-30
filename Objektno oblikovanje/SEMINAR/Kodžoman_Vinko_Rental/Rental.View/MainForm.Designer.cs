@@ -90,6 +90,7 @@
             this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
             this.viewToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.viewToolStripMenuItem1.Text = "View";
+            this.viewToolStripMenuItem1.Click += new System.EventHandler(this.viewToolStripMenuItem1_Click);
             // 
             // addToolStripMenuItem1
             // 
@@ -111,19 +112,19 @@
             this.viewToolStripMenuItem2,
             this.addToolStripMenuItem2});
             this.apartmantsToolStripMenuItem.Name = "apartmantsToolStripMenuItem";
-            this.apartmantsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.apartmantsToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.apartmantsToolStripMenuItem.Text = "Apartmants";
             // 
             // viewToolStripMenuItem2
             // 
             this.viewToolStripMenuItem2.Name = "viewToolStripMenuItem2";
-            this.viewToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.viewToolStripMenuItem2.Size = new System.Drawing.Size(99, 22);
             this.viewToolStripMenuItem2.Text = "View";
             // 
             // addToolStripMenuItem2
             // 
             this.addToolStripMenuItem2.Name = "addToolStripMenuItem2";
-            this.addToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.addToolStripMenuItem2.Size = new System.Drawing.Size(99, 22);
             this.addToolStripMenuItem2.Text = "Add";
             // 
             // MainForm

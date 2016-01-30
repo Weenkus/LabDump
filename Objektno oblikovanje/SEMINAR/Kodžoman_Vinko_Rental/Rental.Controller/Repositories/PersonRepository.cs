@@ -92,6 +92,28 @@ namespace Rental
             return _personList;
         }
 
+        public IList<Client> GetAllClients()
+        {
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    return session.CreateCriteria<Client>().List<Client>();
+                }
+            }
+        }
+
+        public IList<Employee> GetAllEmpoyees()
+        {
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    return session.CreateCriteria<Employee>().List<Employee>();
+                }
+            }
+        }
+
         public void Add(Person person)
         {
             using (var session = NHibernateService.SessionFactory.OpenSession())
@@ -112,7 +134,6 @@ namespace Rental
                 {
                     using (var transaction = session.BeginTransaction())
                     {
-
                         session.Delete(_personList.Where(x => x.Id == id).SingleOrDefault());
                         transaction.Commit();
                     }
