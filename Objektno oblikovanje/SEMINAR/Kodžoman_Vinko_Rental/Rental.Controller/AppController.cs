@@ -32,6 +32,12 @@ namespace Rental
             f.ShowDialog();
         }
 
+        public void AddEmployee()
+        {
+            FormEmployeeAdd f = new FormEmployeeAdd(this, PersonRepository.Instance);
+            f.ShowDialog();
+        }
+
 
     }
 }

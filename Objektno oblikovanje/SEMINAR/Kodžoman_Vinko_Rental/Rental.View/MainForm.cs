@@ -39,5 +39,10 @@ namespace Rental
         {
             _controller.AddClient();
         }
+
+        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _controller.AddEmployee();
+        }
     }
 }
