@@ -91,34 +91,52 @@ namespace Rental
         {
             Client selectedClient = (Client)_repo.Get(((KeyValuePair<Client, string>)cbClients.SelectedItem).Key);
 
-            // Check if there were any rentals in the client possession
-            DialogResult result = MessageBox.Show("The client owns rentals, removing the client will remove them as well. Are you sure you want to continue?"
-                , "Confirmation", MessageBoxButtons.YesNoCancel);
-            if (result == DialogResult.Yes)
-            {
-                // Remove all rentals that the client owned
-                IList<Rental> rentals = _rentalRepo.GetAll();
-                bool removed = false;
-                String apartmantNames = "";
-                foreach (Rental r in rentals)
-                {
-                    if (r.Owner.Id == selectedClient.Id)
-                    {
-                        _rentalRepo.Remove(r);
-                        removed = true;
-                        apartmantNames += r.Name + "\n ";
-                    }
-                }
 
-                if (removed)
-                    MessageBox.Show("The client had apartmants in the system, they were all deleted together with the client.\nRemoved apartmats:\n\n" + apartmantNames,
-                        "Apartmants", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Check if there were any rentals in the client possession
+            IList<Rental> rList = _rentalRepo.GetAll();
+            bool hasREntals = false;
+            foreach (Rental r in rList)
+            {
+                if (r.Owner.Id == selectedClient.Id)
+                    hasREntals = true;
+            }
+
+            // The Client has rentals, ask the user for action
+            if (hasREntals)
+            {             
+                DialogResult result = MessageBox.Show("The client owns rentals, removing the client will remove them as well. Are you sure you want to continue?"
+                    , "Confirmation", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes)
+                {
+                    // Remove all rentals that the client owned
+                    IList<Rental> rentals = _rentalRepo.GetAll();
+                    bool removed = false;
+                    String apartmantNames = "";
+                    foreach (Rental r in rentals)
+                    {
+                        if (r.Owner.Id == selectedClient.Id)
+                        {
+                            _rentalRepo.Remove(r);
+                            removed = true;
+                            apartmantNames += r.Name + "\n ";
+                        }
+                    }
+
+                    if (removed)
+                        MessageBox.Show("The client had apartmants in the system, they were all deleted together with the client.\nRemoved apartmats:\n\n" + apartmantNames,
+                            "Apartmants", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _repo.Remove(selectedClient);
+                    this.Close();
+                }
+                else if (result == DialogResult.No)
+                {
+                    //...
+                }
+            } else
+            {
+                // The client doesn't have any apartmants remove him
                 _repo.Remove(selectedClient);
                 this.Close();
-            }
-            else if (result == DialogResult.No)
-            {
-                //...
             }
         }
 
