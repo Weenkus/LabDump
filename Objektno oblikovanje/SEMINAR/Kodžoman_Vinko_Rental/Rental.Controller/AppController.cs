@@ -44,6 +44,10 @@ namespace Rental
             f.ShowDialog();
         }
 
-
+        public void EditEmployee()
+        {
+            FormEmployeeEdit f = new FormEmployeeEdit(this, PersonRepository.Instance);
+            f.ShowDialog();
+        }
     }
 }
