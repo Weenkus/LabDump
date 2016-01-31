@@ -30,8 +30,9 @@ namespace Rental
             foreach (Employee p in pList)
             {
                 ListViewItem listViewItemNew = new ListViewItem(Convert.ToString(p.Id));
-                listViewItemNew.SubItems.Add(p.LastName);
                 listViewItemNew.SubItems.Add(p.Name);
+                listViewItemNew.SubItems.Add(p.LastName);
+
 
                 // Make a string of clients
                 String clients = "";

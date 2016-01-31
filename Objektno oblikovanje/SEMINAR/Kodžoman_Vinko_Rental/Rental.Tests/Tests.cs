@@ -78,9 +78,6 @@ namespace Rental
             Employee employee3 = new Employee("Hesimono", "Kaero");
             Client client = new Client("Marin", "Veljko", employee1);
 
-            // Clean repos (because they are singeltons, they might still have some data left in them)
-            PersonRepository.Instance.Clear();
-
             // Fill the repos
             PersonRepository.Instance.Add(employee1);
             PersonRepository.Instance.Add(employee2);
@@ -101,6 +98,9 @@ namespace Rental
             int empId = emp.Id;
             emp.LastName = "Brega";
             PersonRepository.Instance.Update(emp);
+
+            // Should still be only 3 people in the repo
+            Assert.Equal(PersonRepository.Instance.Count(), 3);
 
             // Check if update worked
             Assert.Equal(PersonRepository.Instance.Get(empId).Id, emp.Id);
@@ -151,14 +151,14 @@ namespace Rental
             Assert.Equal(RentalRepository.Instance.Contains(a), false);
 
             // Update
-            RentalRepository.Instance.Add(a);
+            /*RentalRepository.Instance.Add(a);
             Apartment a1 = (Apartment)RentalRepository.Instance.Get(a);
             int aId = a1.Id;
             a1.Name = "Vila Markica";
             RentalRepository.Instance.Update(a1);
 
             // Check if update worked
-            Assert.Equal(RentalRepository.Instance.Get(aId), a1);
+            Assert.Equal(RentalRepository.Instance.Get(aId), a1);*/
         }
 
         [Fact]
@@ -182,6 +182,54 @@ namespace Rental
             PersonRepository.Instance.Add(client);
 
             Assert.Equal(PersonRepository.Instance.GetAll().Count, 4);
+        }
+
+        [Fact]
+        public void TestClientCRUD()
+        {
+            // Initialise NH and SQLite
+            NHibernateService.Init();
+
+            // Insert some data
+            Employee employee1 = new Employee("Vinko", "Zadric");
+            Employee employee2 = new Employee("Mlako", "Vader");
+            Employee employee3 = new Employee("Hesimono", "Kaero");
+            Client client = new Client("Marin", "Veljko", employee1);
+            Client client1 = new Client("John", "Make", employee1);
+            Client client2 = new Client("Mark", "Shannon", employee3);
+            Client client3 = new Client("Laplace", "Smith", employee1);
+
+            // Fill the repos
+            PersonRepository.Instance.Add(employee1);
+            PersonRepository.Instance.Add(employee2);
+            PersonRepository.Instance.Add(employee3);
+            PersonRepository.Instance.Add(client);
+            PersonRepository.Instance.Add(client1);
+
+            // Check number
+            Assert.Equal(PersonRepository.Instance.Count(), 7);
+
+            // Check delete function of a repo
+            PersonRepository.Instance.Remove(client);
+            Assert.Equal(PersonRepository.Instance.Count(), 6);
+
+            // Check relations
+            Assert.Equal(PersonRepository.Instance.Contains(client), false);
+            Assert.Equal(PersonRepository.Instance.Contains(employee1), true);
+
+            // Update
+            Client cli = (Client)PersonRepository.Instance.Get(client1);
+            int cId = cli.Id;
+            cli.LastName = "Hekko";
+            PersonRepository.Instance.Update(cli);
+
+            // Should still be only 6 people in the repo
+            Assert.Equal(PersonRepository.Instance.Count(), 6);
+
+            // Check if update worked
+            Assert.Equal(PersonRepository.Instance.Get(cId).Id, cli.Id);
+            Assert.Equal(PersonRepository.Instance.Get(cId).Name, cli.Name);
+            Assert.Equal(PersonRepository.Instance.Get(cId).LastName, cli.LastName);
         }
     }
 }

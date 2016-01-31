@@ -33,7 +33,7 @@ namespace Rental
             Employee employee1 = new Employee("Vinko", "Zadric");
             Employee employee2 = new Employee("Mlako", "Vader");
             Employee employee3 = new Employee("Hesimono", "Kaero");
-            Client client = new Client("Marin", "Veljko", employee1);
+            Client client = new Client("Marin", "Veljko", employee3);
             Client client1 = new Client("John", "Make", employee1);
             Client client2 = new Client("Mark", "Shannon", employee3);
             Client client3 = new Client("Laplace", "Smith", employee1);

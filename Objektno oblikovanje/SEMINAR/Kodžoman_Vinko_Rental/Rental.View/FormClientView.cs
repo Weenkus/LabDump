@@ -30,8 +30,8 @@ namespace Rental
             foreach (Client p in pList)
             {
                 ListViewItem listViewItemNew = new ListViewItem(Convert.ToString(p.Id));
-                listViewItemNew.SubItems.Add(p.LastName);
                 listViewItemNew.SubItems.Add(p.Name);
+                listViewItemNew.SubItems.Add(p.LastName);
 
                 String dedicatedAgent = "[" + Convert.ToString(p.Id) + "] " +  p.DedicatedAgent.Name + " " + p.DedicatedAgent.LastName;
                 listViewItemNew.SubItems.Add(dedicatedAgent);

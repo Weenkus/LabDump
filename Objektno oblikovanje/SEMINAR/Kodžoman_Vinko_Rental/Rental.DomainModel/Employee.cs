@@ -10,7 +10,7 @@ namespace Rental
     {
         private IList<Client> _advisingClients = new List<Client>();
 
-        public override bool Equals(object other)
+        /*public override bool Equals(object other)
         {
             var toCompareWith = other as Employee;
             if (toCompareWith == null)
@@ -24,7 +24,7 @@ namespace Rental
             return this.Id == toCompareWith.Id
                 && this.Name == toCompareWith.Name
                 && this.LastName == toCompareWith.LastName;
-        }
+        }*/
 
         public Employee() { }
 

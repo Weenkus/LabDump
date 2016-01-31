@@ -122,6 +122,7 @@ namespace Rental
 
         public void Remove(int id)
         {
+            LoadData();
             if (_personList.Any(x => x.Id == id))
             {
                 using (var session = NHibernateService.SessionFactory.OpenSession())
@@ -137,13 +138,15 @@ namespace Rental
 
         public void Remove(Person person)
         {
+            LoadData();
             if (_personList.Any(x => x.Id == person.Id))
             {
                 using (var session = NHibernateService.SessionFactory.OpenSession())
                 {
                     using (var transaction = session.BeginTransaction())
                     {
-                        session.Delete(_personList.Where(x => x.Id == person.Id).SingleOrDefault());
+                        //session.Delete<Person>(person.Id);
+                        session.Delete(person);
                         transaction.Commit();
                     }
                 }
@@ -168,7 +171,8 @@ namespace Rental
             {
                 using (var transaction = session.BeginTransaction())
                 {
-
+                    //session.Delete<Person>(person.Id);
+                    //session.Save(person);
                     session.SaveOrUpdate(person);
                     transaction.Commit();
                 }

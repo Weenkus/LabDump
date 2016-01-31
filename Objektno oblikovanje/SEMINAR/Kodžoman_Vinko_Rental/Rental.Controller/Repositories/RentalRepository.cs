@@ -127,8 +127,8 @@ namespace Rental
                 {
                     using (var transaction = session.BeginTransaction())
                     {
-                        SessionHelper.Delete<Rental>(session, rental.Id);
-                        //session.Delete(_rentableList.Where(x => x.Id == rental.Id).SingleOrDefault());
+                        //SessionHelper.Delete<Rental>(session, rental.Id);
+                        session.Delete(_rentableList.Where(x => x.Id == rental.Id).SingleOrDefault());
                         transaction.Commit();
                     }
                 }

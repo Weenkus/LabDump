@@ -31,7 +31,7 @@ namespace Rental
     {
         public EmployeeMap()
         {
-            HasMany(x => x.AdvisingClients).Cascade.All().Not.LazyLoad();
+            HasMany(x => x.AdvisingClients).Cascade.SaveUpdate().Not.LazyLoad().ForeignKeyConstraintName("none");
         }
     }
 
@@ -53,8 +53,8 @@ namespace Rental
         {
             Map(x => x.Address);
             Map(x => x.PostalCode);
-            HasMany(x => x.IncludedFeatures).Cascade.All().Not.LazyLoad();
-            HasMany(x => x.PayedFeatures).Cascade.All().Not.LazyLoad();
+            HasManyToMany(x => x.IncludedFeatures).Cascade.All().Not.LazyLoad();
+            HasManyToMany(x => x.PayedFeatures).Cascade.All().Not.LazyLoad();
         }
     }
 
