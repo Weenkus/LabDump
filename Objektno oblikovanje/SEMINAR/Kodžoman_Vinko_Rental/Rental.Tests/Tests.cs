@@ -70,7 +70,7 @@ namespace Rental
             Assert.Equal(RentalRepository.Instance.Get(a).Name, a.Name);
 
             Assert.Equal(RentalRepository.Instance.Get(a).Description, a.Description);
-            //Assert.Equal(RentalRepository.Instance.Get(a).Owner, client);
+            Assert.Equal(RentalRepository.Instance.Get(a).Owner.Name, client.Name);
         }
 
         [Fact]
