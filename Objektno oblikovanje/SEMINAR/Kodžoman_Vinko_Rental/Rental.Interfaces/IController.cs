@@ -11,6 +11,7 @@ namespace Rental
         void ShowEmplyoees();
         void ShowClients();
         void ShowApartmants();
+        void ShowTransactions();
         void AddClient();
         void AddEmployee();
         void AddApartment();

@@ -26,6 +26,12 @@ namespace Rental
             f.ShowDialog();
         }
 
+        public void ShowTransactions()
+        {
+            FormTransactionsView f = new FormTransactionsView(this, RentalInfoRepository.Instance);
+            f.ShowDialog();
+        }
+
         public void AddClient()
         {
             FormClientAdd f = new FormClientAdd(this, PersonRepository.Instance);

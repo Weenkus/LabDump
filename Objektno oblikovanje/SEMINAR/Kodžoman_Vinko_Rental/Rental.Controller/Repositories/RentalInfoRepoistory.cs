@@ -66,6 +66,7 @@ namespace Rental
 
         public IList<RentalInformation> GetAll()
         {
+            LoadData();
             return _rentalInfoList;
         }
 

@@ -59,5 +59,10 @@ namespace Rental
         {
             _controller.AddApartment();
         }
+
+        private void viewToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            _controller.ShowTransactions();
+        }
     }
 }
