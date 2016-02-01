@@ -24,11 +24,27 @@ namespace Rental
 
         private void FormApartmantView_Load(object sender, EventArgs e)
         {
+            FillApartmants(null);
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            FillApartmants(tbSearch.Text);
+        }
+
+        private void FillApartmants(String filter)
+        {
             listView1.Items.Clear();
 
             IList<Apartment> rList = _repo.GetAllApartmants();
             foreach (Apartment p in rList)
             {
+                if(filter != null)
+                {
+                    if (!p.Name.ToLower().Contains(filter.ToLower()))
+                        continue;
+                }
+
                 ListViewItem listViewItemNew = new ListViewItem(Convert.ToString(p.Id));
                 listViewItemNew.SubItems.Add(p.Name);
                 listViewItemNew.SubItems.Add(p.Description);
@@ -42,9 +58,9 @@ namespace Rental
 
                 // Concat all incldudes
                 String includes = "";
-                for(int i =0; i < p.IncludedFeatures.Count; ++i)
+                for (int i = 0; i < p.IncludedFeatures.Count; ++i)
                 {
-                    if(i == p.IncludedFeatures.Count - 1)
+                    if (i == p.IncludedFeatures.Count - 1)
                         includes += p.IncludedFeatures[i].ToString();
                     else
                         includes += p.IncludedFeatures[i].ToString() + ", ";

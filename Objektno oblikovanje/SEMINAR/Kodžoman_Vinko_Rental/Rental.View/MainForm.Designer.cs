@@ -32,16 +32,15 @@
             this.employeesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.addToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.rentalsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.apartmantsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.addToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.editToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -81,6 +80,13 @@
             this.addToolStripMenuItem.Text = "Add";
             this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.editToolStripMenuItem.Text = "Edit";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
+            // 
             // clientsToolStripMenuItem
             // 
             this.clientsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -94,16 +100,23 @@
             // viewToolStripMenuItem1
             // 
             this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
-            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(99, 22);
+            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.viewToolStripMenuItem1.Text = "View";
             this.viewToolStripMenuItem1.Click += new System.EventHandler(this.viewToolStripMenuItem1_Click);
             // 
             // addToolStripMenuItem1
             // 
             this.addToolStripMenuItem1.Name = "addToolStripMenuItem1";
-            this.addToolStripMenuItem1.Size = new System.Drawing.Size(99, 22);
+            this.addToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.addToolStripMenuItem1.Text = "Add";
             this.addToolStripMenuItem1.Click += new System.EventHandler(this.addToolStripMenuItem1_Click);
+            // 
+            // editToolStripMenuItem1
+            // 
+            this.editToolStripMenuItem1.Name = "editToolStripMenuItem1";
+            this.editToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.editToolStripMenuItem1.Text = "Edit";
+            this.editToolStripMenuItem1.Click += new System.EventHandler(this.editToolStripMenuItem1_Click);
             // 
             // rentalsToolStripMenuItem
             // 
@@ -117,8 +130,7 @@
             // 
             this.apartmantsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.viewToolStripMenuItem2,
-            this.addToolStripMenuItem2,
-            this.editToolStripMenuItem2});
+            this.addToolStripMenuItem2});
             this.apartmantsToolStripMenuItem.Name = "apartmantsToolStripMenuItem";
             this.apartmantsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.apartmantsToolStripMenuItem.Text = "Apartmants";
@@ -126,7 +138,7 @@
             // viewToolStripMenuItem2
             // 
             this.viewToolStripMenuItem2.Name = "viewToolStripMenuItem2";
-            this.viewToolStripMenuItem2.Size = new System.Drawing.Size(99, 22);
+            this.viewToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
             this.viewToolStripMenuItem2.Text = "View";
             this.viewToolStripMenuItem2.Click += new System.EventHandler(this.viewToolStripMenuItem2_Click);
             // 
@@ -136,26 +148,6 @@
             this.addToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
             this.addToolStripMenuItem2.Text = "Add";
             this.addToolStripMenuItem2.Click += new System.EventHandler(this.addToolStripMenuItem2_Click);
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.editToolStripMenuItem.Text = "Edit";
-            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
-            // 
-            // editToolStripMenuItem1
-            // 
-            this.editToolStripMenuItem1.Name = "editToolStripMenuItem1";
-            this.editToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.editToolStripMenuItem1.Text = "Edit";
-            this.editToolStripMenuItem1.Click += new System.EventHandler(this.editToolStripMenuItem1_Click);
-            // 
-            // editToolStripMenuItem2
-            // 
-            this.editToolStripMenuItem2.Name = "editToolStripMenuItem2";
-            this.editToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
-            this.editToolStripMenuItem2.Text = "Edit";
             // 
             // MainForm
             // 
@@ -188,7 +180,6 @@
         private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem2;
     }
 }
 

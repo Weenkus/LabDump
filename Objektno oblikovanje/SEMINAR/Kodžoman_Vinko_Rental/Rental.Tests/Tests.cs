@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 using Xunit;
 
+using NHibernate.Cfg;
+using NHibernate;
+using NHibernate.Tool.hbm2ddl;
+using NHibernate.Criterion;
+using System.Text.RegularExpressions;
+
 namespace Rental
 {
     public class Tests
@@ -40,7 +46,7 @@ namespace Rental
             NHibernateService.Init();
 
             Employee employee = new Employee("Vinko", "Zadric");
-            Client client = new Client("Marin", "Veljko", employee);  
+            Client client = new Client("Marin", "Veljko", employee);
 
             PersonRepository.Instance.Add(employee);
             PersonRepository.Instance.Add(client);
@@ -109,6 +115,36 @@ namespace Rental
         }
 
         [Fact]
+        public void SimpleTransactionCreation()
+        {
+            // Initialise NH and SQLite
+            NHibernateService.Init();
+
+            Employee employee = new Employee("Vinko", "Zadric");
+            Client client = new Client("Marin", "Veljko", employee);
+
+            // Create some features (payed and included)
+            IList<SpecialFeatures> sF = new List<SpecialFeatures>();
+            sF.Add(new SpecialFeatures(200, "Izlet na more."));
+            sF.Add(new SpecialFeatures(150, "Vecer u finom restoranu."));
+
+            IList<RentalInclude> rF = new List<RentalInclude>();
+            rF.Add(new RentalInclude(Offer.balcony, 2));
+            rF.Add(new RentalInclude(Offer.kitchen, 2));
+            rF.Add(new RentalInclude(Offer.room, 4));
+
+            // Create the apartmant via the factory and add it to the repo
+            Apartment a = ApartmanFactory.createApartman(client, "Vila zrinka", "Prekrasna vila na moru...",
+                "12004", "Torovinkova 5", 200, rF, sF);
+            RentalRepository.Instance.Add(a);
+
+
+            RentalInformation transaction = new RentalInformation(client, a, DateTime.Now, DateTime.Now.AddDays(2), a.DailyPrice);
+            Assert.Equal(transaction.Client.Id, client.Id);
+            Assert.Equal(transaction.Client.Name, client.Name);
+        }
+
+        [Fact]
         public void RepositoryCRUDTestingRental()
         {
             // Initialise NH and SQLite
@@ -149,16 +185,6 @@ namespace Rental
             Assert.Equal(RentalRepository.Instance.Count(), 0);
 
             Assert.Equal(RentalRepository.Instance.Contains(a), false);
-
-            // Update
-            /*RentalRepository.Instance.Add(a);
-            Apartment a1 = (Apartment)RentalRepository.Instance.Get(a);
-            int aId = a1.Id;
-            a1.Name = "Vila Markica";
-            RentalRepository.Instance.Update(a1);
-
-            // Check if update worked
-            Assert.Equal(RentalRepository.Instance.Get(aId), a1);*/
         }
 
         [Fact]
@@ -230,6 +256,78 @@ namespace Rental
             Assert.Equal(PersonRepository.Instance.Get(cId).Id, cli.Id);
             Assert.Equal(PersonRepository.Instance.Get(cId).Name, cli.Name);
             Assert.Equal(PersonRepository.Instance.Get(cId).LastName, cli.LastName);
+        }
+
+        [Fact]
+        public void TransactionCreationAndRepoCRUD()
+        {
+            // Initialise NH and SQLite
+            NHibernateService.Init();
+
+            Employee employee = new Employee("Vinko", "Zadric");
+            Client client = new Client("Marin", "Veljko", employee);
+
+            PersonRepository.Instance.Add(employee);
+            PersonRepository.Instance.Add(client);
+
+
+            // Create some features (payed and included)
+            IList<SpecialFeatures> sF = new List<SpecialFeatures>();
+            sF.Add(new SpecialFeatures(200, "Izlet na more."));
+            sF.Add(new SpecialFeatures(150, "Vecer u finom restoranu."));
+
+            IList<RentalInclude> rF = new List<RentalInclude>();
+            rF.Add(new RentalInclude(Offer.balcony, 2));
+            rF.Add(new RentalInclude(Offer.kitchen, 2));
+            rF.Add(new RentalInclude(Offer.room, 4));
+
+            // Create the apartmant via the factory and add it to the repo
+            Apartment a = ApartmanFactory.createApartman(client, "Vila zrinka", "Prekrasna vila na moru...",
+                "12004", "Torovinkova 5", 200, rF, sF);
+            RentalRepository.Instance.Add(a);
+
+
+            RentalInformation transaction = new RentalInformation(client, a, DateTime.Now, DateTime.Now.AddDays(2), a.DailyPrice);
+            RentalInfoRepository.Instance.Add(transaction);
+
+            // Check if the repository saved successfully
+            Assert.Equal(RentalInfoRepository.Instance.Count(), 1);
+
+            Assert.Equal(RentalInfoRepository.Instance.Get(transaction.Id).Id, transaction.Id);
+            Assert.Equal(RentalInfoRepository.Instance.Get(transaction.Id).DailyCost, transaction.DailyCost);
+            Assert.Equal(RentalInfoRepository.Instance.Contains(transaction), true);
+
+            // Test the link
+            Assert.Equal(transaction.Client.Id, client.Id);
+
+            // Test removal
+            RentalInfoRepository.Instance.Remove(transaction);
+            Assert.Equal(RentalInfoRepository.Instance.Count(), 0);
+            Assert.Equal(RentalInfoRepository.Instance.Contains(transaction), false);
+        }
+
+        [Fact]
+        public void DatabaseTransactionTesting()
+        {
+            // Initialise NH and SQLite
+            NHibernateService.Init();
+
+            Employee person = new Employee("Vinko", "Zadric");
+
+            // Try to open a session
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(person);
+                    transaction.Commit();
+
+                    Employee newPerson = session.CreateCriteria<Employee>().List<Employee>().ElementAt(0);
+
+                    Assert.Equal(person.Name, newPerson.Name);
+                    Assert.Equal(person.LastName, newPerson.LastName);
+                }
+            }
         }
     }
 }

@@ -44,14 +44,24 @@ namespace Rental
 
         public RentalInformation Get(int id)
         {
-            LoadData();
-            return _rentalInfoList.Where(p => p.Id == id).SingleOrDefault();
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    return session.Get<RentalInformation>(id);
+                }
+            }
         }
 
         public RentalInformation Get(RentalInformation rentalInfo)
         {
-            LoadData();
-            return _rentalInfoList.Where(p => p.Equals(rentalInfo)).SingleOrDefault();
+            using (var session = NHibernateService.SessionFactory.OpenSession())
+            {
+                using (var transaction = session.BeginTransaction())
+                {
+                    return session.Get<RentalInformation>(rentalInfo);
+                }
+            }
         }
 
         public IList<RentalInformation> GetAll()
@@ -91,7 +101,7 @@ namespace Rental
                 {
                     using (var transaction = session.BeginTransaction())
                     {
-                        session.Delete(_rentalInfoList.Where(x => x.Id == id).SingleOrDefault());
+                        session.Delete<RentalInfoRepository>(id);
                         transaction.Commit();
                     }
                 }
@@ -108,7 +118,7 @@ namespace Rental
                     using (var transaction = session.BeginTransaction())
                     {
 
-                        session.Delete(_rentalInfoList.Where(x => x.Id == rentalInfo.Id).SingleOrDefault());
+                        session.Delete(rentalInfo);
                         transaction.Commit();
                     }
                 }
@@ -124,7 +134,7 @@ namespace Rental
         public bool Contains(RentalInformation rentalInfo)
         {
             LoadData();
-            return _rentalInfoList.Any(p => p.Equals(rentalInfo));
+            return _rentalInfoList.Any(p => p.Id == rentalInfo.Id);
         }
 
         public void Update(RentalInformation rentalInfo)

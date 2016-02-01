@@ -23,7 +23,7 @@ namespace Rental
     {
         public ClientMap()
         {
-            References(x => x.DedicatedAgent).Nullable().Not.LazyLoad();
+            References(x => x.DedicatedAgent).Cascade.SaveUpdate().Nullable().Not.LazyLoad();
         }
     }
 
@@ -83,11 +83,11 @@ namespace Rental
         public RentalInformationMap()
         {
             Id(x => x.Id);
-            //Map(x => x.To).CustomType<NHibernate.Type.TimeType>(); ;
-            //Map(x => x.From).CustomType<NHibernate.Type.TimeType>(); ;
+            Map(x => x.Start);
+            Map(x => x.End);
             Map(x => x.DailyCost);
-            HasOne(x => x.Rented).Cascade.All().Not.LazyLoad();
-            HasOne(x => x.Client).Cascade.All().Not.LazyLoad();
+            References(x => x.Rented).Cascade.All().Not.LazyLoad();
+            References(x => x.Client).Cascade.All().Not.LazyLoad();
         }
     }
 

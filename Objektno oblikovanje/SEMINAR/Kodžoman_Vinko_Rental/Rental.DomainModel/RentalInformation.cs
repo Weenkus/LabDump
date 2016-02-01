@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace Rental
 {
     public class RentalInformation
@@ -11,8 +13,7 @@ namespace Rental
         private int _id;
         private Client _client;
         private Rental _rented;
-        private DateTime _from;
-        private DateTime  _to;
+        private DateTime _start, _end;
         private Double _dailyCost;
 
         public RentalInformation() { }
@@ -21,8 +22,8 @@ namespace Rental
         {
             this.Client = c;
             this.Rented = r;
-            this.From = from;
-            this.To = to;
+            this._start = from;
+            this._end = to;
             this.DailyCost = dailyCost;
         }
 
@@ -52,29 +53,29 @@ namespace Rental
             }
         }
 
-        public virtual DateTime From
+        public virtual DateTime Start
         {
             get
             {
-                return _from;
+                return _start;
             }
 
             set
             {
-                _from = value;
+                _start = value;
             }
         }
 
-        public virtual DateTime To
+        public virtual DateTime End
         {
             get
             {
-                return _to;
+                return _end;
             }
 
             set
             {
-                _to = value;
+                _end = value;
             }
         }
 
