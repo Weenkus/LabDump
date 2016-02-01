@@ -30,7 +30,7 @@ namespace Rental
             foreach (RentalInformation t in riList)
             {
                 ListViewItem listViewItemNew = new ListViewItem(Convert.ToString(t.Id));
-                listViewItemNew.SubItems.Add(t.Client.ToString());
+                listViewItemNew.SubItems.Add(t.Rented.Owner.ToString());
                 listViewItemNew.SubItems.Add(t.Rented.Name.ToString());
                 listViewItemNew.SubItems.Add(t.Start.ToLongDateString());
                 listViewItemNew.SubItems.Add(t.End.ToLongDateString());

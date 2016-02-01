@@ -40,6 +40,7 @@ namespace Rental
                 {
                     Employee newEmployee = new Employee(tbName.Text, tbSurname.Text);
                     _repo.Add(newEmployee);
+                    _controller.ShowEmplyoees();
                     this.Close();
                 }
             }

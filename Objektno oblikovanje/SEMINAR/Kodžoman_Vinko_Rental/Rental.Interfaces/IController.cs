@@ -15,6 +15,7 @@ namespace Rental
         void AddClient();
         void AddEmployee();
         void AddApartment();
+        void AddTransactions();
         void EditClient();
         void EditEmployee();
     }

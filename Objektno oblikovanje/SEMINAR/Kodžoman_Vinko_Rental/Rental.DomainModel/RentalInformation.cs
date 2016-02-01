@@ -11,33 +11,18 @@ namespace Rental
     public class RentalInformation
     {
         private int _id;
-        private Client _client;
         private Rental _rented;
         private DateTime _start, _end;
         private Double _dailyCost;
 
         public RentalInformation() { }
 
-        public RentalInformation(Client c, Rental r, DateTime from, DateTime to, Double dailyCost)
+        public RentalInformation(Rental r, DateTime from, DateTime to, Double dailyCost)
         {
-            this.Client = c;
             this.Rented = r;
             this._start = from;
             this._end = to;
             this.DailyCost = dailyCost;
-        }
-
-        public virtual Client Client
-        {
-            get
-            {
-                return _client;
-            }
-
-            set
-            {
-                _client = value;
-            }
         }
 
         public virtual Rental Rented

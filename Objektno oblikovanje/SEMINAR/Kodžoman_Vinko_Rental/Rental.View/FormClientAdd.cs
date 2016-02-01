@@ -56,6 +56,7 @@ namespace Rental
                     Employee dedicatedAgent = ((KeyValuePair<Employee, string>)cbAgents.SelectedItem).Key;
                     Client newClient = new Client(tbName.Text, tbSurname.Text, dedicatedAgent);
                     _repo.Add(newClient);
+                    _controller.ShowClients();
                     this.Close();
                 }
             }

@@ -139,9 +139,9 @@ namespace Rental
             RentalRepository.Instance.Add(a);
 
 
-            RentalInformation transaction = new RentalInformation(client, a, DateTime.Now, DateTime.Now.AddDays(2), a.DailyPrice);
-            Assert.Equal(transaction.Client.Id, client.Id);
-            Assert.Equal(transaction.Client.Name, client.Name);
+            RentalInformation transaction = new RentalInformation(a, DateTime.Now, DateTime.Now.AddDays(2), a.DailyPrice);
+            Assert.Equal(transaction.Rented.Owner.Id, client.Id);
+            Assert.Equal(transaction.Rented.Owner.Name, client.Name);
         }
 
         [Fact]
@@ -287,7 +287,7 @@ namespace Rental
             RentalRepository.Instance.Add(a);
 
 
-            RentalInformation transaction = new RentalInformation(client, a, DateTime.Now, DateTime.Now.AddDays(2), a.DailyPrice);
+            RentalInformation transaction = new RentalInformation(a, DateTime.Now, DateTime.Now.AddDays(2), a.DailyPrice);
             RentalInfoRepository.Instance.Add(transaction);
 
             // Check if the repository saved successfully
@@ -298,7 +298,7 @@ namespace Rental
             Assert.Equal(RentalInfoRepository.Instance.Contains(transaction), true);
 
             // Test the link
-            Assert.Equal(transaction.Client.Id, client.Id);
+            Assert.Equal(transaction.Rented.Owner.Id, client.Id);
 
             // Test removal
             RentalInfoRepository.Instance.Remove(transaction);

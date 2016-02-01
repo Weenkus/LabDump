@@ -56,8 +56,8 @@
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Client";
-            this.columnHeader1.Width = 104;
+            this.columnHeader1.Text = "Owner";
+            this.columnHeader1.Width = 101;
             // 
             // columnHeader2
             // 

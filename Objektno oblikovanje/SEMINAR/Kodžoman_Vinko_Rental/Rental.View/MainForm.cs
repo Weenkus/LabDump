@@ -64,5 +64,10 @@ namespace Rental
         {
             _controller.ShowTransactions();
         }
+
+        private void addToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            _controller.AddTransactions();
+        }
     }
 }

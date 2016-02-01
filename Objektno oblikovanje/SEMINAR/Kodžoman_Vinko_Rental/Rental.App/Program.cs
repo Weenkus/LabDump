@@ -95,9 +95,9 @@ namespace Rental
             RentalRepository.Instance.Add(apartmant2);
 
             // Add transactions
-            RentalInformation transaction = new RentalInformation(client, apartmant, DateTime.Now, DateTime.Now.AddDays(2), apartmant.DailyPrice);
-            RentalInformation transaction1 = new RentalInformation(client1, apartmant, DateTime.Now.AddDays(5), DateTime.Now.AddDays(10), apartmant.DailyPrice);
-            RentalInformation transaction2 = new RentalInformation(client2, apartmant1, DateTime.Now.AddDays(2), DateTime.Now.AddDays(15), apartmant2.DailyPrice);
+            RentalInformation transaction = new RentalInformation(apartmant, DateTime.Now, DateTime.Now.AddDays(2), apartmant.DailyPrice);
+            RentalInformation transaction1 = new RentalInformation(apartmant, DateTime.Now.AddDays(5), DateTime.Now.AddDays(10), apartmant.DailyPrice);
+            RentalInformation transaction2 = new RentalInformation(apartmant1, DateTime.Now.AddDays(2), DateTime.Now.AddDays(15), apartmant2.DailyPrice);
 
             RentalInfoRepository.Instance.Add(transaction);
             RentalInfoRepository.Instance.Add(transaction1);

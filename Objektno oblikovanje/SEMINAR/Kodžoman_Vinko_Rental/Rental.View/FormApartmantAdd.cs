@@ -157,6 +157,7 @@ namespace Rental
                         tbName.Text, tbDescription.Text, tbPostal.Text, tbAddress.Text,
                         Convert.ToInt32(tbDailyPrice.Text), _includes, _specials);
                     _rentalRepo.Add(newApartment);
+                    _controller.ShowApartmants();
                     this.Close();
                 }
             }

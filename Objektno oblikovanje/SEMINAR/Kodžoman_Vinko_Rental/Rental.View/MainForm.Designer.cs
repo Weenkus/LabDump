@@ -174,6 +174,7 @@
             this.addToolStripMenuItem3.Name = "addToolStripMenuItem3";
             this.addToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
             this.addToolStripMenuItem3.Text = "Add";
+            this.addToolStripMenuItem3.Click += new System.EventHandler(this.addToolStripMenuItem3_Click);
             // 
             // MainForm
             // 

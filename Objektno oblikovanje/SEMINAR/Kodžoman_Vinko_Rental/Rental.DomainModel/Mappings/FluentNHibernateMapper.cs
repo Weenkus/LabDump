@@ -87,7 +87,6 @@ namespace Rental
             Map(x => x.End);
             Map(x => x.DailyCost);
             References(x => x.Rented).Cascade.All().Not.LazyLoad();
-            References(x => x.Client).Cascade.All().Not.LazyLoad();
         }
     }
 
