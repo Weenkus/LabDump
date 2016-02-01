@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Model.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,5 +15,13 @@ namespace Rental
                 monthlyPrice, rFeatures, sFeatures);
             return apartmant;
         }
+
+        public static Apartment createApartman(Client owner, String name, String description, String postal,
+            String address, Double monthlyPrice)
+        {
+            Apartment apartmant = new Apartment(owner, name, description, postal, address,
+               monthlyPrice, null, null);
+            return apartmant;
+        }
     }
 }
