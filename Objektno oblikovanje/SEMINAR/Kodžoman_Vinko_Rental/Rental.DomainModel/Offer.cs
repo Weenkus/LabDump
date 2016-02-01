@@ -12,6 +12,7 @@ namespace Rental
         room,
         kitchen,
         balcony,
-        garden
+        garden,
+        AC
     }
 }

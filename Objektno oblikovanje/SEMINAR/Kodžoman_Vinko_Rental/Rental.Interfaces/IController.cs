@@ -13,6 +13,7 @@ namespace Rental
         void ShowApartmants();
         void AddClient();
         void AddEmployee();
+        void AddApartment();
         void EditClient();
         void EditEmployee();
     }

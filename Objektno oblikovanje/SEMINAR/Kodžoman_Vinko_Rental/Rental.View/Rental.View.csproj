@@ -64,6 +64,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormApartmantAdd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormApartmantAdd.Designer.cs">
+      <DependentUpon>FormApartmantAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormApartmantView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +120,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormApartmantAdd.resx">
+      <DependentUpon>FormApartmantAdd.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormApartmantView.resx">
       <DependentUpon>FormApartmantView.cs</DependentUpon>
     </EmbeddedResource>

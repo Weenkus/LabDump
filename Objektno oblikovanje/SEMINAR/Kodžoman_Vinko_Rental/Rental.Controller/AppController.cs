@@ -49,5 +49,11 @@ namespace Rental
             FormEmployeeEdit f = new FormEmployeeEdit(this, PersonRepository.Instance);
             f.ShowDialog();
         }
+
+        public void AddApartment()
+        {
+            FormApartmantAdd f = new FormApartmantAdd(this, PersonRepository.Instance, RentalRepository.Instance);
+            f.ShowDialog();
+        }
     }
 }
