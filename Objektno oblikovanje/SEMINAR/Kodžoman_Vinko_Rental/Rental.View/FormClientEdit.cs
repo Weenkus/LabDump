@@ -15,9 +15,11 @@ namespace Rental
         private IController _controller;
         private IPersonRepository _repo;
         private IRentalRepository _rentalRepo;
+        private IRentalInfoRepository _transactionRepo;
 
-        public FormClientEdit(IController con, IPersonRepository p, IRentalRepository r)
+        public FormClientEdit(IController con, IPersonRepository p, IRentalRepository r, IRentalInfoRepository t)
         {
+            _transactionRepo = t;
             _repo = p;
             _rentalRepo = r;
             _controller = con;
@@ -112,10 +114,23 @@ namespace Rental
                     IList<Rental> rentals = _rentalRepo.GetAll();
                     bool removed = false;
                     String apartmantNames = "";
+                    bool removedTransactions = false;
                     foreach (Rental r in rentals)
                     {
                         if (r.Owner.Id == selectedClient.Id)
                         {
+                            // Delete all transactions as well
+                            IList<RentalInformation> transactions = _transactionRepo.GetAll();
+                            foreach(RentalInformation t in transactions)
+                            {
+                                if (t.Rented.Id == r.Id)
+                                {
+                                    _transactionRepo.Remove(t);
+                                    removedTransactions = true;
+                                }
+                            }
+
+
                             _rentalRepo.Remove(r);
                             removed = true;
                             apartmantNames += r.Name + "\n ";
@@ -123,8 +138,16 @@ namespace Rental
                     }
 
                     if (removed)
-                        MessageBox.Show("The client had apartmants in the system, they were all deleted together with the client.\nRemoved apartmats:\n\n" + apartmantNames,
+                    {
+                        if(removedTransactions == false)
+                            MessageBox.Show("The client had apartmants in the system, they were all deleted together with the client.\nRemoved apartmats:\n\n" + apartmantNames,
                             "Apartmants", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else
+                        {
+                            MessageBox.Show("The client had apartmants in the system, they were all deleted together with the client.\nRemoved apartmats:\n\n" + apartmantNames + "\n\nTransaction history for the rentals are deleted.",
+                           "Apartmants", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
                     _repo.Remove(selectedClient);
                     this.Close();
                 }
@@ -152,7 +175,10 @@ namespace Rental
             tbName.Text = selectedCLient.Name;
             tbSurname.Text = selectedCLient.LastName;
 
-            String present = "[" + selectedCLient.DedicatedAgent.Id + "] " + selectedCLient.DedicatedAgent.ToString();
+            String present = "No agent";
+            if (selectedCLient.DedicatedAgent != null)
+                present = "[" + selectedCLient.DedicatedAgent.Id + "] " + selectedCLient.DedicatedAgent.ToString();
+
             cbAgents.SelectedItem = new KeyValuePair<Employee, string>(selectedCLient.DedicatedAgent, present);
         }
     }

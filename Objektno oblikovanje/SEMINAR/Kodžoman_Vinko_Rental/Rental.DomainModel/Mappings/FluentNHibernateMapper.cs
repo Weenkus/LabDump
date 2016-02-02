@@ -14,8 +14,8 @@ namespace Rental
         public PersonMap()
         {
             Id(x => x.Id);
-            Map(x => x.Name).Not.LazyLoad();
-            Map(x => x.LastName).Not.LazyLoad();
+            Map(x => x.Name);
+            Map(x => x.LastName);
         }
     }
 
@@ -53,8 +53,8 @@ namespace Rental
         {
             Map(x => x.Address);
             Map(x => x.PostalCode);
-            HasManyToMany(x => x.IncludedFeatures).Cascade.All().Not.LazyLoad();
-            HasManyToMany(x => x.PayedFeatures).Cascade.All().Not.LazyLoad();
+            HasMany(x => x.IncludedFeatures).Cascade.All().Not.LazyLoad();
+            HasMany(x => x.PayedFeatures).Cascade.All().Not.LazyLoad();
         }
     }
 
@@ -86,7 +86,7 @@ namespace Rental
             Map(x => x.Start);
             Map(x => x.End);
             Map(x => x.DailyCost);
-            References(x => x.Rented).Cascade.All().Not.LazyLoad();
+            References(x => x.Rented).Cascade.SaveUpdate().Not.LazyLoad();
         }
     }
 

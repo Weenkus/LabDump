@@ -33,7 +33,11 @@ namespace Rental
                 listViewItemNew.SubItems.Add(p.Name);
                 listViewItemNew.SubItems.Add(p.LastName);
 
-                String dedicatedAgent = "[" + Convert.ToString(p.Id) + "] " +  p.DedicatedAgent.Name + " " + p.DedicatedAgent.LastName;
+                String dedicatedAgent;
+                if (p.DedicatedAgent != null)
+                    dedicatedAgent = "[" + Convert.ToString(p.Id) + "] " + p.DedicatedAgent.Name + " " + p.DedicatedAgent.LastName;
+                else
+                    dedicatedAgent = "No agent";
                 listViewItemNew.SubItems.Add(dedicatedAgent);
 
                 listView1.Items.Add(listViewItemNew);

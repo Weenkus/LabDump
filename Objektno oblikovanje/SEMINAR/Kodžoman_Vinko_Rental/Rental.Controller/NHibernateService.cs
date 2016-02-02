@@ -18,7 +18,6 @@ namespace Rental
 {
     public class NHibernateService
     {
-        private static Configuration _cfg;
         private static ISessionFactory _sessionFactory;
 
         public static ISessionFactory SessionFactory
@@ -36,31 +35,7 @@ namespace Rental
 
         public static void Init()
         {
-            // Create the database
-            //SQLiteConnection.CreateFile("MyDatabase.sqlite");
-
-    //        Configuration c = new Configuration();
-    //        c.Configure();
-
-            //c.AddAssembly(Assembly.GetCallingAssembly());
-    //        _cfg = c;
-
-            // SchemaUpdate creates tables in db if they don't exists
-            // SchemaCreate will erase all previous tables (getting fresh database every run)
-
-
             _sessionFactory = CreateSessionFactory();
-            //BuildSchema(_cfg);
-
-
-
-            //new SchemaUpdate(c).Execute(true, true);
-        }
-
-        public static ISession OpenSession()
-        {
-            ISessionFactory f = _cfg.BuildSessionFactory();
-            return f.OpenSession();
         }
 
         private static ISessionFactory CreateSessionFactory()

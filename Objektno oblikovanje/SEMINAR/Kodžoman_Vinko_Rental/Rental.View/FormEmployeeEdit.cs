@@ -69,6 +69,17 @@ namespace Rental
         private void btRemove_Click(object sender, EventArgs e)
         {
             Employee selectedEmployee = (Employee)_repo.Get(((KeyValuePair<Employee, string>)cbEmployees.SelectedItem).Key);
+
+
+            // Before removing, remove the connections to all clients
+            IList<Client> clinets = _repo.GetAllClients();
+            foreach(Client c in clinets)
+            {
+                if (c.DedicatedAgent.Id == selectedEmployee.Id)
+                    c.DedicatedAgent = null;
+            }
+
+
             _repo.Remove(selectedEmployee);
             this.Close();
         }

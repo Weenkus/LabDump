@@ -52,7 +52,7 @@ namespace Rental
 
         public void EditClient()
         {
-            FormClientEdit f = new FormClientEdit(this, PersonRepository.Instance, RentalRepository.Instance);
+            FormClientEdit f = new FormClientEdit(this, PersonRepository.Instance, RentalRepository.Instance, RentalInfoRepository.Instance);
             f.ShowDialog();
         }
 
