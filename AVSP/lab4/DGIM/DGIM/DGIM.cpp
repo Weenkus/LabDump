@@ -22,8 +22,9 @@ int TIMESTAMP{ 0 };
 
 void start_stream();
 void stream_loop(std::istream& stream);
-void process_query(std::list<Bucket>& buckets, const int query_value);
+void process_query(std::list<Bucket>& buckets, const int query_value, const int window_size);
 void update_buckets(std::list<Bucket>& buckets, const std::string& line, const int window_size);
+inline void normalize_timestamps(std::list<Bucket>& buckets, const int window_size);
 
 inline void empty_stream(std::stringstream* stream) {
 	stream->clear();
@@ -88,7 +89,7 @@ void stream_loop(std::istream&  stream){
 
 		if (is_query(line)) {
 			int query_value{ get_query_value(line) };
-			process_query(buckets, query_value);
+			process_query(buckets, query_value, stream_size);
 		} 
 
 		update_buckets(buckets, line, stream_size);
@@ -148,14 +149,18 @@ void update_buckets(std::list<Bucket>& buckets, const std::string& line, const i
 	}
 }
 
-void process_query(std::list<Bucket>& buckets, const int query_value) {
-	int num_of_ones{ 0 }, k{ 0 };
-	bool wrote_to_output{ false };
-	for (auto &b : buckets) {
-		std::cout << "q_v: " << query_value << ", b_t: " << b.timestamp << ", b_s:" << b.size << ", k:" << k << std::endl;
+void process_query(std::list<Bucket>& buckets, const int query_value, const int window_size) {
+	normalize_timestamps(buckets, window_size);
 
-		if (query_value < k + b.size) {
-			num_of_ones -= (b.size / 2);
+	int num_of_ones{ 0 };
+	bool wrote_to_output{ false };
+	for (auto it = buckets.begin(); it != buckets.end(); ++it) {
+		auto b = (*it);
+		
+		std::cout << "q_v: " << query_value << ", b_t: " << b.timestamp << ", b_s: " << b.size << std::endl;
+
+		if (query_value < b.timestamp) {
+			num_of_ones += (b.size / 2);
 			//std::cout << num_of_ones << std::endl;
 			std::cout << "Number of ones: " << num_of_ones << std::endl;
 			wrote_to_output = true;
@@ -164,10 +169,33 @@ void process_query(std::list<Bucket>& buckets, const int query_value) {
 			num_of_ones += b.size;
 		}
 
-		k += b.size;
+		
 	}
 
 	//const int last_size = get_biggest_bucket_size(buckets);
 	//if (!wrote_to_output) std::cout << "Number of ones: " << get_total_size(buckets) - last_size/2 << std::endl;
 	//if (!wrote_to_output) std::cout << num_of_ones << std::endl;
+}
+
+inline void normalize_timestamps(std::list<Bucket>& buckets, const int window_size) {
+	int current_timestamp{ 0 };
+	for (auto it = buckets.begin(); it != buckets.end(); ++it) {
+
+		if (std::next(it, 1) != buckets.end() && it != buckets.begin()) {
+			auto it_next = std::next(it, 1);
+
+			std::cout << "it_n: " << (*it_next).timestamp << ", it: " << (*it).timestamp << std::endl;
+
+			if ((*it_next).timestamp < (*it).timestamp)
+				current_timestamp += (*it).timestamp - (*it_next).timestamp;
+			else {
+				current_timestamp += (*it).timestamp + (window_size - (*it_next).timestamp);
+			}
+		}
+
+		if (it == buckets.begin())
+			(*it).timestamp = 0;
+		else 
+			(*it).timestamp = current_timestamp;
+	}
 }
