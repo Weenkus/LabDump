@@ -41,39 +41,65 @@ def stream(line, N, buckets):
         wrote_to_output = False
         if MODE == "LOCAL":
             print('q_v:', query_value, buckets)
+
         for i, bucket in enumerate(buckets):
 
             if i != 0:
                 k += buckets[i-1][TS] - buckets[i][TS]
-                #print('k:', k)
+
+                if MODE == "LOCAL":
+                    print('k:', k)
 
             if k >= query_value:
-                number_of_ones -= buckets[i-1][SIZE]/2
-                print(int(number_of_ones), k)
+                if k != query_value:
+                    number_of_ones -= buckets[i-1][SIZE]/2
+                else:
+                    number_of_ones -= buckets[i-1][SIZE]/2
+
+                if MODE == "LOCAL":
+                    print("U:", int(number_of_ones), k)
+                    print()
+                else:
+                    print(int(number_of_ones))
+
                 wrote_to_output = True
                 break
             else:
                 number_of_ones += bucket[SIZE]
 
         if not wrote_to_output:
-            output = int(number_of_ones) - int(buckets[-1][SIZE]/2)
-            print("K:", output)
+
+            if k != query_value:
+                output = int(number_of_ones) - int(buckets[-1][SIZE]/2)
+            else:
+                output = int(number_of_ones) - int(buckets[-1][SIZE]/2)
+
+            if MODE == "LOCAL":
+                print("K:", output)
+                print()
+            else:
+                print(output)
+
     else:
         for c in line:
-
-            if len(buckets) > 2 and (buckets[0][TS] - buckets[-1][TS]) > N:
-                buckets.pop()
+            TIMESTAMP += 1
+            #if len(buckets) > 2 and (buckets[0][TS] - buckets[-1][TS]) >= N:
+            #    buckets.pop()
 
             if c == '1':
+
+                buckets = [b for b in buckets if (TIMESTAMP - b[TS]) <= N]
+
                 buckets.insert(0, [1, TIMESTAMP])
 
+                #print('BEFORE:', buckets)
                 for i, bucket in enumerate(buckets):
 
                     if i > 1 and buckets[i][SIZE] == buckets[i-1][SIZE] == buckets[i-2][SIZE]:
-                        buckets.remove(buckets[i])
                         buckets[i-1][SIZE] *= 2
+                        buckets.remove(buckets[i])
 
-            TIMESTAMP += 1
+                #print('AFTER:', buckets)
 
     return buckets
 
